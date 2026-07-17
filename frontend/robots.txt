@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://voblakah-kryma.ru/sitemap.xml

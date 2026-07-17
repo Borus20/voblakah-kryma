@@ -1,0 +1,19 @@
+{
+  "name": "crimea-booking-app",
+  "version": "1.0.0",
+  "description": "Backend for booking system",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^17.4.2",
+    "express": "^4.19.2",
+    "express-rate-limit": "^8.6.0",
+    "mysql2": "^3.9.7",
+    "node-telegram-bot-api": "^0.66.0",
+    "nodemailer": "^8.0.6"
+  }
+}

@@ -1,0 +1,8 @@
+# Зависимости
+backend/node_modules/
+
+# Секреты
+backend/.env
+
+# Логи
+*.log
