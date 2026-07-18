@@ -289,6 +289,15 @@
             .rule-icon { transition: none; }
         }
 
+        /* Шапка — сплошной цвет (а не полупрозрачный поверх фона), чтобы системная
+           панель телефона (theme-color) совпадала с ней ровно, без видимого шва.
+           ВАЖНО: цвет должен совпадать с <meta name="theme-color"> в index.html. */
+        header {
+            background-color: #eaf5fb !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+
         /* Когда открыто бургер-меню, шапка переходит в меню — нижние углы не скругляем */
         header:has(#mobile-menu:not(.hidden)) {
             border-bottom-left-radius: 0 !important;
@@ -345,22 +354,17 @@
             overflow: hidden;
         }
 
+        /* Небольшой фиксированный отступ вместо процентов: края не сливаются,
+           но фото занимает максимум площади экрана (проценты «съедали» много места). */
+        .fullscreen-slide { padding: 8px; box-sizing: border-box; }
         .fullscreen-slide img {
             width: auto !important;
             height: auto !important;
-            max-width: 95% !important;   /* десктоп: не во всю ширину экрана */
-            max-height: 95% !important;
+            max-width: 100% !important;
+            max-height: 100% !important;
             object-fit: contain !important;
             display: block;
             border-radius: 0.75rem; /* Added this line */
-        }
-
-        /* На телефоне полноэкранное фото занимает 97% (чуть больше, экран меньше) */
-        @media (max-width: 767px) {
-            .fullscreen-slide img {
-                max-width: 97% !important;
-                max-height: 97% !important;
-            }
         }
 
         #fullscreen-close {

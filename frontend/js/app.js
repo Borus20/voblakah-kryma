@@ -162,7 +162,7 @@
             const track = document.getElementById('fullscreen-track');
             
             // Генерируем слайды
-            track.innerHTML = images.map(src => `<div class="fullscreen-slide">${pictureTag(src, '', 'Фото', false, '95vw')}</div>`).join('');
+            track.innerHTML = images.map(src => `<div class="fullscreen-slide">${pictureTag(src, '', 'Фото', false, '100vw')}</div>`).join('');
             
             // Сдвигаем на нужный слайд
             track.style.transform = `translateX(-${startIndex * 100}%)`;
