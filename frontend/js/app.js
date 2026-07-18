@@ -27,6 +27,15 @@
         let currentFullscreenIndex = 0;
 
         // === 3. ГЛОБАЛЬНЫЕ ФУНКЦИИ ===
+        // Возвращает <picture> с WebP (современные браузеры) и фолбэком на исходный файл.
+        // eager=true — без lazy (для hero/первого экрана).
+        function pictureTag(src, imgClass, alt, eager) {
+            const cls = imgClass ? ` class="${imgClass}"` : '';
+            const loading = eager ? '' : ' loading="lazy"';
+            const a = alt || '';
+            return `<picture><source type="image/webp" srcset="${src}.webp"><img src="${src}"${cls} alt="${a}"${loading} decoding="async"></picture>`;
+        }
+
         function setKeyboardNav(prev, next) {
             keyboardNav.prev = prev;
             keyboardNav.next = next;
@@ -131,7 +140,7 @@
             const track = document.getElementById('fullscreen-track');
             
             // Генерируем слайды
-            track.innerHTML = images.map(src => `<div class="fullscreen-slide"><img src="${src}" alt="Фото"></div>`).join('');
+            track.innerHTML = images.map(src => `<div class="fullscreen-slide">${pictureTag(src, '', 'Фото', false)}</div>`).join('');
             
             // Сдвигаем на нужный слайд
             track.style.transform = `translateX(-${startIndex * 100}%)`;
@@ -518,7 +527,7 @@
                 return `<div class="carousel-item p-2 group relative min-w-[280px] sm:min-w-[320px]" data-sight-id="${sightId}" onclick="window.showDetailsPage('${sightId}')">
                     <div class="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden h-full transition-transform transform hover:scale-105 cursor-pointer">
                         <div class="inner-carousel-container relative z-10">
-                            <div class="inner-carousel transition-transform duration-300" data-idx="0">${data.images.map(src => `<div class="inner-carousel-slide flex-shrink-0 w-full h-full"><img src="${src}" class="w-full h-full object-cover"></div>`).join('')}</div>
+                            <div class="inner-carousel transition-transform duration-300" data-idx="0">${data.images.map(src => `<div class="inner-carousel-slide flex-shrink-0 w-full h-full">${pictureTag(src, 'w-full h-full object-cover', '', false)}</div>`).join('')}</div>
                             <button class="inner-nav prev opacity-0 group-hover:opacity-100 transition-opacity" onclick="event.stopPropagation(); window.prevSlide(this)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg></button>
                             <button class="inner-nav next opacity-0 group-hover:opacity-100 transition-opacity" onclick="event.stopPropagation(); window.nextSlide(this)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg></button>
                             <div class="dots-container">${dotsHTML}</div>
@@ -534,7 +543,7 @@
                 return `<div class="apartment-photo-card p-2 group relative" data-apartment-id="${aptId}" onclick="window.showApartmentDetailsPage('${aptId}')">
                     <div class="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden h-full cursor-pointer transition-transform transform hover:scale-105 relative">
                         <div class="inner-carousel-container relative z-10">
-                            <div class="inner-carousel transition-transform duration-300" data-idx="0">${data.photos.map(src => `<div class="inner-carousel-slide flex-shrink-0 w-full h-full"><img src="${src}" class="w-full h-full object-cover"></div>`).join('')}</div>
+                            <div class="inner-carousel transition-transform duration-300" data-idx="0">${data.photos.map(src => `<div class="inner-carousel-slide flex-shrink-0 w-full h-full">${pictureTag(src, 'w-full h-full object-cover', '', false)}</div>`).join('')}</div>
                             <button class="inner-nav prev opacity-0 group-hover:opacity-100 transition-opacity" onclick="event.stopPropagation(); window.prevSlide(this)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg></button>
                             <button class="inner-nav next opacity-0 group-hover:opacity-100 transition-opacity" onclick="event.stopPropagation(); window.nextSlide(this)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg></button>
                             <div class="dots-container">${dotsHTML}</div>
@@ -546,7 +555,7 @@
             const heroCarousel = document.getElementById('hero-carousel');
             if(heroCarousel) {
                 let currentHeroIndex = 0;
-                heroImages.forEach((src, index) => { const img = document.createElement('img'); img.src = src; img.className = 'hero-slide'; if (index === 0) img.classList.add('active'); heroCarousel.appendChild(img); });
+                heroImages.forEach((src, index) => { const img = document.createElement('img'); img.src = src + '.webp'; img.onerror = () => { img.onerror = null; img.src = src; }; img.decoding = 'async'; img.className = 'hero-slide'; if (index === 0) img.classList.add('active'); heroCarousel.appendChild(img); });
                 setInterval(() => { const slides = heroCarousel.querySelectorAll('.hero-slide'); if(slides.length > 0) { slides[currentHeroIndex].classList.remove('active'); currentHeroIndex = (currentHeroIndex + 1) % slides.length; slides[currentHeroIndex].classList.add('active'); } }, 3000);
             }
 
@@ -860,7 +869,7 @@
                 const prev = document.getElementById('apartment-details-photo-prev');
                 const next = document.getElementById('apartment-details-photo-next');
                 const dots = document.getElementById('apartment-details-dots');
-                setupCarousel(aptDetailsPhotoSlides, prev, next, data.photos, (src, alt) => `<div class="details-photo-slide"><img src="${src}" alt="${alt}"></div>`, dots);
+                setupCarousel(aptDetailsPhotoSlides, prev, next, data.photos, (src, alt) => `<div class="details-photo-slide">${pictureTag(src, '', alt, false)}</div>`, dots);
                 const slideImages = aptDetailsPhotoSlides.querySelectorAll('img');
                 slideImages.forEach((img, idx) => { img.style.cursor = 'zoom-in'; img.addEventListener('click', (e) => { e.stopPropagation(); openFullscreen(data.photos, idx); }); });
                 
@@ -926,7 +935,7 @@
 
 
                 const prev = document.getElementById('details-photo-prev'); const next = document.getElementById('details-photo-next'); const dots = document.getElementById('details-dots');
-                setupCarousel(detailsPhotoSlidesContainer, prev, next, data.images, (src, alt) => `<div class="details-photo-slide"><img src="${src}" alt="${alt}"></div>`, dots); 
+                setupCarousel(detailsPhotoSlidesContainer, prev, next, data.images, (src, alt) => `<div class="details-photo-slide">${pictureTag(src, '', alt, false)}</div>`, dots); 
                 const slideImages = detailsPhotoSlidesContainer.querySelectorAll('img'); slideImages.forEach((img, idx) => { img.style.cursor = 'zoom-in'; img.addEventListener('click', (e) => { e.stopPropagation(); openFullscreen(data.images, idx); }); });
                 showPage(detailsPage); 
             }
