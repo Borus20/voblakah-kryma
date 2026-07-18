@@ -1,19 +1,23 @@
-        body { 
-            font-family: 'Inter', sans-serif; 
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            background-color: #89cff0;
+        }
+
+        /* Фон — отдельным фиксированным слоем на весь экран: не двигается при прокрутке,
+           сразу во всю высоту. В отличие от background-attachment: fixed этот способ
+           не вызывает тормозов на мобильных (слой обрабатывает композитор). */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
             background-image: url('/img/common/background.png'), linear-gradient(180deg, #89cff0 0%, #e0f7fa 100%); /* фолбэк */
             background-image: image-set(url('/img/common/background.png.webp') type('image/webp'), url('/img/common/background.png') type('image/png')), linear-gradient(180deg, #89cff0 0%, #e0f7fa 100%);
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            background-attachment: fixed; 
-            overflow-x: hidden;
-            background-color: #89cff0;
-        }
-
-        /* На мобильных background-attachment: fixed вызывает постоянные перерисовки
-           и дёрганье при прокрутке/анимациях — отключаем. */
-        @media (max-width: 767px) {
-            body { background-attachment: scroll; }
         }
 
         /* === БЛОКИРОВКА ПРОКРУТКИ ПРИ ОТКРЫТОМ МОДАЛЬНОМ ОКНЕ === */
@@ -358,8 +362,11 @@
            но фото занимает максимум площади экрана (проценты «съедали» много места). */
         .fullscreen-slide { padding: 8px; box-sizing: border-box; }
 
-        /* Зум фото: свои жесты, поэтому браузерные отключаем */
-        #fullscreen-gallery { touch-action: none; }
+        /* Зум фото: свои жесты, поэтому браузерные отключаем (на всех вложенных тоже,
+           иначе первый щипок может «съесть» браузер) */
+        #fullscreen-gallery, #fullscreen-track, .fullscreen-slide, .fullscreen-slide picture, .fullscreen-slide img {
+            touch-action: none;
+        }
         .fullscreen-slide img { transform-origin: center center; will-change: transform; }
         #fullscreen-gallery.zoomed .fullscreen-slide img { cursor: grab; }
         /* Пока фото увеличено, стрелки листания не мешают */

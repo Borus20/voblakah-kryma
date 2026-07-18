@@ -224,6 +224,9 @@
         let fsPinchDist = 0, fsPinchScale = 1;
         let fsPanning = false, fsPanX = 0, fsPanY = 0;
         let fsLastTap = 0;
+        // После касания браузер шлёт синтетические mouse-события (в т.ч. dblclick).
+        // Запоминаем время касания, чтобы не обрабатывать их повторно и не сбрасывать зум.
+        let fsLastTouchTime = 0;
 
         function fsActiveImg() {
             const track = document.getElementById('fullscreen-track');
@@ -281,10 +284,12 @@
             if (!gallery) return;
 
             gallery.addEventListener('touchstart', (e) => {
+                fsLastTouchTime = Date.now();
                 if (e.touches.length === 2) {
                     fsPinchDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
                     fsPinchScale = fsScale;
                     fsPanning = false;
+                    fsLastTap = 0; // два пальца — это не двойной тап
                 } else if (e.touches.length === 1) {
                     const t = e.touches[0];
                     if (fsIsZoomed()) { fsPanning = true; fsPanX = t.clientX - fsTx; fsPanY = t.clientY - fsTy; }
@@ -314,11 +319,14 @@
             }, { passive: false });
 
             gallery.addEventListener('touchend', () => {
+                fsLastTouchTime = Date.now();
                 fsPanning = false; fsPinchDist = 0;
                 if (fsScale <= 1.01) fsResetZoom(true);
             }, { passive: true });
 
             gallery.addEventListener('dblclick', (e) => {
+                // Игнорируем dblclick, синтезированный после касания — иначе он сбросит зум
+                if (Date.now() - fsLastTouchTime < 900) return;
                 if (fsIsZoomed()) fsResetZoom(true);
                 else fsZoomToPoint(2.5, e.clientX, e.clientY, true);
             });
