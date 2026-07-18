@@ -29,11 +29,13 @@
         // === 3. ГЛОБАЛЬНЫЕ ФУНКЦИИ ===
         // Возвращает <picture> с WebP (современные браузеры) и фолбэком на исходный файл.
         // eager=true — без lazy (для hero/первого экрана).
-        function pictureTag(src, imgClass, alt, eager) {
+        function pictureTag(src, imgClass, alt, eager, sizes) {
             const cls = imgClass ? ` class="${imgClass}"` : '';
             const loading = eager ? '' : ' loading="lazy"';
             const a = alt || '';
-            return `<picture><source type="image/webp" srcset="${src}.webp"><img src="${src}"${cls} alt="${a}"${loading} decoding="async"></picture>`;
+            // Телефон получает версию 1280px вместо 2560px — вчетверо меньше пикселей, отсюда плавность
+            const sz = sizes || '(max-width: 767px) 100vw, 50vw';
+            return `<picture><source type="image/webp" srcset="${src}.w1280.webp 1280w, ${src}.webp 2560w" sizes="${sz}"><img src="${src}"${cls} alt="${a}"${loading} decoding="async"></picture>`;
         }
 
         // Заранее подгружает текущий и соседние кадры карусели, чтобы свайп/переключение шли плавно (без «прыжка» загрузки)
@@ -103,7 +105,7 @@
             idx = (idx + 1) % count;
             const dot = container.querySelector(`.dot:nth-child(${idx + 1})`);
             window.goToSlide(dot, idx);
-            container.focus();
+            container.focus({ preventScroll: true });
             setKeyboardNav(() => window.prevSlide(btn), () => window.nextSlide(btn));
         };
 
@@ -115,7 +117,7 @@
             idx = (idx - 1 + count) % count;
             const dot = container.querySelector(`.dot:nth-child(${idx + 1})`);
             window.goToSlide(dot, idx);
-            container.focus();
+            container.focus({ preventScroll: true });
             setKeyboardNav(() => window.prevSlide(btn), () => window.nextSlide(btn));
         };
 
@@ -153,7 +155,7 @@
             const track = document.getElementById('fullscreen-track');
             
             // Генерируем слайды
-            track.innerHTML = images.map(src => `<div class="fullscreen-slide">${pictureTag(src, '', 'Фото', false)}</div>`).join('');
+            track.innerHTML = images.map(src => `<div class="fullscreen-slide">${pictureTag(src, '', 'Фото', false, '95vw')}</div>`).join('');
             
             // Сдвигаем на нужный слайд
             track.style.transform = `translateX(-${startIndex * 100}%)`;
@@ -161,7 +163,7 @@
 
             renderFullscreenDots();
             gallery.classList.add('active');
-            gallery.focus(); 
+            gallery.focus({ preventScroll: true }); 
             history.pushState({modal: true}, '');
         }
 
@@ -576,7 +578,7 @@
             const heroCarousel = document.getElementById('hero-carousel');
             if(heroCarousel) {
                 let currentHeroIndex = 0;
-                heroImages.forEach((src, index) => { const img = document.createElement('img'); img.src = src + '.webp'; img.onerror = () => { img.onerror = null; img.src = src; }; img.decoding = 'async'; img.className = 'hero-slide'; if (index === 0) img.classList.add('active'); heroCarousel.appendChild(img); });
+                heroImages.forEach((src, index) => { const img = document.createElement('img'); img.src = src + '.webp'; img.srcset = `${src}.w1280.webp 1280w, ${src}.webp 2560w`; img.sizes = '100vw'; img.onerror = () => { img.onerror = null; img.removeAttribute('srcset'); img.src = src; }; img.decoding = 'async'; img.className = 'hero-slide'; if (index === 0) img.classList.add('active'); heroCarousel.appendChild(img); });
                 setInterval(() => { const slides = heroCarousel.querySelectorAll('.hero-slide'); if(slides.length > 0) { slides[currentHeroIndex].classList.remove('active'); currentHeroIndex = (currentHeroIndex + 1) % slides.length; slides[currentHeroIndex].classList.add('active'); } }, 3000);
             }
 
@@ -906,15 +908,15 @@
                     const calPrev = document.getElementById('apartment-details-calendar-prev');
                     const calContainer = document.getElementById('apartment-details-calendar');
                     if(calContainer) addSwipeSupport(calContainer, handleNextMonth, handlePrevMonth);
-                    calContainer.onclick = () => calContainer.focus();
+                    calContainer.onclick = () => calContainer.focus({ preventScroll: true });
                     function handleNextMonth() { 
                         const nextMonth = new Date(currentCalendarDate); nextMonth.setMonth(nextMonth.getMonth() + 1); nextMonth.setDate(1); 
                         const monthsToShow = window.innerWidth >= 768 ? 2 : 1; const maxStartDate = new Date(CALENDAR_END_DATE); maxStartDate.setMonth(maxStartDate.getMonth() - (monthsToShow - 1)); maxStartDate.setDate(1); 
-                        if (nextMonth <= maxStartDate) { currentCalendarDate = nextMonth; renderApartmentCalendar(); setKeyboardNav(handlePrevMonth, handleNextMonth); calContainer.focus(); }
+                        if (nextMonth <= maxStartDate) { currentCalendarDate = nextMonth; renderApartmentCalendar(); setKeyboardNav(handlePrevMonth, handleNextMonth); calContainer.focus({ preventScroll: true }); }
                     };
                     function handlePrevMonth() { 
                         const prevMonth = new Date(currentCalendarDate); prevMonth.setMonth(prevMonth.getMonth() - 1); prevMonth.setDate(1); 
-                        if (prevMonth >= getCalendarStartDate()) { currentCalendarDate = prevMonth; renderApartmentCalendar(); setKeyboardNav(handlePrevMonth, handleNextMonth); calContainer.focus(); }
+                        if (prevMonth >= getCalendarStartDate()) { currentCalendarDate = prevMonth; renderApartmentCalendar(); setKeyboardNav(handlePrevMonth, handleNextMonth); calContainer.focus({ preventScroll: true }); }
                     };
                     calNext.addEventListener('click', () => { handleNextMonth(); }); calPrev.addEventListener('click', () => { handlePrevMonth(); });
                     bookingSection.style.display = 'block'; resetBookingState(); renderApartmentCalendar();
@@ -993,11 +995,11 @@
                 if (dotsContainer) {
                     dotsContainer.innerHTML = items.map((_, i) => `<div class="dot ${i === 0 ? 'active' : ''}"></div>`).join('');
                     dots = dotsContainer.querySelectorAll('.dot');
-                    dots.forEach((dot, index) => { dot.addEventListener('click', (e) => { e.stopPropagation(); currentIndex = index; update(); container.focus(); }); });
+                    dots.forEach((dot, index) => { dot.addEventListener('click', (e) => { e.stopPropagation(); currentIndex = index; update(); container.focus({ preventScroll: true }); }); });
                 }
                 const update = () => { container.style.transform = `translateX(-${currentIndex * 100}%)`; preloadAround(container, currentIndex); if (dots.length > 0) { dots.forEach(d => d.classList.remove('active')); if(dots[currentIndex]) { const activeDot = dots[currentIndex]; activeDot.classList.add('active'); const scrollLeft = activeDot.offsetLeft - (dotsContainer.clientWidth / 2) + (activeDot.clientWidth / 2); dotsContainer.scrollTo({ left: scrollLeft, behavior: 'smooth' }); } } }; 
-                const handleNext = () => { currentIndex = (currentIndex + 1) % items.length; update(); container.focus(); setKeyboardNav(handlePrev, handleNext); }; 
-                const handlePrev = () => { currentIndex = (currentIndex - 1 + items.length) % items.length; update(); container.focus(); setKeyboardNav(handlePrev, handleNext); }; 
+                const handleNext = () => { currentIndex = (currentIndex + 1) % items.length; update(); container.focus({ preventScroll: true }); setKeyboardNav(handlePrev, handleNext); }; 
+                const handlePrev = () => { currentIndex = (currentIndex - 1 + items.length) % items.length; update(); container.focus({ preventScroll: true }); setKeyboardNav(handlePrev, handleNext); }; 
                 
                 // === ИСПРАВЛЕНИЕ: УБРАНО КЛОНИРОВАНИЕ КНОПОК ===
                 // Клонирование кнопок создавало лишнюю нагрузку на DOM и могло вызывать "зависание"
@@ -1010,10 +1012,10 @@
                 // мы просто используем свойство onclick, которое перезаписывается. 
                 // Для свайпов используем уже оптимизированную addSwipeSupport.
 
-                nextBtn.onclick = (e) => { e.stopPropagation(); handleNext(); container.focus(); }; 
-                prevBtn.onclick = (e) => { e.stopPropagation(); handlePrev(); container.focus(); }; 
+                nextBtn.onclick = (e) => { e.stopPropagation(); handleNext(); container.focus({ preventScroll: true }); }; 
+                prevBtn.onclick = (e) => { e.stopPropagation(); handlePrev(); container.focus({ preventScroll: true }); }; 
                 
-                container.onclick = () => container.focus();
+                container.onclick = () => container.focus({ preventScroll: true });
                 container.onkeydown = (e) => { if (e.key === 'ArrowRight') { e.stopPropagation(); handleNext(); } if (e.key === 'ArrowLeft') { e.stopPropagation(); handlePrev(); } };
                 
                 // Добавляем поддержку свайпов (функция сама очистит старые слушатели)

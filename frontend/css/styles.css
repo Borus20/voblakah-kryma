@@ -6,8 +6,14 @@
             background-position: center;
             background-repeat: no-repeat;
             background-attachment: fixed; 
-            overflow-x: hidden; 
+            overflow-x: hidden;
             background-color: #89cff0;
+        }
+
+        /* На мобильных background-attachment: fixed вызывает постоянные перерисовки
+           и дёрганье при прокрутке/анимациях — отключаем. */
+        @media (max-width: 767px) {
+            body { background-attachment: scroll; }
         }
 
         /* === БЛОКИРОВКА ПРОКРУТКИ ПРИ ОТКРЫТОМ МОДАЛЬНОМ ОКНЕ === */
