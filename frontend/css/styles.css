@@ -1,6 +1,7 @@
         body { 
             font-family: 'Inter', sans-serif; 
-            background-image: url('img/common/background.png'), linear-gradient(180deg, #89cff0 0%, #e0f7fa 100%);
+            background-image: url('/img/common/background.png'), linear-gradient(180deg, #89cff0 0%, #e0f7fa 100%); /* фолбэк */
+            background-image: image-set(url('/img/common/background.png.webp') type('image/webp'), url('/img/common/background.png') type('image/png')), linear-gradient(180deg, #89cff0 0%, #e0f7fa 100%);
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -317,7 +318,8 @@
             z-index: 10000;
             align-items: center;
             justify-content: center;
-            background-image: url('img/common/background.png'), linear-gradient(180deg, #89cff0 0%, #e0f7fa 100%);
+            background-image: url('/img/common/background.png'), linear-gradient(180deg, #89cff0 0%, #e0f7fa 100%); /* фолбэк */
+            background-image: image-set(url('/img/common/background.png.webp') type('image/webp'), url('/img/common/background.png') type('image/png')), linear-gradient(180deg, #89cff0 0%, #e0f7fa 100%);
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
