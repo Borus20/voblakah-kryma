@@ -160,6 +160,11 @@
         @media (min-width: 1024px) { .carousel-item { flex: 0 0 33.333333%; } }
         @media (min-width: 1280px) { .carousel-item { flex: 0 0 25%; } }
         @media (min-width: 1536px) { .carousel-item { flex: 0 0 20%; } }
+        /* Телефон в горизонтальной ориентации: ширина экрана большая, но высота маленькая.
+           Показываем одну карточку на всю ширину, иначе фото остаются такими же мелкими, как в вертикальной. */
+        @media (orientation: landscape) and (max-height: 600px) {
+            .carousel-item { flex: 0 0 100% !important; }
+        }
         
         /* === СТРЕЛКИ И НАВИГАЦИЯ === */
         .inner-nav, .details-photo-nav {
@@ -243,23 +248,29 @@
             background-color: transparent;
         }
 
-        /* ===== ЛИПКАЯ КНОПКА «ЗАБРОНИРОВАТЬ» (телефон) ===== */
-        .sticky-book-btn {
-            position: fixed; left: 50%; bottom: 18px; z-index: 45;
-            display: inline-flex; align-items: center; gap: 8px;
-            padding: 12px 22px; border-radius: 9999px;
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-            color: #fff; font-weight: 700; font-size: .95rem; text-decoration: none; white-space: nowrap;
-            box-shadow: 0 10px 26px rgba(37, 99, 235, .45);
-            opacity: 0; transform: translate(-50%, 160%); pointer-events: none;
-            transition: transform .38s cubic-bezier(.22, 1, .36, 1), opacity .3s ease;
+        /* ===== ТЕКСТ: без выключки по ширине, с переносами (чтобы не было полупустых строк) ===== */
+        .text-readable {
+            text-align: left;
+            hyphens: auto;
+            -webkit-hyphens: auto;
+            overflow-wrap: break-word;
+            text-wrap: pretty;
         }
-        .sticky-book-btn.visible { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
-        .sticky-book-btn:active { transform: translate(-50%, 0) scale(.96); }
-        .sticky-book-btn svg { width: 18px; height: 18px; }
-        /* Прячем поверх полноэкранного просмотра и модалок */
-        body.gallery-open .sticky-book-btn, body.overflow-hidden .sticky-book-btn {
-            opacity: 0 !important; transform: translate(-50%, 160%) !important; pointer-events: none !important;
+
+        /* ===== ИКОНКИ В ПРАВИЛАХ ПРОЖИВАНИЯ ===== */
+        .rule-icon {
+            flex-shrink: 0;
+            width: 42px; height: 42px; margin-right: 14px;
+            display: inline-flex; align-items: center; justify-content: center;
+            border-radius: 9999px;
+            background: linear-gradient(135deg, #e0f2fe 0%, #bfdbfe 100%);
+            color: #1d4ed8;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, .18);
+            transition: transform .25s cubic-bezier(.22, 1, .36, 1), box-shadow .25s ease;
+        }
+        .rule-icon svg { width: 22px; height: 22px; }
+        @media (hover: hover) {
+            .rules-list li:hover .rule-icon { transform: scale(1.08); box-shadow: 0 4px 14px rgba(37, 99, 235, .28); }
         }
 
         /* ===== МИКРОАНИМАЦИИ ===== */
@@ -275,7 +286,13 @@
         @media (prefers-reduced-motion: reduce) {
             .reveal, .reveal.revealed { opacity: 1; transform: none; transition: none; }
             .inner-carousel-slide, .details-photo-slide, .fullscreen-slide { animation: none; }
-            .sticky-book-btn { transition: opacity .2s ease; }
+            .rule-icon { transition: none; }
+        }
+
+        /* Когда открыто бургер-меню, шапка переходит в меню — нижние углы не скругляем */
+        header:has(#mobile-menu:not(.hidden)) {
+            border-bottom-left-radius: 0 !important;
+            border-bottom-right-radius: 0 !important;
         }
 
         /* Закрываем субпиксельный зазор между шапкой и открытым мобильным меню.

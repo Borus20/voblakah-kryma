@@ -151,9 +151,6 @@
             } else {
                 window.scrollTo(0, 0);
             }
-
-            // Липкая кнопка бронирования актуальна только на главной
-            if (window.updateStickyBook) window.updateStickyBook();
         }
 
         // FULLSCREEN LOGIC (С АНИМАЦИЕЙ)
@@ -598,21 +595,6 @@
             document.addEventListener('click', (e) => { if (mobileMenu && !mobileMenu.classList.contains('hidden')) { if (!mobileMenu.contains(e.target) && !mobileMenuButton.contains(e.target)) { closeMenu(); } } });
             window.addEventListener('scroll', () => { closeMenu(); });
             if (mobileMenuButton && mobileMenu) mobileMenuButton.addEventListener('click', (e) => { e.stopPropagation(); mobileMenu.classList.toggle('hidden'); });
-
-            // === ЛИПКАЯ КНОПКА «ЗАБРОНИРОВАТЬ» (телефон): появляется при прокрутке главной ===
-            const stickyBook = document.getElementById('sticky-book');
-            if (stickyBook) {
-                let stickyTicking = false;
-                window.updateStickyBook = () => {
-                    stickyTicking = false;
-                    const mainVisible = !document.getElementById('main-page').classList.contains('hidden');
-                    stickyBook.classList.toggle('visible', mainVisible && window.scrollY > 400);
-                };
-                window.addEventListener('scroll', () => {
-                    if (!stickyTicking) { stickyTicking = true; requestAnimationFrame(window.updateStickyBook); }
-                }, { passive: true });
-                window.updateStickyBook();
-            }
 
             // === МЯГКОЕ ПОЯВЛЕНИЕ СЕКЦИЙ ПРИ ПРОКРУТКЕ ===
             // Класс .reveal вешаем из JS, чтобы без JS контент оставался видимым
