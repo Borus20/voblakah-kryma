@@ -4,21 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Квартиры "В облаках Крыма" - Большая Ялта, Кацивели, Крым</title>
-    <meta name="theme-color" content="#89cff0">
+    <meta name="theme-color" content="#e7f5fc">
     <meta name="yandex-verification" content="ae02fa85f7655e0f" />
-    <meta name="description" content="Аренда уютных квартир «В облаках Крыма» в Кацивели. Вид на море и горы, комфортный отдых на Южном берегу Крыма. Бронируйте напрямую без посредников!">
+    <meta name="description" content="Уютные квартиры с панорамным видом на море и горы в Кацивели, Большая Ялта. Небольшой дом среди можжевельников, беседка и парковка. Бронирование напрямую у хозяев, без посредников и комиссий.">
     <meta name="keywords" content="аренда квартир Кацивели, жильё у моря Крым, отдых в Кацивели, В облаках Крыма, Большая Ялта, гостевой дом Кацивели, отдых без посредников">
     
     <meta property="og:title" content="Квартиры &quot;В облаках Крыма&quot; - Отдых в Кацивели">
-    <meta property="og:description" content="Уютные квартиры с видом на море и горы. Южный берег Крыма, пгт. Кацивели. Бронирование напрямую.">
-    <meta property="og:image" content="https://voblakah-kryma.ru/img/common/house.jpg"> <meta property="og:type" content="website">
+    <meta property="og:description" content="Уютные квартиры с панорамным видом на море и горы. Небольшой дом среди можжевельников в Кацивели, Большая Ялта. Бронирование напрямую у хозяев.">
+    <meta property="og:image" content="https://voblakah-kryma.ru/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Гостевой дом «В облаках Крыма» в Кацивели">
+    <meta name="twitter:image" content="https://voblakah-kryma.ru/og-image.jpg">
+    <meta property="og:type" content="website">
     <meta property="og:locale" content="ru_RU">
     <meta property="og:url" content="https://voblakah-kryma.ru">
     <meta property="og:site_name" content="В облаках Крыма">
     <meta name="twitter:card" content="summary_large_image">
     <link rel="canonical" href="https://voblakah-kryma.ru/">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <link rel="manifest" href="/site.webmanifest">
     <link rel="stylesheet" href="css/tailwind.css">
@@ -76,7 +81,7 @@
             <p class="text-gray-600 text-sm sm:text-base">Сайт оптимизирован для вертикального просмотра. Пожалуйста, переверните телефон</p>
         </div>
     </div>
-    <header class="bg-white/80 backdrop-blur-md shadow-md sticky top-0 z-50 relative">
+    <header class="bg-white/80 backdrop-blur-md shadow-md sticky top-0 z-50 relative rounded-b-2xl">
         <nav class="container mx-auto px-4 sm:px-6 py-2 flex justify-between items-center relative">
             <div class="flex items-center gap-x-6 relative z-50">
                 <a href="#" id="home-link" class="title-link text-2xl font-bold text-gray-900">
@@ -99,7 +104,7 @@
                 </button>
             </div>
         </nav>
-        <div id="mobile-menu" class="hidden xl:hidden absolute top-full left-0 w-full shadow-xl z-40 overflow-hidden border-t border-white/20">
+        <div id="mobile-menu" class="hidden xl:hidden absolute top-full left-0 w-full shadow-xl z-40 overflow-hidden border-t border-white/20 rounded-b-2xl">
             
             <div class="absolute inset-0 z-0 opacity-100" style="background-image: url('img/common/house.jpg'); background-size: cover; background-position: center;"></div>
             
@@ -391,7 +396,7 @@
         </div>
     </div>
     
-    <footer class="bg-gray-800/80 backdrop-blur-sm text-white py-4 mt-auto">
+    <footer class="bg-gray-800/80 backdrop-blur-sm text-white py-4 mt-auto rounded-t-2xl">
         <div class="container text-center"><p>&copy; 2026 Квартиры "В облаках Крыма". Все права защищены</p><p class="text-sm text-gray-300 mt-1">Отдых в Крыму с комфортом</p></div>
     </footer>
 
@@ -512,6 +517,12 @@
         </div>
     </div>
     
+    <!-- Липкая кнопка бронирования (появляется при прокрутке на телефоне) -->
+    <a href="#apartments" id="sticky-book" class="nav-link sticky-book-btn md:hidden" aria-label="Забронировать квартиру">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+        <span>Забронировать</span>
+    </a>
+
     <script src="js/config.js"></script>
     <script src="js/app.js"></script>
 </body>

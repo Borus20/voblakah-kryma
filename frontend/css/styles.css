@@ -217,6 +217,67 @@
         .inner-carousel, .details-photo-slides { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; height: 100%; transition: transform 0.3s ease-in-out; touch-action: pan-y; }
         .inner-carousel-slide, .details-photo-slide { flex-shrink: 0; width: 100%; height: 100%; }
         .inner-carousel-slide img, .details-photo-slide img { width: 100%; height: 100%; object-fit: cover; }
+        /* ===== СКЕЛЕТОНЫ: мягкое мерцание вместо пустого места, пока грузится фото ===== */
+        .inner-carousel-slide, .details-photo-slide, .fullscreen-slide {
+            background-color: #e5e7eb;
+            background-image: linear-gradient(100deg, rgba(255,255,255,0) 20%, rgba(255,255,255,.65) 50%, rgba(255,255,255,0) 80%);
+            background-size: 220% 100%;
+            background-repeat: no-repeat;
+            animation: skeleton-shimmer 1.3s linear infinite;
+        }
+        /* В полноэкранном просмотре фон тёмный — мерцание не нужно, только плавное появление фото */
+        .fullscreen-slide { background-color: transparent; background-image: none; animation: none; }
+        @keyframes skeleton-shimmer {
+            0%   { background-position: 120% 0; }
+            100% { background-position: -120% 0; }
+        }
+        /* Фото проявляется плавно, скелетон гаснет */
+        .inner-carousel-slide img, .details-photo-slide img, .fullscreen-slide img {
+            opacity: 0;
+            transition: opacity .45s ease;
+        }
+        .inner-carousel-slide img.img-loaded, .details-photo-slide img.img-loaded, .fullscreen-slide img.img-loaded { opacity: 1; }
+        .inner-carousel-slide.img-done, .details-photo-slide.img-done, .fullscreen-slide.img-done {
+            animation: none;
+            background-image: none;
+            background-color: transparent;
+        }
+
+        /* ===== ЛИПКАЯ КНОПКА «ЗАБРОНИРОВАТЬ» (телефон) ===== */
+        .sticky-book-btn {
+            position: fixed; left: 50%; bottom: 18px; z-index: 45;
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 22px; border-radius: 9999px;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: #fff; font-weight: 700; font-size: .95rem; text-decoration: none; white-space: nowrap;
+            box-shadow: 0 10px 26px rgba(37, 99, 235, .45);
+            opacity: 0; transform: translate(-50%, 160%); pointer-events: none;
+            transition: transform .38s cubic-bezier(.22, 1, .36, 1), opacity .3s ease;
+        }
+        .sticky-book-btn.visible { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
+        .sticky-book-btn:active { transform: translate(-50%, 0) scale(.96); }
+        .sticky-book-btn svg { width: 18px; height: 18px; }
+        /* Прячем поверх полноэкранного просмотра и модалок */
+        body.gallery-open .sticky-book-btn, body.overflow-hidden .sticky-book-btn {
+            opacity: 0 !important; transform: translate(-50%, 160%) !important; pointer-events: none !important;
+        }
+
+        /* ===== МИКРОАНИМАЦИИ ===== */
+        /* Мягкое появление секций при прокрутке (класс .reveal вешает JS, поэтому без JS всё видно) */
+        .reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s ease, transform .6s cubic-bezier(.22, 1, .36, 1); }
+        .reveal.revealed { opacity: 1; transform: none; }
+        /* Лёгкий подъём карточки при наведении (только там, где есть мышь) */
+        @media (hover: hover) {
+            .apartment-photo-card { transition: transform .3s cubic-bezier(.22, 1, .36, 1), box-shadow .3s ease; }
+            .apartment-photo-card:hover { transform: translateY(-4px); box-shadow: 0 16px 32px rgba(0, 0, 0, .16); }
+        }
+        /* Уважаем системную настройку «меньше движения» */
+        @media (prefers-reduced-motion: reduce) {
+            .reveal, .reveal.revealed { opacity: 1; transform: none; transition: none; }
+            .inner-carousel-slide, .details-photo-slide, .fullscreen-slide { animation: none; }
+            .sticky-book-btn { transition: opacity .2s ease; }
+        }
+
         /* Закрываем субпиксельный зазор между шапкой и открытым мобильным меню.
            Шапка выше по z-index, поэтому небольшое перекрытие не видно. */
         #mobile-menu { margin-top: -2px; }

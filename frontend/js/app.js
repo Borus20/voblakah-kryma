@@ -35,8 +35,15 @@
             const a = alt || '';
             // Телефон получает версию 1280px вместо 2560px — вчетверо меньше пикселей, отсюда плавность
             const sz = sizes || '(max-width: 767px) 100vw, 50vw';
-            return `<picture><source type="image/webp" srcset="${src}.w1280.webp 1280w, ${src}.webp 2560w" sizes="${sz}"><img src="${src}"${cls} alt="${a}"${loading} decoding="async"></picture>`;
+            return `<picture><source type="image/webp" srcset="${src}.w1280.webp 1280w, ${src}.webp 2560w" sizes="${sz}"><img src="${src}"${cls} alt="${a}"${loading} decoding="async" onload="imgLoaded(this)" onerror="imgLoaded(this)"></picture>`;
         }
+
+        // Фото загрузилось — плавно проявляем его и гасим скелетон-заглушку
+        window.imgLoaded = function(img) {
+            img.classList.add('img-loaded');
+            const slide = img.closest('.inner-carousel-slide, .details-photo-slide, .fullscreen-slide');
+            if (slide) slide.classList.add('img-done');
+        };
 
         // Заранее подгружает текущий и соседние кадры карусели, чтобы свайп/переключение шли плавно (без «прыжка» загрузки)
         function preloadAround(parent, index) {
@@ -144,6 +151,9 @@
             } else {
                 window.scrollTo(0, 0);
             }
+
+            // Липкая кнопка бронирования актуальна только на главной
+            if (window.updateStickyBook) window.updateStickyBook();
         }
 
         // FULLSCREEN LOGIC (С АНИМАЦИЕЙ)
@@ -588,6 +598,38 @@
             document.addEventListener('click', (e) => { if (mobileMenu && !mobileMenu.classList.contains('hidden')) { if (!mobileMenu.contains(e.target) && !mobileMenuButton.contains(e.target)) { closeMenu(); } } });
             window.addEventListener('scroll', () => { closeMenu(); });
             if (mobileMenuButton && mobileMenu) mobileMenuButton.addEventListener('click', (e) => { e.stopPropagation(); mobileMenu.classList.toggle('hidden'); });
+
+            // === ЛИПКАЯ КНОПКА «ЗАБРОНИРОВАТЬ» (телефон): появляется при прокрутке главной ===
+            const stickyBook = document.getElementById('sticky-book');
+            if (stickyBook) {
+                let stickyTicking = false;
+                window.updateStickyBook = () => {
+                    stickyTicking = false;
+                    const mainVisible = !document.getElementById('main-page').classList.contains('hidden');
+                    stickyBook.classList.toggle('visible', mainVisible && window.scrollY > 400);
+                };
+                window.addEventListener('scroll', () => {
+                    if (!stickyTicking) { stickyTicking = true; requestAnimationFrame(window.updateStickyBook); }
+                }, { passive: true });
+                window.updateStickyBook();
+            }
+
+            // === МЯГКОЕ ПОЯВЛЕНИЕ СЕКЦИЙ ПРИ ПРОКРУТКЕ ===
+            // Класс .reveal вешаем из JS, чтобы без JS контент оставался видимым
+            if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                const revealObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('revealed');
+                            revealObserver.unobserve(entry.target);
+                        }
+                    });
+                }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
+                document.querySelectorAll('#main-page section').forEach(section => {
+                    section.classList.add('reveal');
+                    revealObserver.observe(section);
+                });
+            }
 
             // MODAL LOCK SCROLL LOGIC
             function openModal(modal) { 
