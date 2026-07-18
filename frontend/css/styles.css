@@ -258,9 +258,17 @@
             height: auto !important;
             max-width: 100% !important;
             max-height: 100% !important;
-            object-fit: contain !important; 
+            object-fit: contain !important;
             display: block;
             border-radius: 0.75rem; /* Added this line */
+        }
+
+        /* На телефоне полноэкранное фото не упирается в края экрана (~97%) */
+        @media (max-width: 767px) {
+            .fullscreen-slide img {
+                max-width: 97% !important;
+                max-height: 97% !important;
+            }
         }
 
         #fullscreen-close {

@@ -302,12 +302,18 @@
                      const isPast = date.getTime() < new Date().setHours(0,0,0,0);
                      const parentClass = [];
 
+                     const isSeasonFirst = date.getTime() === CALENDAR_START_DATE.getTime();
+                     const isSeasonLast = date.getTime() === CALENDAR_END_DATE.getTime();
+
                      if (isPast) {
                          // Прошедшие дни всегда серые (даже если были заняты) и без цены
                          parentClass.push('past');
                      }
                      else if (isBooked) parentClass.push('booked');
                      else if (isBookedStart && isBookedEnd) parentClass.push('booked-double');
+                     // Занятый крайний день календаря: внешней (зелёной) половинки быть не должно — красим полностью
+                     else if (isBookedStart && isSeasonFirst) parentClass.push('booked');
+                     else if (isBookedEnd && isSeasonLast) parentClass.push('booked');
                      else if (isBookedStart) parentClass.push('booked-start');
                      else if (isBookedEnd) parentClass.push('booked-end');
                      else parentClass.push('selectable');
