@@ -36,6 +36,18 @@
             return `<picture><source type="image/webp" srcset="${src}.webp"><img src="${src}"${cls} alt="${a}"${loading} decoding="async"></picture>`;
         }
 
+        // Заранее подгружает текущий и соседние кадры карусели, чтобы свайп/переключение шли плавно (без «прыжка» загрузки)
+        function preloadAround(parent, index) {
+            if (!parent) return;
+            const slides = parent.children;
+            [index, index - 1, index + 1].forEach(i => {
+                if (i >= 0 && i < slides.length) {
+                    const img = slides[i].querySelector('img');
+                    if (img && img.getAttribute('loading') === 'lazy') img.setAttribute('loading', 'eager');
+                }
+            });
+        }
+
         function setKeyboardNav(prev, next) {
             keyboardNav.prev = prev;
             keyboardNav.next = next;
@@ -73,6 +85,7 @@
             
             carousel.setAttribute('data-idx', index);
             carousel.style.transform = `translateX(-${index * 100}%)`;
+            preloadAround(carousel, index);
             updateDots(container, index);
             
             if(dotsContainer && dotsContainer.children[index]) {
@@ -144,8 +157,9 @@
             
             // Сдвигаем на нужный слайд
             track.style.transform = `translateX(-${startIndex * 100}%)`;
-            
-            renderFullscreenDots(); 
+            preloadAround(track, startIndex);
+
+            renderFullscreenDots();
             gallery.classList.add('active');
             gallery.focus(); 
             history.pushState({modal: true}, '');
@@ -169,6 +183,7 @@
         function updateFullscreenView() {
             const track = document.getElementById('fullscreen-track');
             track.style.transform = `translateX(-${currentFullscreenIndex * 100}%)`;
+            preloadAround(track, currentFullscreenIndex);
             renderFullscreenDots();
         }
 
@@ -980,7 +995,7 @@
                     dots = dotsContainer.querySelectorAll('.dot');
                     dots.forEach((dot, index) => { dot.addEventListener('click', (e) => { e.stopPropagation(); currentIndex = index; update(); container.focus(); }); });
                 }
-                const update = () => { container.style.transform = `translateX(-${currentIndex * 100}%)`; if (dots.length > 0) { dots.forEach(d => d.classList.remove('active')); if(dots[currentIndex]) { const activeDot = dots[currentIndex]; activeDot.classList.add('active'); const scrollLeft = activeDot.offsetLeft - (dotsContainer.clientWidth / 2) + (activeDot.clientWidth / 2); dotsContainer.scrollTo({ left: scrollLeft, behavior: 'smooth' }); } } }; 
+                const update = () => { container.style.transform = `translateX(-${currentIndex * 100}%)`; preloadAround(container, currentIndex); if (dots.length > 0) { dots.forEach(d => d.classList.remove('active')); if(dots[currentIndex]) { const activeDot = dots[currentIndex]; activeDot.classList.add('active'); const scrollLeft = activeDot.offsetLeft - (dotsContainer.clientWidth / 2) + (activeDot.clientWidth / 2); dotsContainer.scrollTo({ left: scrollLeft, behavior: 'smooth' }); } } }; 
                 const handleNext = () => { currentIndex = (currentIndex + 1) % items.length; update(); container.focus(); setKeyboardNav(handlePrev, handleNext); }; 
                 const handlePrev = () => { currentIndex = (currentIndex - 1 + items.length) % items.length; update(); container.focus(); setKeyboardNav(handlePrev, handleNext); }; 
                 
@@ -1052,9 +1067,11 @@
                     let nextBtn = container.querySelector('.next');
                     let prevBtn = container.querySelector('.prev');
                     
-                    if(carousel && nextBtn && prevBtn) { 
+                    if(carousel && nextBtn && prevBtn) {
+                        // Подгружаем второй кадр заранее, чтобы первый свайп был плавным
+                        preloadAround(carousel, 0);
                         // Свайп на самой картинке (уже был)
-                        addSwipeSupport(carousel, () => nextBtn.click(), () => prevBtn.click()); 
+                        addSwipeSupport(carousel, () => nextBtn.click(), () => prevBtn.click());
                         
                         // === 2.3 СВАЙП НА ТЕКСТЕ КАРТОЧКИ (НА ГЛАВНОЙ) ===
                         // Добавляет переключение фоток при свайпе по тексту на главной
