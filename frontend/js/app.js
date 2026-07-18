@@ -165,13 +165,34 @@
             track.innerHTML = images.map(src => `<div class="fullscreen-slide">${pictureTag(src, '', 'Фото', false, '100vw')}</div>`).join('');
             
             // Сдвигаем на нужный слайд
+            fsResetZoom(false);
             track.style.transform = `translateX(-${startIndex * 100}%)`;
             preloadAround(track, startIndex);
 
             renderFullscreenDots();
             gallery.classList.add('active');
-            gallery.focus({ preventScroll: true }); 
+            gallery.focus({ preventScroll: true });
+            showFullscreenHint(gallery);
             history.pushState({modal: true}, '');
+        }
+
+        // Подсказка про зум — один раз за сессию, чтобы не мозолила глаза
+        function showFullscreenHint(gallery) {
+            try {
+                if (sessionStorage.getItem('fsHintShown')) return;
+                sessionStorage.setItem('fsHintShown', '1');
+            } catch (e) { /* приватный режим — просто покажем один раз */ }
+            let hint = document.getElementById('fullscreen-hint');
+            if (!hint) {
+                hint = document.createElement('div');
+                hint.id = 'fullscreen-hint';
+                hint.textContent = window.matchMedia('(pointer: coarse)').matches
+                    ? 'Двойное касание или щипок — приблизить'
+                    : 'Двойной клик или колесо мыши — приблизить';
+                gallery.appendChild(hint);
+            }
+            requestAnimationFrame(() => hint.classList.add('show'));
+            setTimeout(() => hint.classList.remove('show'), 2800);
         }
 
         function renderFullscreenDots() {
@@ -191,14 +212,127 @@
         
         function updateFullscreenView() {
             const track = document.getElementById('fullscreen-track');
+            fsResetZoom(false);
             track.style.transform = `translateX(-${currentFullscreenIndex * 100}%)`;
             preloadAround(track, currentFullscreenIndex);
             renderFullscreenDots();
         }
 
+        // ===== ЗУМ В ПОЛНОЭКРАННОМ ПРОСМОТРЕ (пинч, двойной тап/клик, колесо) =====
+        const FS_MAX_SCALE = 4;
+        let fsScale = 1, fsTx = 0, fsTy = 0;
+        let fsPinchDist = 0, fsPinchScale = 1;
+        let fsPanning = false, fsPanX = 0, fsPanY = 0;
+        let fsLastTap = 0;
+
+        function fsActiveImg() {
+            const track = document.getElementById('fullscreen-track');
+            const slide = track && track.children[currentFullscreenIndex];
+            return slide ? slide.querySelector('img') : null;
+        }
+        function fsIsZoomed() { return fsScale > 1.01; }
+
+        function fsApply(animate) {
+            const img = fsActiveImg();
+            if (!img) return;
+            img.style.transition = animate ? 'transform .25s ease' : 'none';
+            img.style.transform = `translate(${fsTx}px, ${fsTy}px) scale(${fsScale})`;
+            const gallery = document.getElementById('fullscreen-gallery');
+            if (gallery) gallery.classList.toggle('zoomed', fsIsZoomed());
+        }
+
+        function fsResetZoom(animate) {
+            fsScale = 1; fsTx = 0; fsTy = 0; fsPanning = false; fsPinchDist = 0;
+            const track = document.getElementById('fullscreen-track');
+            if (track) track.querySelectorAll('img').forEach(im => {
+                im.style.transition = animate ? 'transform .25s ease' : 'none';
+                im.style.transform = '';
+            });
+            const gallery = document.getElementById('fullscreen-gallery');
+            if (gallery) gallery.classList.remove('zoomed');
+        }
+
+        // Не даём утащить фото за пределы экрана
+        function fsClampPan() {
+            const img = fsActiveImg();
+            if (!img) return;
+            const maxX = Math.max(0, (img.offsetWidth * fsScale - window.innerWidth) / 2);
+            const maxY = Math.max(0, (img.offsetHeight * fsScale - window.innerHeight) / 2);
+            fsTx = Math.max(-maxX, Math.min(maxX, fsTx));
+            fsTy = Math.max(-maxY, Math.min(maxY, fsTy));
+        }
+
+        // Масштабируем так, чтобы точка под пальцем/курсором осталась на месте
+        function fsZoomToPoint(target, clientX, clientY, animate) {
+            const scale = Math.max(1, Math.min(FS_MAX_SCALE, target));
+            const dx = clientX - window.innerWidth / 2;
+            const dy = clientY - window.innerHeight / 2;
+            const k = scale / fsScale;
+            fsTx = dx - (dx - fsTx) * k;
+            fsTy = dy - (dy - fsTy) * k;
+            fsScale = scale;
+            if (fsScale <= 1.01) { fsResetZoom(true); return; }
+            fsClampPan();
+            fsApply(animate);
+        }
+
+        function initFullscreenZoom() {
+            const gallery = document.getElementById('fullscreen-gallery');
+            if (!gallery) return;
+
+            gallery.addEventListener('touchstart', (e) => {
+                if (e.touches.length === 2) {
+                    fsPinchDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+                    fsPinchScale = fsScale;
+                    fsPanning = false;
+                } else if (e.touches.length === 1) {
+                    const t = e.touches[0];
+                    if (fsIsZoomed()) { fsPanning = true; fsPanX = t.clientX - fsTx; fsPanY = t.clientY - fsTy; }
+                    const now = Date.now();
+                    if (now - fsLastTap < 300) {              // двойной тап
+                        if (fsIsZoomed()) fsResetZoom(true);
+                        else fsZoomToPoint(2.5, t.clientX, t.clientY, true);
+                        fsLastTap = 0;
+                    } else { fsLastTap = now; }
+                }
+            }, { passive: true });
+
+            gallery.addEventListener('touchmove', (e) => {
+                if (e.touches.length === 2 && fsPinchDist > 0) {
+                    e.preventDefault();
+                    const d = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+                    const mx = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+                    const my = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+                    fsZoomToPoint(fsPinchScale * (d / fsPinchDist), mx, my, false);
+                } else if (e.touches.length === 1 && fsPanning) {
+                    e.preventDefault();
+                    fsTx = e.touches[0].clientX - fsPanX;
+                    fsTy = e.touches[0].clientY - fsPanY;
+                    fsClampPan();
+                    fsApply(false);
+                }
+            }, { passive: false });
+
+            gallery.addEventListener('touchend', () => {
+                fsPanning = false; fsPinchDist = 0;
+                if (fsScale <= 1.01) fsResetZoom(true);
+            }, { passive: true });
+
+            gallery.addEventListener('dblclick', (e) => {
+                if (fsIsZoomed()) fsResetZoom(true);
+                else fsZoomToPoint(2.5, e.clientX, e.clientY, true);
+            });
+
+            gallery.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                fsZoomToPoint(fsScale * (e.deltaY < 0 ? 1.15 : 1 / 1.15), e.clientX, e.clientY, false);
+            }, { passive: false });
+        }
+
         function closeFullscreen() {
             const gallery = document.getElementById('fullscreen-gallery');
             if (gallery.classList.contains('active')) {
+                fsResetZoom(false);
                 document.body.classList.remove('gallery-open');
                 gallery.classList.remove('active');
                 if (history.state && history.state.modal) {
@@ -512,15 +646,21 @@
             const fsNext = document.getElementById('fullscreen-next');
             const fsPrev = document.getElementById('fullscreen-prev');
             
-            // СВАЙПЫ
-            addSwipeSupport(fsGallery, () => nextFullscreenImage(), () => prevFullscreenImage());
+            // СВАЙПЫ (при увеличенном фото свайп не листает — пальцем двигаем сам кадр)
+            addSwipeSupport(fsGallery,
+                () => { if (!fsIsZoomed()) nextFullscreenImage(); },
+                () => { if (!fsIsZoomed()) prevFullscreenImage(); });
+
+            // Зум: пинч, двойной тап/клик, колесо мыши
+            initFullscreenZoom();
 
             fsClose.addEventListener('click', closeFullscreen);
             fsNext.addEventListener('click', nextFullscreenImage);
             fsPrev.addEventListener('click', prevFullscreenImage);
             
-            // Клик на фон закрывает (но не на картинку)
+            // Клик на фон закрывает (но не на картинку и не когда фото увеличено)
             fsGallery.addEventListener('click', (e) => {
+                 if (fsIsZoomed()) return;
                  if(e.target.id === 'fullscreen-gallery' || e.target.id === 'fullscreen-track' || e.target.classList.contains('fullscreen-slide')) {
                      closeFullscreen();
                  }

@@ -357,6 +357,26 @@
         /* Небольшой фиксированный отступ вместо процентов: края не сливаются,
            но фото занимает максимум площади экрана (проценты «съедали» много места). */
         .fullscreen-slide { padding: 8px; box-sizing: border-box; }
+
+        /* Зум фото: свои жесты, поэтому браузерные отключаем */
+        #fullscreen-gallery { touch-action: none; }
+        .fullscreen-slide img { transform-origin: center center; will-change: transform; }
+        #fullscreen-gallery.zoomed .fullscreen-slide img { cursor: grab; }
+        /* Пока фото увеличено, стрелки листания не мешают */
+        #fullscreen-gallery.zoomed #fullscreen-prev,
+        #fullscreen-gallery.zoomed #fullscreen-next { opacity: 0; pointer-events: none; }
+
+        /* Подсказка про зум (показывается один раз при открытии) */
+        #fullscreen-hint {
+            position: absolute; left: 50%; bottom: 64px; transform: translateX(-50%);
+            z-index: 10002; pointer-events: none;
+            background: rgba(0, 0, 0, .62); color: #fff;
+            padding: 8px 16px; border-radius: 9999px;
+            font-size: .85rem; white-space: nowrap;
+            backdrop-filter: blur(2px);
+            opacity: 0; transition: opacity .4s ease;
+        }
+        #fullscreen-hint.show { opacity: 1; }
         .fullscreen-slide img {
             width: auto !important;
             height: auto !important;
