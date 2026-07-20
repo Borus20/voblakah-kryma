@@ -47,4 +47,4 @@
 // --- Сезон и цены (месяц: 0=янв ... 4=май ... 8=сен) ---
         const CALENDAR_START_DATE = new Date(2026, 4, 1);
         const CALENDAR_END_DATE = new Date(2026, 8, 30);
-        const PRICES_BY_MONTH = { 4: 3500, 5: 3800, 6: 5500, 7: 5500, 8: 4000 };
+        const PRICES_BY_MONTH = { 4: 3500, 5: 3800, 6: 5500, 7: 4500, 8: 4000 };
