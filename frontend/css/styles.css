@@ -283,8 +283,8 @@
         .reveal.revealed { opacity: 1; transform: none; }
         /* Лёгкий подъём карточки при наведении (только там, где есть мышь) */
         @media (hover: hover) {
-            .apartment-photo-card { transition: transform .3s cubic-bezier(.22, 1, .36, 1), box-shadow .3s ease; }
-            .apartment-photo-card:hover { transform: translateY(-4px); box-shadow: 0 16px 32px rgba(0, 0, 0, .16); }
+            .apartment-photo-card > div { transition: transform .3s cubic-bezier(.22, 1, .36, 1), box-shadow .3s ease; }
+            .apartment-photo-card > div:hover { transform: translateY(-4px) scale(1.05); box-shadow: 0 16px 32px rgba(0, 0, 0, .16); }
         }
         /* Уважаем системную настройку «меньше движения» */
         @media (prefers-reduced-motion: reduce) {

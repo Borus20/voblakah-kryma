@@ -35,7 +35,7 @@
             const a = alt || '';
             // Телефон получает версию 1280px вместо 2560px — вчетверо меньше пикселей, отсюда плавность
             const sz = sizes || '(max-width: 767px) 100vw, 50vw';
-            return `<picture><source type="image/webp" srcset="${src}.w1280.webp 1280w, ${src}.webp 2560w" sizes="${sz}"><img src="${src}"${cls} alt="${a}"${loading} decoding="async" onload="imgLoaded(this)" onerror="imgLoaded(this)"></picture>`;
+            const v = "20260829"; return `<picture><source type="image/webp" srcset="${src}.w1280.webp?v=${v} 1280w, ${src}.webp?v=${v} 2560w" sizes="${sz}"><img src="${src}" ${cls} alt="${a}"${loading} decoding="async" onload="imgLoaded(this)" onerror="imgLoaded(this)"></picture>`;
         }
 
         // Фото загрузилось — плавно проявляем его и гасим скелетон-заглушку

@@ -14,12 +14,12 @@
             'mountain': { 
                 name: 'Квартира "Горный воздух"', 
                 description: 'Эта квартира (40 м²) очарует вас чистейшим воздухом и панорамами моря в сочетании с зеленью заповедника. Внутри подготовлено абсолютно всё для беззаботного проживания. Прекрасный вариант для тех, кто путешествует всей семьёй.', 
-                photos: ['img/2/all1.jpg', 'img/2/common.jpg', 'img/2/bathroom1.jpg', 'img/2/bathroom2.jpg', 'img/2/bedroom1.jpg', 'img/2/bedroom2.jpg', 'img/2/kitchen1.jpg', 'img/2/view1.jpg', 'img/2/view2.jpg', 'img/common/house.jpg', 'img/common/pavilion1.jpg', 'img/common/pavilion2.jpg', 'img/common/pavilion3.jpg', 'img/common/parking.jpg', 'img/common/view1.jpg', 'img/common/view2.jpg', 'img/common/view4.jpg', 'img/common/view6.jpg', 'img/common/view7.jpg', 'img/common/view8.jpg'] 
+                photos: ['img/2/all1.jpg', 'img/2/common.jpg', 'img/2/bathroom1.jpg', 'img/2/bathroom2.jpg', 'img/2/bedroom1.jpg', 'img/2/bedroom2.jpg', 'img/2/bedroom3.jpg', 'img/2/kitchen1.jpg', 'img/2/view1.jpg', 'img/2/view2.jpg', 'img/common/house.jpg', 'img/common/pavilion1.jpg', 'img/common/pavilion2.jpg', 'img/common/pavilion3.jpg', 'img/common/parking.jpg', 'img/common/view1.jpg', 'img/common/view2.jpg', 'img/common/view4.jpg', 'img/common/view6.jpg', 'img/common/view7.jpg', 'img/common/view8.jpg'] 
             },
             'sunny': { 
                 name: 'Квартира "Солнечная"', 
                 description: 'Теплая и уютная квартира на 40 м² с завораживающим видом на морское побережье и горы. Полная комплектация мебелью и современной бытовой техникой гарантирует домашний уют. Идеальное решение для спокойного отпуска с малышами.', 
-                photos: ['img/3/bedroom1.jpg', 'img/3/bedroom2.jpg', 'img/3/all1.jpg', 'img/3/bathroom1.jpg', 'img/3/kitchen1.jpg', 'img/common/house.jpg', 'img/common/pavilion1.jpg', 'img/common/pavilion2.jpg', 'img/common/pavilion3.jpg', 'img/common/parking.jpg', 'img/common/view1.jpg', 'img/common/view2.jpg', 'img/common/view4.jpg', 'img/common/view6.jpg', 'img/common/view7.jpg', 'img/common/view8.jpg'] 
+                photos: ['img/3/bedroom1.jpg', 'img/3/bedroom2.jpg', 'img/3/bedroom3.jpg', 'img/3/bathroom1.jpg', 'img/3/bathroom2.jpg', 'img/3/kitchen1.jpg', 'img/3/kitchen2.jpg', 'img/3/view1.jpg', 'img/3/view2.jpg', 'img/common/house.jpg', 'img/common/pavilion1.jpg', 'img/common/pavilion2.jpg', 'img/common/pavilion3.jpg', 'img/common/parking.jpg', 'img/common/view1.jpg', 'img/common/view2.jpg', 'img/common/view4.jpg', 'img/common/view6.jpg', 'img/common/view7.jpg', 'img/common/view8.jpg'] 
             },
             'zapovednik': { 
                 name: 'Квартира "Заповедник"', 
