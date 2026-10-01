@@ -27,7 +27,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <link rel="manifest" href="/site.webmanifest">
     <link rel="stylesheet" href="css/tailwind.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="preload" href="/fonts/inter-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
     <script src="https://api-maps.yandex.ru/2.1/?apikey=b4a58719-8733-4cf6-b450-e7343a6feef8&lang=ru_RU" type="text/javascript"></script>
     
     <script type="text/javascript">
@@ -461,7 +461,7 @@
     </div>
     
     <footer class="bg-gray-800/80 backdrop-blur-sm text-white py-4 mt-auto rounded-t-2xl">
-        <div class="container text-center"><p>&copy; 2027 Квартиры "В облаках Крыма". Все права защищены</p><p class="text-sm text-gray-300 mt-1">Отдых в Крыму с комфортом</p></div>
+        <div class="container text-center"><p>&copy; 2027 Квартиры "В облаках Крыма". Все права защищены</p><p class="text-sm text-gray-300 mt-1">Отдых в Крыму с комфортом</p><p class="footer-links"><a href="/kvartiry/breeze/">Морской бриз</a> · <a href="/kvartiry/mountain/">Горный воздух</a> · <a href="/kvartiry/sunny/">Солнечная</a> · <a href="/kvartiry/zapovednik/">Заповедник</a></p><p class="footer-links"><a href="/privacy.html">Политика конфиденциальности</a></p></div>
     </footer>
 
     <div id="fullscreen-gallery" tabindex="0">
@@ -544,7 +544,7 @@
                 <div class="mb-4 flex items-center gap-2">
                     <input type="checkbox" id="booking-consent" class="w-4 h-4 cursor-pointer" required>
                     <label for="booking-consent" class="text-[11px] text-gray-600 cursor-pointer leading-tight">
-                        Я даю согласие на обработку моих персональных данных
+                        Я даю согласие на обработку моих персональных данных в соответствии с <a href="/privacy.html" target="_blank" class="policy-link">политикой конфиденциальности</a>
                     </label>
                 </div>
                 <button type="submit" id="booking-submit-button" class="w-full bg-blue-500 text-white px-4 py-3 rounded-full hover:bg-blue-600 transition font-bold disabled:bg-gray-400">Отправить заявку</button>
@@ -573,7 +573,7 @@
                 <div class="mb-4 flex items-center gap-2">
                     <input type="checkbox" id="contact-consent" class="w-4 h-4 cursor-pointer" required>
                     <label for="contact-consent" class="text-[11px] text-gray-600 cursor-pointer leading-tight">
-                        Я даю согласие на обработку моих персональных данных
+                        Я даю согласие на обработку моих персональных данных в соответствии с <a href="/privacy.html" target="_blank" class="policy-link">политикой конфиденциальности</a>
                     </label>
                 </div>
                 <button type="submit" id="submit-button" class="w-full bg-blue-500 text-white px-4 py-3 rounded-full hover:bg-blue-600 transition font-bold disabled:bg-gray-400 disabled:cursor-not-allowed">Отправить</button>
@@ -581,6 +581,10 @@
         </div>
     </div>
     
+    <div id="cookie-banner" class="cookie-banner" role="region" aria-label="Уведомление о cookie" hidden>
+        <p>Мы используем cookie и Яндекс.Метрику, чтобы понимать, как сделать сайт удобнее. <a href="/privacy.html" target="_blank">Подробнее</a></p>
+        <button type="button" id="cookie-ok">Понятно</button>
+    </div>
     <script src="js/config.js"></script>
     <script src="js/app.js"></script>
 </body>

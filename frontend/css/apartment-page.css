@@ -1,0 +1,41 @@
+/* Стили отдельных страниц квартир (/kvartiry/<id>/) — генерируются tools/gen-pages.js */
+@font-face { font-family: "Inter"; font-weight: 400 800; font-display: swap; src: url("/fonts/inter-cyrillic.woff2") format("woff2"); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+@font-face { font-family: "Inter"; font-weight: 400 800; font-display: swap; src: url("/fonts/inter-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+
+* { box-sizing: border-box; }
+body { margin: 0; font-family: "Inter", system-ui, sans-serif; color: #1f2937; line-height: 1.65;
+       background: linear-gradient(180deg, #89cff0 0%, #e0f7fa 100%) fixed; }
+a { color: #2563eb; }
+img { max-width: 100%; display: block; }
+.wrap { max-width: 960px; margin: 0 auto; padding: 20px 16px 48px; }
+.crumbs { font-size: .9rem; margin-bottom: 14px; color: #0f172a; }
+.crumbs a { color: #0f172a; font-weight: 600; text-decoration: none; background: rgba(255,255,255,.75); padding: 6px 14px; border-radius: 999px; }
+.crumbs a:hover { background: #fff; }
+.crumbs span { margin: 0 6px; opacity: .6; }
+.card { background: #fff; border-radius: 20px; padding: 24px 18px; box-shadow: 0 10px 30px rgba(0,0,0,.08); }
+h1 { font-size: 1.8rem; line-height: 1.2; margin: 0 0 4px; }
+.lead { color: #4b5563; margin: 0 0 18px; }
+h2 { font-size: 1.3rem; margin: 32px 0 12px; }
+.text { font-size: 1.05rem; }
+.hero img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 14px; }
+.cta { display: block; text-align: center; margin: 22px 0 4px; padding: 14px 20px; border-radius: 999px;
+       background: #22c55e; color: #fff; font-weight: 700; text-decoration: none; font-size: 1.05rem; }
+.cta:hover { background: #16a34a; }
+.prices { border-collapse: collapse; width: 100%; max-width: 420px; }
+.prices th, .prices td { text-align: left; padding: 8px 12px; border-bottom: 1px solid #e5e7eb; }
+.prices th { color: #6b7280; font-weight: 600; font-size: .9rem; }
+.prices td:last-child { font-weight: 700; }
+.note { color: #6b7280; font-size: .95rem; }
+.gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.gallery img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 10px; transition: opacity .2s; }
+.gallery a:hover img { opacity: .85; }
+.rules { padding-left: 1.2em; }
+.rules li { margin: 6px 0; }
+.others { padding-left: 1.2em; }
+footer { text-align: center; color: #334155; font-size: .9rem; margin-top: 24px; line-height: 1.8; }
+@media (min-width: 640px) {
+    .card { padding: 36px 44px; }
+    h1 { font-size: 2.3rem; }
+    .gallery { grid-template-columns: repeat(3, 1fr); }
+    .cta { display: inline-block; }
+}

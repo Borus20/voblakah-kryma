@@ -888,10 +888,15 @@
                         // Обновляем календарь (загружаем новые брони)
                         loadBookingsForApartment(currentApartmentId).then(() => renderApartmentCalendar());
                     } else { 
-                        throw new Error('Ошибка сервера'); 
+                        // Сервер объясняет причину (даты заняты, вне сезона и т.п.) — показываем её гостю
+                        const data = await response.json().catch(() => ({}));
+                        const err = new Error('Ошибка сервера');
+                        err.userMessage = response.status < 500 ? data.error : null; // 5xx — общий текст ниже
+                        if (response.status === 409) loadBookingsForApartment(currentApartmentId).then(() => renderApartmentCalendar());
+                        throw err;
                     }
                 } catch (err) {
-                    statusDiv.textContent = 'Ошибка отправки. Попробуйте позже или свяжитесь с нами напрямую';
+                    statusDiv.textContent = err.userMessage || 'Ошибка отправки. Попробуйте позже или свяжитесь с нами напрямую';
                     statusDiv.className = 'mt-4 text-center text-red-600';
                 } finally {
                     submitBtn.disabled = false;
@@ -1266,3 +1271,18 @@
             }, 100);
         }
         document.addEventListener('DOMContentLoaded', main);
+
+
+// === Плашка о cookie: показываем, пока посетитель не нажмёт «Понятно» ===
+(function () {
+    const banner = document.getElementById('cookie-banner');
+    if (!banner) return;
+    let seen = false;
+    try { seen = localStorage.getItem('cookieNoticeOk') === '1'; } catch (e) {}
+    if (seen) return;
+    banner.hidden = false;
+    document.getElementById('cookie-ok').addEventListener('click', () => {
+        banner.hidden = true;
+        try { localStorage.setItem('cookieNoticeOk', '1'); } catch (e) {}
+    });
+})();
