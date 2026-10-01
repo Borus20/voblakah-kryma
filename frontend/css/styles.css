@@ -585,3 +585,8 @@
                 justify-content: center; margin: 0 0 12px !important;
             }
         }
+
+        /* Без синей прямоугольной подсветки при нажатии (телефоны) и рамки фокуса после клика.
+           Рамка остаётся только при управлении с клавиатуры (Tab) — :focus-visible. */
+        * { -webkit-tap-highlight-color: transparent; }
+        :focus:not(:focus-visible) { outline: none; }
