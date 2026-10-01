@@ -590,3 +590,10 @@
            Рамка остаётся только при управлении с клавиатуры (Tab) — :focus-visible. */
         * { -webkit-tap-highlight-color: transparent; }
         :focus:not(:focus-visible) { outline: none; }
+
+        /* Горизонтальный телефон: иконка Telegram + плашка с телефоном ровно по центру.
+           У ссылки Telegram невидимый отступ 8px (p-2) слева — из-за него пара визуально
+           смещалась вправо. Компенсируем только здесь, остальные режимы не трогаем. */
+        @media (orientation: landscape) and (max-height: 500px) {
+            .hero-section-container .shrink-0.pointer-events-auto > .flex > a:first-child { margin-left: -8px; }
+        }
