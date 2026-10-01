@@ -223,7 +223,6 @@
         .page.hidden { opacity: 0; transform: translateY(20px); pointer-events: none; position: absolute; width: 100%; top: 0; left: 0; height: 0; overflow: hidden; }
         
         .inner-carousel-container, .details-photo-carousel { position: relative; overflow: hidden; width: 100%; aspect-ratio: 16 / 9; outline: none; }
-        @media (max-height: 500px) and (orientation: landscape) { .inner-carousel-container, .details-photo-carousel { height: 80vh !important; aspect-ratio: auto !important; } .inner-carousel-slide img, .details-photo-slide img { object-fit: contain !important; background-color: #f3f4f6; } }
         .inner-carousel-container { border-radius: 0.75rem 0.75rem 0 0; }
         .details-photo-carousel { border-radius: 0.75rem; }
 
@@ -435,42 +434,6 @@
         .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 20px; border: 2px solid transparent; background-clip: content-box; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background-color: #94a3b8; }
         
-        #landscape-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 10000;
-            align-items: center;
-            justify-content: center;
-            background-image: url('/img/common/background.png'), linear-gradient(180deg, #89cff0 0%, #e0f7fa 100%); /* фолбэк */
-            background-image: image-set(url('/img/common/background.png.webp') type('image/webp'), url('/img/common/background.png') type('image/png')), linear-gradient(180deg, #89cff0 0%, #e0f7fa 100%);
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-        }
-        
-        .rotate-icon {
-            animation: rotatePhone 2s infinite ease-in-out;
-        }
-        
-        @keyframes rotatePhone {
-            0% { transform: rotate(0deg); }
-            25% { transform: rotate(-90deg); }
-            50% { transform: rotate(-90deg); }
-            75% { transform: rotate(0deg); }
-            100% { transform: rotate(0deg); }
-        }
-        
-        @media screen and (orientation: landscape) and (max-height: 500px) {
-            /* Добавили :not(.keyboard-open), чтобы заглушка не всплывала при вводе текста */
-            body:not(.gallery-open):not(.keyboard-open) #landscape-overlay {
-                display: flex !important;
-            }
-            body:not(.gallery-open):not(.keyboard-open) {
-                overflow: hidden !important;
-            }
-        }
-        
         #sights-prev svg, #sights-next svg {
             width: 25px;
             height: 25px;
@@ -543,3 +506,69 @@
             padding: 8px 16px; font: inherit; font-weight: 700; cursor: pointer;
         }
         .cookie-banner button:hover { background: #2563eb; }
+
+        /* =====================================================================
+           ТЕЛЕФОН В ГОРИЗОНТАЛЬНОЙ ОРИЕНТАЦИИ (экран низкий и широкий).
+           Раньше здесь показывалась заглушка «Поверните устройство» — теперь
+           полноценная вёрстка: всё помещается по высоте, контент в две колонки.
+           Тот же медиа-запрос используется в app.js (calendarMonthsToShow).
+           ===================================================================== */
+        @media (orientation: landscape) and (max-height: 500px) {
+            /* --- Шапка ниже, чтобы освободить высоту --- */
+            header nav { padding-top: 0 !important; padding-bottom: 0 !important; }
+            .title-link { font-size: 1.35rem !important; }
+            #mobile-menu-button { padding: 8px 12px !important; }
+            #mobile-menu-button svg { width: 28px; height: 28px; }
+            /* Меню в две колонки — помещается без прокрутки */
+            #mobile-menu { max-height: calc(100vh - 48px); overflow-y: auto; }
+            #mobile-menu > .relative.z-10 { display: grid; grid-template-columns: 1fr 1fr; }
+            #mobile-menu .nav-link { padding-top: 10px !important; padding-bottom: 10px !important; border-bottom: 1px solid rgba(107, 114, 128, .1); }
+
+            /* --- Главный экран: широкий кадр почти на всю высоту, текст компактнее --- */
+            .hero-section-container { aspect-ratio: auto; max-height: none; height: calc(100vh - 84px); height: calc(100svh - 84px); min-height: 220px; }
+            .hero-section-container h1 { font-size: 2rem !important; line-height: 1.15 !important; }
+            .hero-section-container p { font-size: 1rem !important; line-height: 1.4 !important; }
+
+            /* --- Заголовки секций --- */
+            #main-page section > h2 { font-size: 1.75rem !important; margin-bottom: 1rem !important; }
+
+            /* --- Карточки: квартиры по две в ряд, достопримечательности по две на экран --- */
+            #apartment-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 1rem !important; }
+            .carousel-item { flex: 0 0 50% !important; min-width: 0 !important; }
+            .inner-carousel-container, .details-photo-carousel { height: auto !important; aspect-ratio: 16 / 9 !important; }
+            .inner-carousel-slide img, .details-photo-slide img { object-fit: cover !important; }
+
+            /* --- Карта: не на весь экран, чтобы страницу можно было пролистать пальцем --- */
+            #map { height: 70vh !important; height: 70svh !important; }
+
+            /* --- Страницы квартиры и достопримечательности: фото слева, календарь/текст справа --- */
+            #back-to-main-from-apt, #back-to-main-from-sight { margin-bottom: .75rem !important; }
+            #apartment-details-page .container > .rounded-xl, #details-page .container > .rounded-xl { padding: 1rem !important; }
+            #apartment-details-title, #details-title { font-size: 1.6rem !important; margin-bottom: .75rem !important; padding: 0 52px; }
+            #apartment-details-prev, #details-prev { top: 12px !important; left: 12px !important; right: auto !important; }
+            #apartment-details-next, #details-next { top: 12px !important; right: 12px !important; left: auto !important; }
+            #apartment-details-page .grid.grid-cols-1, #details-page .grid.grid-cols-1 {
+                grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 1.25rem !important; align-items: start; margin-bottom: .5rem !important;
+            }
+            /* Фото остаётся на месте, пока листаешь календарь */
+            .details-photo-carousel { position: sticky !important; top: 56px; }
+            .calendar-day { height: 46px; padding-top: 2px; }
+            #apartment-details-calendar-prev { left: -16px; } #apartment-details-calendar-next { right: -16px; }
+
+            /* --- Формы бронирования и «Написать нам»: в две колонки, почти без прокрутки --- */
+            #booking-modal > div, #contact-form-modal > div {
+                max-width: 720px !important; max-height: calc(100vh - 16px) !important; max-height: calc(100svh - 16px) !important;
+                margin: 8px !important; padding: 1rem 1.25rem !important;
+            }
+            #booking-modal h3, #contact-form-modal h3 { font-size: 1.25rem !important; margin-bottom: .25rem !important; }
+            #modal-booking-sum { margin-bottom: .5rem !important; }
+            #bookingForm, #contactForm { display: grid; grid-template-columns: 1fr 1fr; column-gap: 1rem; }
+            #bookingForm > *, #contactForm > * { margin-bottom: .6rem !important; }
+            #bookingForm label, #contactForm label { margin-bottom: .25rem !important; }
+            /* Бронь: имя|телефон, email|telegram, гости|комментарий, дальше на всю ширину */
+            #bookingForm > :nth-child(n+7) { grid-column: 1 / -1; }
+            /* Контакты: имя|телефон, email|telegram, дальше на всю ширину */
+            #contactForm > :nth-child(n+5) { grid-column: 1 / -1; }
+            #contactForm textarea { min-height: 0; }
+            #contactForm textarea[rows] { height: 5.5rem; }
+        }

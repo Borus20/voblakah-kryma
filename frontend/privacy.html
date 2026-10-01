@@ -39,7 +39,16 @@
         ul { padding-left: 1.2em; }
         li { margin: 4px 0; }
         .contacts { background: #f0f7ff; border-left: 4px solid var(--accent); border-radius: 10px; padding: 14px 16px; }
-        footer { text-align: center; color: #334155; font-size: .9rem; margin-top: 24px; }
+        /* Подвал — как на главной, прижат к низу */
+        body { display: flex; flex-direction: column; min-height: 100vh; }
+        .wrap { flex: 1 0 auto; width: 100%; }
+        .site-footer { background: rgba(31, 41, 55, .8); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); color: #fff;
+                       padding: 16px; border-radius: 16px 16px 0 0; text-align: center; line-height: 1.5; }
+        .site-footer p { margin: 0; }
+        .site-footer .sub { font-size: .875rem; color: #d1d5db; margin-top: 4px; }
+        .site-footer .links { font-size: .8rem; color: #d1d5db; margin-top: 6px; }
+        .site-footer a { color: #e5e7eb; text-decoration: none; }
+        .site-footer a:hover { color: #fff; text-decoration: underline; }
         @media (min-width: 640px) { .card { padding: 40px 48px; } h1 { font-size: 2.1rem; } }
     </style>
 </head>
@@ -117,7 +126,12 @@
         <h2>10. Изменения</h2>
         <p>Мы можем обновлять эту политику. Актуальная редакция всегда доступна на этой странице; дата редакции указана в начале.</p>
     </main>
-    <footer>© 2027 Квартиры «В облаках Крыма» · <a href="/">voblakah-kryma.ru</a></footer>
 </div>
+<footer class="site-footer">
+    <p>© 2027 Квартиры "В облаках Крыма". Все права защищены</p>
+    <p class="sub">Отдых в Крыму с комфортом</p>
+    <p class="links"><a href="/kvartiry/breeze/">Морской бриз</a> · <a href="/kvartiry/mountain/">Горный воздух</a> · <a href="/kvartiry/sunny/">Солнечная</a> · <a href="/kvartiry/zapovednik/">Заповедник</a></p>
+    <p class="links"><a href="/privacy.html">Политика конфиденциальности</a></p>
+</footer>
 </body>
 </html>

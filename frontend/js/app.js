@@ -22,6 +22,12 @@
             if (start > seasonLastMonthStart) start = seasonLastMonthStart;
             return start;
         }
+        // Сколько месяцев календаря показывать: 2 на широком экране, 1 на узком.
+        // На телефоне в горизонтальной ориентации календарь стоит в колонке рядом с фото — тоже 1.
+        function calendarMonthsToShow() {
+            if (window.matchMedia('(orientation: landscape) and (max-height: 500px)').matches) return 1;
+            return window.innerWidth >= 768 ? 2 : 1;
+        }
         // FULLSCREEN VARS
         let currentFullscreenImages = [];
         let currentFullscreenIndex = 0;
@@ -399,7 +405,7 @@
              const calendarContainer = document.getElementById('apartment-details-calendar');
              calendarContainer.innerHTML = '';
              
-             const monthsToShow = window.innerWidth >= 768 ? 2 : 1;
+             const monthsToShow = calendarMonthsToShow();
              
              // === 1. ЛОГИКА СКРЫТИЯ СТРЕЛОК КАЛЕНДАРЯ ===
              const prevBtn = document.getElementById('apartment-details-calendar-prev');
@@ -1088,13 +1094,13 @@
                     calContainer.onclick = () => calContainer.focus({ preventScroll: true });
                     function handleNextMonth() { 
                         // Листаем сразу на столько месяцев, сколько видно на экране (2 на широком), но не дальше конца сезона
-                        const monthsToShow = window.innerWidth >= 768 ? 2 : 1; const maxStartDate = new Date(CALENDAR_END_DATE); maxStartDate.setMonth(maxStartDate.getMonth() - (monthsToShow - 1)); maxStartDate.setDate(1); 
+                        const monthsToShow = calendarMonthsToShow(); const maxStartDate = new Date(CALENDAR_END_DATE); maxStartDate.setMonth(maxStartDate.getMonth() - (monthsToShow - 1)); maxStartDate.setDate(1); 
                         let nextMonth = new Date(currentCalendarDate); nextMonth.setDate(1); nextMonth.setMonth(nextMonth.getMonth() + monthsToShow); 
                         if (nextMonth > maxStartDate) nextMonth = maxStartDate; 
                         if (nextMonth > currentCalendarDate) { currentCalendarDate = nextMonth; renderApartmentCalendar(); setKeyboardNav(handlePrevMonth, handleNextMonth); calContainer.focus({ preventScroll: true }); }
                     };
                     function handlePrevMonth() { 
-                        const monthsToShow = window.innerWidth >= 768 ? 2 : 1; const minStartDate = getCalendarStartDate(); 
+                        const monthsToShow = calendarMonthsToShow(); const minStartDate = getCalendarStartDate(); 
                         let prevMonth = new Date(currentCalendarDate); prevMonth.setDate(1); prevMonth.setMonth(prevMonth.getMonth() - monthsToShow); 
                         if (prevMonth < minStartDate) prevMonth = minStartDate; 
                         if (prevMonth < currentCalendarDate) { currentCalendarDate = prevMonth; renderApartmentCalendar(); setKeyboardNav(handlePrevMonth, handleNextMonth); calContainer.focus({ preventScroll: true }); }
@@ -1284,5 +1290,26 @@
     document.getElementById('cookie-ok').addEventListener('click', () => {
         banner.hidden = true;
         try { localStorage.setItem('cookieNoticeOk', '1'); } catch (e) {}
+    });
+})();
+
+
+// === Поворот телефона / изменение ширины окна: календарь перестраивается под новое число месяцев ===
+(function () {
+    let lastMonths = calendarMonthsToShow();
+    let timer;
+    window.addEventListener('resize', () => {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+            const months = calendarMonthsToShow();
+            if (months === lastMonths) return;
+            lastMonths = months;
+            if (!document.getElementById('apartment-details-calendar') || !currentCalendarDate) return;
+            const maxStart = new Date(CALENDAR_END_DATE);
+            maxStart.setDate(1);
+            maxStart.setMonth(maxStart.getMonth() - (months - 1));
+            if (currentCalendarDate > maxStart) currentCalendarDate = maxStart;
+            renderApartmentCalendar();
+        }, 150);
     });
 })();

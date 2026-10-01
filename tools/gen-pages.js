@@ -35,6 +35,16 @@ function picture(src, alt, eager) {
         `<img src="${s}" alt="${esc(alt)}"${eager ? '' : ' loading="lazy"'} decoding="async"></picture>`;
 }
 
+// Подвал — такой же, как на главной (index.html)
+function siteFooter() {
+    return `<footer class="site-footer">
+    <p>© ${year} Квартиры "В облаках Крыма". Все права защищены</p>
+    <p class="sub">Отдых в Крыму с комфортом</p>
+    <p class="links">${ids.map(o => `<a href="/kvartiry/${o}/">${esc(plainName(cfg.apartmentsData[o].name))}</a>`).join(' · ')}</p>
+    <p class="links"><a href="/privacy.html">Политика конфиденциальности</a></p>
+</footer>`;
+}
+
 function page(id) {
     const apt = cfg.apartmentsData[id];
     const name = niceName(apt.name);
@@ -139,6 +149,7 @@ ${photos.slice(1).map((p, i) => `            <a href="/${p}" target="_blank" rel
 
         <h2>Где находится</h2>
         <p class="text">Республика Крым, пгт Кацивели, ул. Шулейкина, 53 — небольшой дом среди можжевельников, 18 км от Ялты. <a href="https://yandex.ru/maps/?text=Крым,+Кацивели,+Шулейкина,+53" target="_blank" rel="noopener">Открыть на карте</a></p>
+        <p class="text">Телефон: <a href="tel:+79093553729">+7 (909) 355-37-29</a> · <a href="https://t.me/+79093553729" target="_blank" rel="noopener">Telegram</a> · <a href="mailto:polinadun@mail.ru">polinadun@mail.ru</a></p>
 
         <a class="cta" href="/#apartment-${id}">Забронировать ${esc(name.replace('Квартира', 'квартиру'))}</a>
 
@@ -147,11 +158,8 @@ ${photos.slice(1).map((p, i) => `            <a href="/${p}" target="_blank" rel
 ${others.map(o => `            <li><a href="/kvartiry/${o}/">${esc(niceName(cfg.apartmentsData[o].name))}</a></li>`).join('\n')}
         </ul>
     </main>
-    <footer>
-        <a href="tel:+79093553729">+7 (909) 355-37-29</a> · <a href="mailto:polinadun@mail.ru">polinadun@mail.ru</a><br>
-        © ${year} Квартиры «В облаках Крыма» · <a href="/privacy.html">Политика конфиденциальности</a>
-    </footer>
 </div>
+${siteFooter()}
 </body>
 </html>
 `;
