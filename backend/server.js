@@ -279,10 +279,10 @@ function sendGuestEmail(booking, isConfirm, chatId) {
         ? `
                     <div style="font-family: sans-serif; line-height: 1.6; color: #333;">
                         <h2 style="color: #2c3e50;">Добрый день, ${escapeHTML(booking.user_name)}!</h2>
-                        <p>Рады сообщить, что ваша бронь <b>#${id}</b> <a href="https://voblakah-kryma.ru" style="color: #3b82f6; text-decoration: underline; font-weight: bold;">"В облаках Крыма"</a> успешно подтверждена.</p>
+                        <p>Рады сообщить, что Ваша бронь <b>#${id}</b> <a href="https://voblakah-kryma.ru" style="color: #3b82f6; text-decoration: underline; font-weight: bold;">"В облаках Крыма"</a> успешно подтверждена.</p>
                         <hr style="border: 0; border-top: 1px solid #eee;">
                         ${bookingDetails}
-                        <p>С нетерпением ждём вас в гости по адресу: <a href="https://yandex.ru/maps/?text=Крым,+Кацивели,+Шулейкина,+53" style="color: #2c3e50; text-decoration: underline;"><b>Республика Крым, пгт. Кацивели, ул. Шулейкина, 53</b></a>.</p>
+                        <p>С нетерпением ждём Вас в гости по адресу: <a href="https://yandex.ru/maps/?text=Крым,+Кацивели,+Шулейкина,+53" style="color: #2c3e50; text-decoration: underline;"><b>Республика Крым, пгт. Кацивели, ул. Шулейкина, 53</b></a>.</p>
                         ${contacts}
                         ${signature}
                     </div>`
