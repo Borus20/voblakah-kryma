@@ -1082,13 +1082,17 @@
                     if(calContainer) addSwipeSupport(calContainer, handleNextMonth, handlePrevMonth);
                     calContainer.onclick = () => calContainer.focus({ preventScroll: true });
                     function handleNextMonth() { 
-                        const nextMonth = new Date(currentCalendarDate); nextMonth.setMonth(nextMonth.getMonth() + 1); nextMonth.setDate(1); 
+                        // Листаем сразу на столько месяцев, сколько видно на экране (2 на широком), но не дальше конца сезона
                         const monthsToShow = window.innerWidth >= 768 ? 2 : 1; const maxStartDate = new Date(CALENDAR_END_DATE); maxStartDate.setMonth(maxStartDate.getMonth() - (monthsToShow - 1)); maxStartDate.setDate(1); 
-                        if (nextMonth <= maxStartDate) { currentCalendarDate = nextMonth; renderApartmentCalendar(); setKeyboardNav(handlePrevMonth, handleNextMonth); calContainer.focus({ preventScroll: true }); }
+                        let nextMonth = new Date(currentCalendarDate); nextMonth.setDate(1); nextMonth.setMonth(nextMonth.getMonth() + monthsToShow); 
+                        if (nextMonth > maxStartDate) nextMonth = maxStartDate; 
+                        if (nextMonth > currentCalendarDate) { currentCalendarDate = nextMonth; renderApartmentCalendar(); setKeyboardNav(handlePrevMonth, handleNextMonth); calContainer.focus({ preventScroll: true }); }
                     };
                     function handlePrevMonth() { 
-                        const prevMonth = new Date(currentCalendarDate); prevMonth.setMonth(prevMonth.getMonth() - 1); prevMonth.setDate(1); 
-                        if (prevMonth >= getCalendarStartDate()) { currentCalendarDate = prevMonth; renderApartmentCalendar(); setKeyboardNav(handlePrevMonth, handleNextMonth); calContainer.focus({ preventScroll: true }); }
+                        const monthsToShow = window.innerWidth >= 768 ? 2 : 1; const minStartDate = getCalendarStartDate(); 
+                        let prevMonth = new Date(currentCalendarDate); prevMonth.setDate(1); prevMonth.setMonth(prevMonth.getMonth() - monthsToShow); 
+                        if (prevMonth < minStartDate) prevMonth = minStartDate; 
+                        if (prevMonth < currentCalendarDate) { currentCalendarDate = prevMonth; renderApartmentCalendar(); setKeyboardNav(handlePrevMonth, handleNextMonth); calContainer.focus({ preventScroll: true }); }
                     };
                     calNext.addEventListener('click', () => { handleNextMonth(); }); calPrev.addEventListener('click', () => { handlePrevMonth(); });
                     bookingSection.style.display = 'block'; resetBookingState(); renderApartmentCalendar();
