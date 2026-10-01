@@ -572,3 +572,16 @@
             #contactForm textarea { min-height: 0; }
             #contactForm textarea[rows] { height: 5.5rem; }
         }
+
+        /* Горизонтальный телефон: Telegram и плашка с телефоном на главном экране —
+           не поверх фото в углу (наезжали на текст), а отдельной строкой под текстом.
+           Главный экран при необходимости растёт по высоте, а не обрезает текст. */
+        @media (orientation: landscape) and (max-height: 500px) {
+            .hero-section-container { display: flex; flex-direction: column; height: auto; min-height: calc(100vh - 84px); min-height: calc(100svh - 84px); }
+            .hero-section-container > .relative.z-10 { flex: 1 0 auto; height: auto !important; }
+            .hero-section-container > .relative.z-10 > .flex-grow { padding-top: 12px; padding-bottom: 8px; }
+            .hero-section-container .shrink-0.pointer-events-auto {
+                position: static !important; width: 100% !important; display: flex !important;
+                justify-content: center; margin: 0 0 12px !important;
+            }
+        }
