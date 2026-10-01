@@ -104,7 +104,7 @@ function page(id) {
 </head>
 <body>
 <div class="wrap">
-    <nav class="crumbs"><a href="/">В облаках Крыма</a> <span>›</span> ${esc(name)}</nav>
+    <a class="back" href="/"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>На главную</a>
     <main class="card">
         <h1>${esc(name)}</h1>
         <p class="lead">Кацивели, Большая Ялта${area ? ` · ${area} м²` : ''} · от ${rub(minPrice)} ₽ за сутки</p>
