@@ -49,7 +49,7 @@ function siteHeader() {
     const links = NAV.map(([href, text, main]) => `<a href="${href}"${main ? ' class="sh-main"' : ''}>${text}</a>`).join('');
     return `<header class="site-header">
     <nav class="sh-nav">
-        <a href="/" class="sh-logo">В&nbsp;облаках</a>
+        <a href="/" class="sh-logo">В&nbsp;облаках&nbsp;Крыма</a>
         <div class="sh-links">${links}</div>
         <button type="button" class="sh-burger" aria-label="Меню" aria-expanded="false"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg></button>
     </nav>
