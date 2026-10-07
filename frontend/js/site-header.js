@@ -17,3 +17,18 @@
     window.addEventListener('scroll', () => { if (!menu.hidden) setOpen(false); }, { passive: true });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setOpen(false); });
 })();
+
+// Логотип: при нажатии — волна по буквам и градиент, через секунду переход на главную (как на главной)
+(function () {
+    const logo = document.querySelector('.sh-logo');
+    if (!logo) return;
+    logo.addEventListener('click', function (e) {
+        e.preventDefault();
+        if (this.classList.contains('click-anim')) return; // анимация уже идёт
+        this.classList.add('click-anim');
+        setTimeout(() => {
+            this.classList.remove('click-anim');
+            window.location.href = '/';
+        }, 1000);
+    });
+})();

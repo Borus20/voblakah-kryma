@@ -65,3 +65,25 @@
     .sh-menu-links { display: grid; grid-template-columns: 1fr 1fr; }
     .sh-menu-links a { padding-top: 10px; padding-bottom: 10px; border-bottom: 1px solid rgba(107, 114, 128, .1); }
 }
+
+/* Нажатие на логотип: волна по буквам + бегущий градиент, через секунду переход на главную —
+   та же анимация, что у логотипа на главной (.title-link.click-anim в styles.css) */
+.sh-char { display: inline-block; color: inherit; opacity: 1; }
+.sh-logo.click-anim { animation: sh-running-gradient 2s linear infinite; }
+.sh-logo.click-anim .sh-char { animation: sh-wave 0.6s ease-in-out 1; }
+@keyframes sh-wave { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+.sh-logo.click-anim .sh-char:nth-child(1) { animation-delay: 0.00s; }
+.sh-logo.click-anim .sh-char:nth-child(2) { animation-delay: 0.04s; }
+.sh-logo.click-anim .sh-char:nth-child(3) { animation-delay: 0.08s; }
+.sh-logo.click-anim .sh-char:nth-child(4) { animation-delay: 0.12s; }
+.sh-logo.click-anim .sh-char:nth-child(5) { animation-delay: 0.16s; }
+.sh-logo.click-anim .sh-char:nth-child(6) { animation-delay: 0.20s; }
+.sh-logo.click-anim .sh-char:nth-child(7) { animation-delay: 0.24s; }
+.sh-logo.click-anim .sh-char:nth-child(8) { animation-delay: 0.28s; }
+.sh-logo.click-anim .sh-char:nth-child(9) { animation-delay: 0.32s; }
+.sh-logo.click-anim .sh-char:nth-child(10) { animation-delay: 0.36s; }
+.sh-logo.click-anim .sh-char:nth-child(11) { animation-delay: 0.40s; }
+.sh-logo.click-anim .sh-char:nth-child(12) { animation-delay: 0.44s; }
+.sh-logo.click-anim .sh-char:nth-child(13) { animation-delay: 0.48s; }
+.sh-logo.click-anim .sh-char:nth-child(14) { animation-delay: 0.52s; }
+.sh-logo.click-anim .sh-char:nth-child(15) { animation-delay: 0.56s; }
