@@ -10,6 +10,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <link rel="preload" href="/fonts/inter-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="/css/site-header.css">
     <style>
         @font-face { font-family: "Inter"; font-weight: 400 800; font-display: swap; src: url("/fonts/inter-cyrillic.woff2") format("woff2"); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
         @font-face { font-family: "Inter"; font-weight: 400 800; font-display: swap; src: url("/fonts/inter-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
@@ -54,6 +55,15 @@
     </style>
 </head>
 <body>
+<!-- Шапка как на главной; та же разметка генерируется для квартир в tools/gen-pages.js -->
+<header class="site-header">
+    <nav class="sh-nav">
+        <a href="/" class="sh-logo">В&nbsp;облаках</a>
+        <div class="sh-links"><a href="/#about">О нас</a><a href="/#apartments" class="sh-main">Забронировать квартиру</a><a href="/#sights">Достопримечательности рядом</a><a href="/#location">Расположение</a><a href="/#contact">Контакты</a><a href="/#rules">Правила проживания</a></div>
+        <button type="button" class="sh-burger" aria-label="Меню" aria-expanded="false"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg></button>
+    </nav>
+    <div class="sh-menu" hidden><div class="sh-menu-bg"></div><div class="sh-menu-links"><a href="/#about">О нас</a><a href="/#apartments" class="sh-main">Забронировать квартиру</a><a href="/#sights">Достопримечательности рядом</a><a href="/#location">Расположение</a><a href="/#contact">Контакты</a><a href="/#rules">Правила проживания</a></div></div>
+</header>
 <div class="wrap">
     <a class="back" href="/"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>На главную</a>
     <main class="card">
@@ -134,5 +144,6 @@
     <p class="links"><a href="/kvartiry/breeze/">Морской бриз</a> · <a href="/kvartiry/mountain/">Горный воздух</a> · <a href="/kvartiry/sunny/">Солнечная</a> · <a href="/kvartiry/zapovednik/">Заповедник</a></p>
     <p class="links"><a href="/privacy.html">Политика конфиденциальности</a></p>
 </footer>
+<script src="/js/site-header.js"></script>
 </body>
 </html>

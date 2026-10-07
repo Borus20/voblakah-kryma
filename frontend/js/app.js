@@ -1157,6 +1157,8 @@
                 // ИЗМЕНЕНИЕ 2: Добавлена обработка хеша #about при загрузке страницы
                 else if (hash === '#about') { window.showAboutPage(false); }
                 else if (hash === '#rules') { window.showRulesPage(false); }
+                // Переход с отдельных страниц (квартиры, политика) по пунктам шапки: /#apartments, /#contact и т.п.
+                else if (["#apartments", "#sights", "#location", "#contact"].includes(hash)) { setTimeout(() => { const el = document.querySelector(hash); if (el) el.scrollIntoView(); }, 300); }
             }
 
             if (typeof ymaps !== 'undefined') {

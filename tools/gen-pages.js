@@ -35,6 +35,28 @@ function picture(src, alt, eager) {
         `<img src="${s}" alt="${esc(alt)}"${eager ? '' : ' loading="lazy"'} decoding="async"></picture>`;
 }
 
+// Шапка — как на главной (стили css/site-header.css, меню js/site-header.js).
+// Та же разметка вручную продублирована в privacy.html.
+const NAV = [
+    ['/#about', 'О нас'],
+    ['/#apartments', 'Забронировать квартиру', true],
+    ['/#sights', 'Достопримечательности рядом'],
+    ['/#location', 'Расположение'],
+    ['/#contact', 'Контакты'],
+    ['/#rules', 'Правила проживания']
+];
+function siteHeader() {
+    const links = NAV.map(([href, text, main]) => `<a href="${href}"${main ? ' class="sh-main"' : ''}>${text}</a>`).join('');
+    return `<header class="site-header">
+    <nav class="sh-nav">
+        <a href="/" class="sh-logo">В&nbsp;облаках</a>
+        <div class="sh-links">${links}</div>
+        <button type="button" class="sh-burger" aria-label="Меню" aria-expanded="false"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg></button>
+    </nav>
+    <div class="sh-menu" hidden><div class="sh-menu-bg"></div><div class="sh-menu-links">${links}</div></div>
+</header>`;
+}
+
 // Подвал — такой же, как на главной (index.html)
 function siteFooter() {
     return `<footer class="site-footer">
@@ -102,6 +124,7 @@ function page(id) {
     <link rel="manifest" href="/site.webmanifest">
     <link rel="preload" href="/fonts/inter-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="/css/apartment-page.css">
+    <link rel="stylesheet" href="/css/site-header.css">
     <script type="application/ld+json">${JSON.stringify(ld)}</script>
     <script type="application/ld+json">${JSON.stringify(breadcrumbs)}</script>
     <script>
@@ -113,6 +136,7 @@ function page(id) {
     </script>
 </head>
 <body>
+${siteHeader()}
 <div class="wrap">
     <a class="back" href="/"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>На главную</a>
     <main class="card">
@@ -160,6 +184,7 @@ ${others.map(o => `            <li><a href="/kvartiry/${o}/">${esc(niceName(cfg.
     </main>
 </div>
 ${siteFooter()}
+<script src="/js/site-header.js"></script>
 </body>
 </html>
 `;
