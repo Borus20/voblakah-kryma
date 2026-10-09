@@ -156,7 +156,7 @@ ${siteHeader()}
 ${prices.map(x => `                <tr><td>${MONTHS[x.m][0].toUpperCase() + MONTHS[x.m].slice(1)}</td><td>${rub(x.p)} ₽</td></tr>`).join('\n')}
             </tbody>
         </table>
-        <p class="note">Цена указана за всю квартиру. Минимальный срок бронирования — 4 ночи.</p>
+        <p class="note">Цена указана за всю квартиру. Минимальный срок бронирования — 7 ночей.</p>
 
         <h2>Фотографии</h2>
         <div class="gallery">

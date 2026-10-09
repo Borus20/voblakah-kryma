@@ -140,7 +140,7 @@ function isValidDate(v) {
 // ==========================================
 
 const SITE_CONFIG_PATH = path.join(FRONTEND_DIR, 'js', 'config.js');
-const MIN_NIGHTS = 4;
+const MIN_NIGHTS = 7;
 const DEFAULT_NIGHT_PRICE = 3500; // как в app.js, если месяц не указан в PRICES_BY_MONTH
 let siteConfigCache = { mtimeMs: 0, data: null };
 
@@ -403,7 +403,7 @@ app.post('/api/book', publicLimiter, async (req, res) => {
     }
     const stay = calcStay(startDate, endDate, cfg.PRICES_BY_MONTH);
     if (stay.nights < MIN_NIGHTS) {
-        return res.status(400).json({ error: `Минимальный срок бронирования — ${MIN_NIGHTS} ночи.` });
+        return res.status(400).json({ error: `Минимальный срок бронирования — ${MIN_NIGHTS} ночей.` });
     }
     if (stay.total !== priceNum) {
         console.warn(`Цена с сайта (${priceNum}) не совпала с расчётом сервера (${stay.total}) для ${apartmentId} ${startDate}—${endDate}`);

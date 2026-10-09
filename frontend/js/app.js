@@ -547,8 +547,8 @@
                     resetBookingState(); 
                 } else {
                     const nights = Math.ceil((checkOutDate - checkInDate) / (1000 * 60 * 60 * 24));
-                    if (nights < 4) {
-                        showToast("Минимальный срок бронирования - 4 ночи");
+                    if (nights < 7) {
+                        showToast("Минимальный срок бронирования - 7 ночей");
                         // СБРОС (согласно требованию очищать выделение при ошибке)
                         checkOutDate = null;
                         checkInDate = null;
@@ -583,7 +583,7 @@
                  const prepayment = Math.round(totalPrice * 0.2);
                  sumDisplay.innerHTML = `Сумма: ${totalPrice} руб.<br><span class="text-sm text-blue-500"> Предоплата (20%): ${prepayment} руб.</span>`;
                  
-                 if (nights >= 4) {
+                 if (nights >= 7) {
                      btn.disabled = false;
                      btn.classList.remove('cursor-not-allowed', 'bg-gray-400');
                      btn.classList.add('bg-green-500', 'hover:bg-green-600');
