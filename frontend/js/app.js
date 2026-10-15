@@ -417,7 +417,7 @@
              maxStartDate.setDate(1);
 
              if (prevBtn) {
-                 // Скрываем "Назад", если текущий месяц <= стартовой даты (Май)
+                 // Скрываем "Назад", если текущий месяц <= стартовой даты (начало сезона)
                  prevBtn.style.visibility = (currentCalendarDate.getTime() <= getCalendarStartDate().getTime()) ? 'hidden' : 'visible';
              }
              if (nextBtn) {

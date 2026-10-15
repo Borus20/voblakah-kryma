@@ -45,6 +45,6 @@
         const heroImages = ['img/common/house.jpg', 'img/common/view1.jpg', 'img/common/view2.jpg', 'img/common/view3.jpg', 'img/common/view4.jpg', 'img/common/view5.jpg', 'img/common/view6.jpg', 'img/common/view7.jpg', 'img/common/view8.jpg'];
 
 // --- Сезон и цены (месяц: 0=янв ... 4=май ... 8=сен) ---
-        const CALENDAR_START_DATE = new Date(2027, 4, 1);
+        const CALENDAR_START_DATE = new Date(2027, 5, 1);
         const CALENDAR_END_DATE = new Date(2027, 8, 30);
-        const PRICES_BY_MONTH = { 4: 3500, 5: 4500, 6: 5500, 7: 5500, 8: 4000 };
+        const PRICES_BY_MONTH = { 5: 4500, 6: 5500, 7: 5500, 8: 4000 };
