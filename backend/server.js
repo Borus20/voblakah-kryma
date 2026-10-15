@@ -536,6 +536,15 @@ bot.on('callback_query', async (query) => {
         if (!booking) return await answer({ text: 'Бронь не найдена в базе', show_alert: true });
         const status = booking.status;
 
+        // Нумерация броней начиналась заново с #1 (старые лежат в bookings_archive).
+        // Кнопка из сообщения, отправленного раньше, чем создана бронь с этим номером, —
+        // от старой брони: новую не трогаем, кнопки убираем.
+        const createdAt = Date.parse(String(booking.created_at).replace(' ', 'T') + 'Z');
+        if (msg.date && !isNaN(createdAt) && msg.date * 1000 < createdAt - 120000) {
+            await answer({ text: `Эта кнопка от старой брони. Сейчас под номером #${id} другая заявка — откройте её через «📋 Список броней».`, show_alert: true });
+            return await safe(bot.editMessageReplyMarkup({ inline_keyboard: [] }, where));
+        }
+
         // Уже отменена — убираем кнопки (уведомление с данными гостя НЕ удаляем)
         if (status === 'cancelled') {
             await answer({ text: `⚠️ Бронь #${id} уже отменена`, show_alert: true });
