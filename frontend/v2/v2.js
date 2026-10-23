@@ -143,13 +143,19 @@
     // ---------- координаты мест (для расстояний и карты) ----------
     let places = null;
     const placesReady = fetch('/v2/map/data/places.json').then(r => r.json()).then(p => (places = p)).catch(() => null);
+    function kmBetween(a, b) {
+        const R = 6371, rad = (d) => d * Math.PI / 180;
+        const s = Math.sin(rad(b.lat - a.lat) / 2) ** 2 + Math.cos(rad(a.lat)) * Math.cos(rad(b.lat)) * Math.sin(rad(b.lon - a.lon) / 2) ** 2;
+        return 2 * R * Math.asin(Math.sqrt(s));
+    }
+    const fmtKm = (km) => km < 10 ? km.toFixed(1).replace('.', ',') : String(Math.round(km));
     function distKm(id) {
         if (!places || !places[id] || !places.house) return null;
-        const a = places.house, b = places[id], R = 6371, rad = (d) => d * Math.PI / 180;
-        const s = Math.sin(rad(b.lat - a.lat) / 2) ** 2 + Math.cos(rad(a.lat)) * Math.cos(rad(b.lat)) * Math.sin(rad(b.lon - a.lon) / 2) ** 2;
-        const km = 2 * R * Math.asin(Math.sqrt(s));
-        return km < 10 ? km.toFixed(1).replace('.', ',') : String(Math.round(km));
+        return fmtKm(kmBetween(places.house, places[id]));
     }
+    // Маршрут на машине от нашего дома в Яндекс Картах (rtext: широта,долгота~широта,долгота)
+    const routeUrl = (id) => places && places[id] && places.house
+        ? `https://yandex.ru/maps/?rtext=${places.house.lat},${places.house.lon}~${places[id].lat},${places[id].lon}&rtt=auto` : null;
 
     // ---------- достопримечательности ----------
     const rail = $('#sights-rail');
@@ -184,10 +190,13 @@
     addEventListener('keydown', (e) => { if (e.key === 'Escape' && openLayer) hideLayer(openLayer); });
 
     // ---------- окно достопримечательности ----------
-    let smTimer = null;
+    let smTimer = null, smCurrent = null;
     function openSight(id, pushHash) {
         const s = sightsData[id]; if (!s) return;
         if (mapApi && document.querySelector('.m3d.is-full')) mapApi.setFull(false);   // окно не должно открываться под полноэкранной картой
+        smCurrent = id;
+        // открыли по прямой ссылке до загрузки координат — дополним окно маршрутом и соседями, когда они придут
+        if (!places) placesReady.then(() => { if (places && smCurrent === id && !$('#sight-modal').hidden) openSight(id, false); });
         const d = distKm(id);
         $('#sm-dist').textContent = d ? `${d} км от нашего дома по прямой` : 'Рядом с нами';
         $('#sm-title').textContent = s.title;
@@ -198,8 +207,25 @@
         g.innerHTML = s.images.map((src, i) => pic(src, s.title, { sizes: '(max-width: 1000px) 100vw, 520px', cls: i === 0 ? 'is-on' : '' })).join('');
         clearInterval(smTimer);
         const imgs = $$('img', g); let k = 0;
-        if (imgs.length > 1 && !reduceMotion) smTimer = setInterval(() => { imgs[k].classList.remove('is-on'); k = (k + 1) % imgs.length; imgs[k].classList.add('is-on'); }, 3800);
+        if (imgs.length > 1 && !reduceMotion) smTimer = setInterval(() => showImg((k + 1) % imgs.length), 3800);   // showImg объявлена ниже, вызывается позже
         $('#sm-onmap').onclick = () => { hideLayer($('#sight-modal')); showOnMap(id); };
+        // маршрут и расстояние
+        const route = routeUrl(id), routeBox = $('.sm-route');
+        routeBox.hidden = !route;
+        if (route) { $('#sm-route').href = route; $('#sm-km').textContent = `${d} км по прямой`; }
+        // три ближайших места к этому
+        const near = places && places[id] ? Object.keys(sightsData).filter(k => k !== id && places[k])
+            .map(k => ({ k, km: kmBetween(places[id], places[k]) })).sort((a, b) => a.km - b.km).slice(0, 3) : [];
+        $('.sm-near').hidden = !near.length;
+        $('#sm-near').innerHTML = near.map(({ k, km }) => `<button type="button" class="sm-near-item" data-near="${k}">
+            ${pic(sightsData[k].images[0], sightsData[k].title, { sizes: '120px' })}
+            <span><b>${esc(sightsData[k].title)}</b><small>${fmtKm(km)} км отсюда</small></span></button>`).join('');
+        $$('[data-near]', $('#sm-near')).forEach(b => b.addEventListener('click', () => { history.replaceState(null, '', '#sight-' + b.dataset.near); openSight(b.dataset.near, false); $('.modal-panel--sight').scrollTop = 0; $('.sm-body').scrollTop = 0; }));
+        // точки-переключатели фото
+        g.insertAdjacentHTML('beforeend', imgs.length > 1 ? `<div class="sm-dots">${imgs.map((_, i) => `<button type="button" data-dot="${i}" class="${i === 0 ? 'is-on' : ''}" aria-label="Фото ${i + 1}"></button>`).join('')}</div>` : '');
+        const dots = $$('[data-dot]', g);
+        const showImg = (i) => { imgs[k].classList.remove('is-on'); dots[k] && dots[k].classList.remove('is-on'); k = i; imgs[k].classList.add('is-on'); dots[k] && dots[k].classList.add('is-on'); };
+        dots.forEach(b => b.addEventListener('click', () => { clearInterval(smTimer); showImg(+b.dataset.dot); }));
         if (pushHash) history.pushState(null, '', '#sight-' + id);
         showLayer($('#sight-modal'));
     }

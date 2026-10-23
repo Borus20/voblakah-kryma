@@ -12,8 +12,8 @@
     <link rel="preload" href="/v2/fonts/cormorant-cyrillic-normal.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="/fonts/inter-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="/v2/fonts/cormorant.css">
-    <link rel="stylesheet" href="/v2/v2.css?v=4">
-    <link rel="stylesheet" href="/v2/map/map3d.css?v=3">
+    <link rel="stylesheet" href="/v2/v2.css?v=5">
+    <link rel="stylesheet" href="/v2/map/map3d.css?v=4">
 </head>
 <body>
 
@@ -244,9 +244,20 @@
             <p class="kicker" id="sm-dist"></p>
             <h2 id="sm-title"></h2>
             <p id="sm-desc"></p>
+            <div class="sm-route">
+                <div>
+                    <span>От нашего дома</span>
+                    <b id="sm-km"></b>
+                </div>
+                <a class="btn btn--gold" id="sm-route" target="_blank" rel="noopener">Маршрут в Яндекс Картах</a>
+            </div>
             <div class="sm-actions">
                 <button type="button" class="btn btn--dark" id="sm-onmap">Показать на 3D-карте</button>
                 <a class="btn btn--outline" id="sm-link" target="_blank" rel="noopener">Сайт места</a>
+            </div>
+            <div class="sm-near">
+                <h3>Что ещё рядом с этим местом</h3>
+                <div id="sm-near"></div>
             </div>
         </div>
     </div>
@@ -288,9 +299,9 @@
 </div>
 
 <script src="/js/config.js?v=v2"></script>
-<script src="/v2/v2.js?v=3"></script>
+<script src="/v2/v2.js?v=5"></script>
 <script type="module">
-    import { initMap3D } from '/v2/map/map3d.min.js?v=5';
+    import { initMap3D } from '/v2/map/map3d.min.js?v=8';
     window.__initMap3D = initMap3D;
     window.dispatchEvent(new Event('map3d-ready'));
 </script>

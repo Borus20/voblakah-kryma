@@ -86,5 +86,36 @@
    "h": 15
   }
  },
- "attribution": "Снимки: Copernicus Sentinel-2 (ЕКА), 2026. Рельеф: Copernicus DEM GLO-30 © DLR e.V. 2010–2014, © Airbus Defence and Space GmbH 2014–2018, предоставлено ЕС и ЕКА в рамках программы Copernicus."
+ "attribution": "Снимки: Copernicus Sentinel-2 (ЕКА), 2026. Рельеф: Copernicus DEM GLO-30 © DLR e.V. 2010–2014, © Airbus Defence and Space GmbH 2014–2018, предоставлено ЕС и ЕКА в рамках программы Copernicus.",
+ "outer": {
+  "bounds_utm36n": [
+   492002.8153488647,
+   4888533.270093516,
+   683936.7859479748,
+   5013296.224434157
+  ],
+  "offset_m": [
+   -53264.41790517635,
+   -78437.97978876345
+  ],
+  "width_m": 191933.97059911006,
+  "height_m": 124762.95434064046,
+  "height": {
+   "file": "outer_height_512x332.bin",
+   "w": 512,
+   "h": 332
+  },
+  "sea_rgb": {
+   "summer": [
+    10,
+    12,
+    45
+   ],
+   "winter": [
+    3,
+    4,
+    10
+   ]
+  }
+ }
 }

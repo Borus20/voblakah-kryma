@@ -89,3 +89,6 @@ html.m3d-lock, html.m3d-lock body { overflow: hidden !important; }
     .m3d-attr { max-width: 100%; left: 10px; text-align: left; }
 }
 @media (prefers-reduced-motion: reduce) { .m3d-pin--house .m3d-dot::before { animation: none; } }
+/* метка за горой — плавно скрывается */
+.m3d-pin { transition: opacity .35s ease; }
+.m3d-pin.is-behind { opacity: 0; pointer-events: none; }

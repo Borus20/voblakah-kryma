@@ -7,12 +7,14 @@ import {
     WebGLRenderer, Scene, PerspectiveCamera, BufferGeometry, BufferAttribute, Mesh, ShaderMaterial,
     TextureLoader, LinearFilter, LinearMipmapLinearFilter, Vector3, Color, Sprite, SpriteMaterial,
     CanvasTexture, Spherical, MathUtils, SRGBColorSpace, NoColorSpace,
-    InstancedMesh, InstancedBufferAttribute, Object3D, DoubleSide
+    InstancedMesh, InstancedBufferAttribute, Object3D, DoubleSide, BackSide, SphereGeometry, PlaneGeometry
 } from 'three';
 import { MapControls } from 'three/examples/jsm/controls/MapControls.js';
 
 const EXAG = 1.8;                 // вертикальное преувеличение рельефа (горы выразительнее)
-const SEA = new Color('#0b1b33');  // цвет фона/тумана — как тёмное море на снимках
+// Цвет моря: снимки дают почти чёрно-синюю воду — сдвигаем к голубому (летом ярче, зимой спокойнее)
+const SEA_SUMMER = new Color('#2a6eab');
+const SEA_WINTER = new Color('#245d93');
 
 // Расстояние по прямой между двумя точками (км)
 function haversineKm(a, b) {
@@ -55,19 +57,62 @@ void main() {
 const FRAG = `
 uniform sampler2D tA; uniform sampler2D tB; uniform float uMix; uniform float uTime;
 uniform vec3 uLight; uniform vec3 uFog; uniform float uFogNear; uniform float uFogFar;
+uniform float uEdge; uniform vec3 uSea; uniform vec3 uSeaTex; uniform float uSeaFlat;
 varying vec2 vUv; varying vec3 vN; varying float vDepth; varying vec3 vW;
 void main() {
     vec3 c = mix(texture2D(tA, vUv).rgb, texture2D(tB, vUv).rgb, uMix);
     // море: высота ~0 и синий цвет на снимке (пляжи и низкий берег не блестят)
     float sea = (1.0 - smoothstep(0.0, 0.006, vW.y)) * step(c.r, c.b + 0.015);
+    float edge = min(min(vUv.x, 1.0 - vUv.x), min(vUv.y, 1.0 - vUv.y));
+    // вода: тон сдвигается к голубому uSea, но перепады снимка (бирюза мелководья, рябь) сохраняются;
+    // на подложке и у краёв основной карты — ровный цвет (нет полос между снимками и шва)
+    float flatK = max(uSeaFlat, 1.0 - smoothstep(0.0, 0.06, edge));
+    vec3 water = uSea + (c - uSeaTex) * 1.15 * (1.0 - flatK);
+    c = mix(c, water, sea);
     float d = max(dot(normalize(vN), uLight), 0.0);
     c *= 0.66 + 0.5 * d;                                   // подсветка рельефа низким солнцем
     float g = sin(vW.x * 95.0 + uTime * 1.6) * sin(vW.z * 77.0 - uTime * 1.25) * sin((vW.x + vW.z) * 41.0 + uTime * 0.7);
     float glint = pow(max(g, 0.0), 30.0) * (1.0 - smoothstep(6.0, 26.0, vDepth));
     c += sea * (glint * 0.4 * vec3(1.0, 0.96, 0.86) + vec3(0.0, 0.012, 0.03));
-    float edge = min(min(vUv.x, 1.0 - vUv.x), min(vUv.y, 1.0 - vUv.y));
-    c = mix(uFog, c, smoothstep(0.0, 0.035, edge));        // края карты растворяются
-    c = mix(c, uFog, smoothstep(uFogNear, uFogFar, vDepth)); // воздушная перспектива
+    // края подложки плавно переходят в бесконечное море (у основной карты uEdge = 0 — края нет)
+    if (uEdge > 0.0) c = mix(uSea, c, smoothstep(0.0, uEdge, edge));
+    c = mix(c, uFog, smoothstep(uFogNear, uFogFar, vDepth)); // воздушная перспектива, дымка у горизонта
+    gl_FragColor = vec4(c, 1.0);
+}`;
+
+// Бесконечное море до горизонта
+const SEA_VERT = `
+varying vec3 vW; varying float vDepth;
+void main() {
+    vec4 w = modelMatrix * vec4(position, 1.0); vW = w.xyz;
+    vec4 mv = viewMatrix * w; vDepth = -mv.z;
+    gl_Position = projectionMatrix * mv;
+}`;
+const SEA_FRAG = `
+uniform vec3 uSea; uniform vec3 uFog; uniform float uFogNear; uniform float uFogFar; uniform float uTime;
+varying vec3 vW; varying float vDepth;
+void main() {
+    float g = sin(vW.x * 95.0 + uTime * 1.6) * sin(vW.z * 77.0 - uTime * 1.25) * sin((vW.x + vW.z) * 41.0 + uTime * 0.7);
+    float glint = pow(max(g, 0.0), 30.0) * (1.0 - smoothstep(6.0, 26.0, vDepth));
+    vec3 c = uSea * 0.97 + glint * 0.4 * vec3(1.0, 0.96, 0.86) + vec3(0.0, 0.012, 0.03);   // 0.97 — как освещение ровной воды на карте
+    c = mix(c, uFog, smoothstep(uFogNear, uFogFar, vDepth));
+    gl_FragColor = vec4(c, 1.0);
+}`;
+
+// Небо: от голубого зенита к светлой дымке у горизонта
+const SKY_VERT = `
+varying vec3 vDir;
+void main() {
+    vDir = normalize(position);
+    vec4 p = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    gl_Position = p.xyww;   // всегда на дальней плоскости
+}`;
+const SKY_FRAG = `
+uniform vec3 uHorizon; uniform vec3 uZenith;
+varying vec3 vDir;
+void main() {
+    float h = clamp(vDir.y, 0.0, 1.0);
+    vec3 c = mix(uHorizon, uZenith, pow(smoothstep(0.0, 0.55, h), 0.8));
     gl_FragColor = vec4(c, 1.0);
 }`;
 
@@ -152,54 +197,102 @@ export async function initMap3D(root, opts) {
     };
     const world = (u, v) => new Vector3((u - 0.5) * W, hAt(u, v) / 1000 * EXAG, (v - 0.5) * H);
 
-    // --- Рельеф ---
-    const step = small ? 2 : 1;
-    const nx = Math.floor((hw - 1) / step) + 1, ny = Math.floor((hh - 1) / step) + 1;
-    const pos = new Float32Array(nx * ny * 3), uvs = new Float32Array(nx * ny * 2);
-    for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) {
-        const u = i / (nx - 1), v = j / (ny - 1), k = j * nx + i;
-        pos[k * 3] = (u - 0.5) * W; pos[k * 3 + 1] = hAt(u, v) / 1000 * EXAG; pos[k * 3 + 2] = (v - 0.5) * H;
-        uvs[k * 2] = u; uvs[k * 2 + 1] = 1 - v;
+    // --- Рельеф: сетка по карте высот. offX/offZ — сдвиг левого-верхнего угла (км) относительно основной карты;
+    //     lowerInside — опустить участок под основной картой (для подложки), чтобы они не спорили ---
+    function terrainGeometry(hts, gw, gh, wKm, hKm, offX, offZ, stp, lowerInside) {
+        const at = (u, v) => {
+            const x = Math.min(gw - 1.001, Math.max(0, u * (gw - 1))), y = Math.min(gh - 1.001, Math.max(0, v * (gh - 1)));
+            const x0 = Math.floor(x), y0 = Math.floor(y), fx = x - x0, fy = y - y0, i = y0 * gw + x0;
+            return (hts[i] * (1 - fx) + hts[i + 1] * fx) * (1 - fy) + (hts[i + gw] * (1 - fx) + hts[i + gw + 1] * fx) * fy;
+        };
+        const nx = Math.floor((gw - 1) / stp) + 1, ny = Math.floor((gh - 1) / stp) + 1;
+        const pos = new Float32Array(nx * ny * 3), uvs = new Float32Array(nx * ny * 2);
+        for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) {
+            const u = i / (nx - 1), v = j / (ny - 1), k = j * nx + i;
+            const x = offX + u * wKm - W / 2, z = offZ + v * hKm - H / 2;
+            let y = at(u, v) / 1000 * EXAG;
+            if (lowerInside && x > -W / 2 + 0.05 && x < W / 2 - 0.05 && z > -H / 2 + 0.05 && z < H / 2 - 0.05) y -= 0.08;
+            pos[k * 3] = x; pos[k * 3 + 1] = y; pos[k * 3 + 2] = z;
+            uvs[k * 2] = u; uvs[k * 2 + 1] = 1 - v;
+        }
+        const idx = new Uint32Array((nx - 1) * (ny - 1) * 6);
+        let p = 0;
+        for (let j = 0; j < ny - 1; j++) for (let i = 0; i < nx - 1; i++) {
+            const a = j * nx + i, b = a + 1, c = a + nx, d = c + 1;
+            idx[p++] = a; idx[p++] = c; idx[p++] = b; idx[p++] = b; idx[p++] = c; idx[p++] = d;
+        }
+        const g = new BufferGeometry();
+        g.setAttribute('position', new BufferAttribute(pos, 3));
+        g.setAttribute('uv', new BufferAttribute(uvs, 2));
+        g.setIndex(new BufferAttribute(idx, 1));
+        g.computeVertexNormals();
+        return g;
     }
-    const idx = new Uint32Array((nx - 1) * (ny - 1) * 6);
-    let p = 0;
-    for (let j = 0; j < ny - 1; j++) for (let i = 0; i < nx - 1; i++) {
-        const a = j * nx + i, b = a + 1, c = a + nx, d = c + 1;
-        idx[p++] = a; idx[p++] = c; idx[p++] = b; idx[p++] = b; idx[p++] = c; idx[p++] = d;
-    }
-    const geo = new BufferGeometry();
-    geo.setAttribute('position', new BufferAttribute(pos, 3));
-    geo.setAttribute('uv', new BufferAttribute(uvs, 2));
-    geo.setIndex(new BufferAttribute(idx, 1));
-    geo.computeVertexNormals();
+    const geo = terrainGeometry(heights, hw, hh, W, H, 0, 0, small ? 2 : 1, false);
 
     // состояние цикла отрисовки (объявлено до первого resize/wake)
     let visible = true, running = false, last = performance.now(), idleSince = performance.now();
 
+    const HORIZON = new Color('#c4d3e1'), ZENITH = new Color('#4f7fb5');
     const renderer = new WebGLRenderer({ antialias: !small, powerPreference: 'high-performance' });
     renderer.setPixelRatio(Math.min(devicePixelRatio || 1, small ? 1.5 : 2));
-    renderer.setClearColor(SEA);
+    renderer.setClearColor(HORIZON);
     stage.appendChild(renderer.domElement);
     const texSize = (!small && renderer.capabilities.maxTextureSize >= 4096) ? 4096 : 2048;
 
     const loader = new TextureLoader();
-    const loadTex = (name) => new Promise((res, rej) => loader.load(`${base}${name}_${texSize}.webp`, (t) => {
+    const loadFile = (file) => new Promise((res, rej) => loader.load(base + file, (t) => {
         t.colorSpace = NoColorSpace; t.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
         t.minFilter = LinearMipmapLinearFilter; t.magFilter = LinearFilter; res(t);
     }, undefined, rej));
+    const loadTex = (name) => loadFile(`${name}_${texSize}.webp`);
     const summer = await loadTex('summer');
     let winter = null;
 
-    const mat = new ShaderMaterial({
-        vertexShader: VERT, fragmentShader: FRAG,
-        uniforms: {
-            tA: { value: summer }, tB: { value: summer }, uMix: { value: 0 }, uTime: { value: 0 },
-            uLight: { value: new Vector3(-0.55, 0.62, 0.56).normalize() },
-            uFog: { value: SEA.clone() }, uFogNear: { value: 30 }, uFogFar: { value: 95 }
-        }
+    const FOG_NEAR = 38, FOG_FAR = 150;
+    const terrainUniforms = (tex, edge) => ({
+        tA: { value: tex }, tB: { value: tex }, uMix: { value: 0 }, uTime: { value: 0 },
+        uLight: { value: new Vector3(-0.55, 0.62, 0.56).normalize() },
+        uFog: { value: HORIZON.clone() }, uFogNear: { value: FOG_NEAR }, uFogFar: { value: FOG_FAR },
+        uEdge: { value: edge }, uSea: { value: SEA_SUMMER.clone() }, uSeaTex: { value: new Color('#0e1e3c') },
+        uSeaFlat: { value: edge > 0 ? 1 : 0 }
     });
+    const mat = new ShaderMaterial({ vertexShader: VERT, fragmentShader: FRAG, uniforms: terrainUniforms(summer, 0) });
     const scene = new Scene();
     scene.add(new Mesh(geo, mat));
+
+    // --- Небо ---
+    const skyMat = new ShaderMaterial({ vertexShader: SKY_VERT, fragmentShader: SKY_FRAG, side: BackSide, depthWrite: false,
+        uniforms: { uHorizon: { value: HORIZON }, uZenith: { value: ZENITH } } });
+    const sky = new Mesh(new SphereGeometry(500, 32, 16), skyMat);
+    sky.renderOrder = -1; sky.frustumCulled = false;
+    scene.add(sky);
+
+    // --- Бесконечное море (цвет — средний цвет моря на снимках) и широкая подложка вокруг ---
+    // средний цвет воды на самих снимках — от него считается сдвиг к голубому
+    const seaRGB = (meta.outer && meta.outer.sea_rgb) || { summer: [12, 18, 48], winter: [12, 18, 48] };
+    const seaTexSummer = new Color(seaRGB.summer[0] / 255, seaRGB.summer[1] / 255, seaRGB.summer[2] / 255);
+    const seaTexWinter = new Color(seaRGB.winter[0] / 255, seaRGB.winter[1] / 255, seaRGB.winter[2] / 255);
+    mat.uniforms.uSeaTex.value.copy(seaTexSummer);
+    const seaMat = new ShaderMaterial({ vertexShader: SEA_VERT, fragmentShader: SEA_FRAG,
+        uniforms: { uSea: { value: SEA_SUMMER.clone() }, uFog: { value: HORIZON.clone() }, uFogNear: { value: FOG_NEAR }, uFogFar: { value: FOG_FAR }, uTime: { value: 0 } } });
+    const seaPlane = new Mesh(new PlaneGeometry(1600, 1600), seaMat);
+    seaPlane.rotation.x = -Math.PI / 2; seaPlane.position.y = -0.03;
+    scene.add(seaPlane);
+
+    let outerMat = null;
+    if (meta.outer) {
+        const o = meta.outer;
+        const oh = new Int16Array(await (await fetch(base + o.height.file)).arrayBuffer());
+        const oGeo = terrainGeometry(oh, o.height.w, o.height.h, o.width_m / 1000, o.height_m / 1000,
+            o.offset_m[0] / 1000, o.offset_m[1] / 1000, small ? 2 : 1, true);
+        const oTex = await loadFile(`outer_summer_${small ? 1024 : 2048}.webp`);
+        outerMat = new ShaderMaterial({ vertexShader: VERT, fragmentShader: FRAG, uniforms: terrainUniforms(oTex, 0.05) });
+        outerMat.uniforms.uSeaTex.value.copy(seaTexSummer);
+        const outer = new Mesh(oGeo, outerMat);
+        outer.position.y = -0.004;   // чуть ниже основной карты на её границе
+        scene.add(outer);
+    }
 
     // --- Облака ---
     const cloudTex = cloudTexture();
@@ -258,11 +351,11 @@ export async function initMap3D(root, opts) {
     }
 
     // --- Камера и управление ---
-    const camera = new PerspectiveCamera(40, 1, 0.1, 400);
+    const camera = new PerspectiveCamera(40, 1, 0.3, 1200);
     const controls = new MapControls(camera, renderer.domElement);
     controls.enableDamping = true; controls.dampingFactor = 0.08;
-    controls.minDistance = 2.2; controls.maxDistance = 48;
-    controls.minPolarAngle = 0.15; controls.maxPolarAngle = 1.22;
+    controls.minDistance = 2.2; controls.maxDistance = 46;
+    controls.minPolarAngle = 0.15; controls.maxPolarAngle = 1.38;   // можно наклониться почти к горизонту
     controls.screenSpacePanning = false;
     controls.enabled = false;
     const clampTarget = () => {
@@ -315,6 +408,8 @@ export async function initMap3D(root, opts) {
         const s = isHouse ? null : sights[id];
         const img = isHouse ? houseInfo.img : (s.images && s.images[0]);
         const dist = (!isHouse && places[id]) ? fmtKm(haversineKm(houseLL, places[id])) : null;
+        // маршрут на машине от нашего дома в Яндекс Картах
+        const route = (!isHouse && places[id]) ? `https://yandex.ru/maps/?rtext=${houseLL.lat},${houseLL.lon}~${places[id].lat},${places[id].lon}&rtt=auto` : null;
         const pic = img ? `<picture><source type="image/webp" srcset="/${img}.w1280.webp"><img src="/${img}" alt="${esc(isHouse ? houseInfo.title : s.title)}" loading="lazy"></picture>` : '';
         card.innerHTML = `
             <button type="button" class="m3d-card-close" aria-label="Закрыть">&times;</button>
@@ -326,7 +421,7 @@ export async function initMap3D(root, opts) {
                 <div class="m3d-card-actions">
                     ${isHouse
                         ? `<a class="m3d-btn m3d-btn--primary" href="${esc(houseInfo.href)}">Выбрать квартиру</a>`
-                        : `<a class="m3d-btn m3d-btn--primary" href="${esc(opts.sightHref ? opts.sightHref(id) : '/#sight-' + id)}">Подробнее</a>${s.link ? `<a class="m3d-btn" href="${esc(s.link)}" target="_blank" rel="noopener">Сайт места</a>` : ''}`}
+                        : `<a class="m3d-btn m3d-btn--primary" href="${esc(opts.sightHref ? opts.sightHref(id) : '/#sight-' + id)}">Подробнее</a>${route ? `<a class="m3d-btn" href="${esc(route)}" target="_blank" rel="noopener">Маршрут</a>` : ''}${s.link ? `<a class="m3d-btn" href="${esc(s.link)}" target="_blank" rel="noopener">Сайт места</a>` : ''}`}
                 </div>
             </div>`;
         card.hidden = false;
@@ -344,9 +439,11 @@ export async function initMap3D(root, opts) {
         root.querySelectorAll('.m3d-season button').forEach(b => b.classList.toggle('is-on', b === btn));
         if (s === 1 && !winter) {
             btn.classList.add('is-loading');
-            winter = await loadTex('winter');
+            const [w, ow] = await Promise.all([loadTex('winter'), outerMat ? loadFile(`outer_winter_${small ? 1024 : 2048}.webp`) : null]);
+            winter = w;
             btn.classList.remove('is-loading');
             mat.uniforms.tB.value = winter;
+            if (outerMat && ow) outerMat.uniforms.tB.value = ow;
         }
         mixTo = s; wake();
     }));
@@ -378,6 +475,17 @@ export async function initMap3D(root, opts) {
         toTgt: houseW.clone().add(new Vector3(0.6, 0, -2.5)), toPos: viewFrom(houseW.clone().add(new Vector3(0.6, 0, -2.5)), 16, 1.0, 0.08) };
     let introDone = false;
     const v = new Vector3();
+    // Метка за горой? Идём по лучу камера → метка и сравниваем высоту луча с рельефом (по карте высот, без тяжёлых пересечений)
+    const q = new Vector3();
+    function occluded(p) {
+        for (let i = 1; i < 26; i++) {           // последние ~7% пути не проверяем: у самой метки луч идёт вдоль склона
+            q.lerpVectors(camera.position, p, i / 28);
+            const u = q.x / W + 0.5, w = q.z / H + 0.5;
+            if (u < 0 || u > 1 || w < 0 || w > 1) continue;
+            if (q.y < hAt(u, w) / 1000 * EXAG - 0.03) return true;
+        }
+        return false;
+    }
     function frame(now) {
         running = false;
         if (!visible) return;
@@ -406,6 +514,16 @@ export async function initMap3D(root, opts) {
         const t = now / 1000;
         mat.uniforms.uTime.value = t;
         gullMat.uniforms.uTime.value = t;
+        seaMat.uniforms.uTime.value = t;
+        const seaNow = seaMat.uniforms.uSea.value.copy(SEA_SUMMER).lerp(SEA_WINTER, um.value);
+        mat.uniforms.uSea.value.copy(seaNow);
+        mat.uniforms.uSeaTex.value.copy(seaTexSummer).lerp(seaTexWinter, um.value);
+        if (outerMat) {
+            outerMat.uniforms.uMix.value = um.value;
+            outerMat.uniforms.uSea.value.copy(seaNow);
+            outerMat.uniforms.uSeaTex.value.copy(mat.uniforms.uSeaTex.value);
+        }
+        sky.position.copy(camera.position);
         updateGulls(dt, t);
 
         // облака: дрейф и проявление после интро
@@ -427,7 +545,10 @@ export async function initMap3D(root, opts) {
             v.copy(m.pos).project(camera);
             const onScreen = v.z < 1 && v.x > -1.1 && v.x < 1.1 && v.y > -1.1 && v.y < 1.1;
             m.el.style.display = onScreen ? '' : 'none';
-            if (onScreen) m.el.style.transform = `translate(${(v.x * 0.5 + 0.5) * rw}px, ${(-v.y * 0.5 + 0.5) * rh}px)`;
+            if (onScreen) {
+                m.el.style.transform = `translate(${(v.x * 0.5 + 0.5) * rw}px, ${(-v.y * 0.5 + 0.5) * rh}px)`;
+                m.el.classList.toggle('is-behind', occluded(m.pos));
+            }
         }
 
         const animating = !introDone || fly || Math.abs(mixTo - um.value) > 0.002 || (!controls.enabled && card.hidden) || clouds.length;

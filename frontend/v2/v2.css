@@ -419,3 +419,24 @@ html.is-locked, html.is-locked body { overflow: hidden; }
         linear-gradient(180deg, rgba(11, 27, 51, .55) 0%, rgba(11, 27, 51, 0) 22%),
         linear-gradient(0deg, rgba(11, 27, 51, .92) 0%, rgba(11, 27, 51, .6) 45%, rgba(11, 27, 51, .15) 75%); }
 }
+
+/* Атрибут hidden всегда скрывает (даже у блоков с display:flex/grid) */
+[hidden] { display: none !important; }
+
+/* Окно достопримечательности: маршрут, «что ещё рядом», точки фото */
+.sm-route { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; margin: 22px 0 4px; padding: 16px 18px;
+            border-radius: 16px; background: var(--sand); }
+.sm-route span { display: block; font-size: 12px; color: var(--muted); }
+.sm-route b { font-size: 18px; color: var(--navy); }
+.sm-route .btn { padding: 12px 20px; }
+.sm-near { margin-top: 28px; padding-top: 22px; border-top: 1px solid var(--line); }
+.sm-near h3 { font-size: 13px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; }
+.sm-near-item { width: 100%; display: flex; align-items: center; gap: 14px; padding: 8px; margin: 0 -8px; border: 0; border-radius: 14px; background: none;
+                text-align: left; cursor: pointer; transition: background .25s; color: var(--ink); }
+.sm-near-item:hover { background: var(--sand); }
+.sm-near-item picture, .sm-near-item img { width: 64px; height: 64px; flex-shrink: 0; border-radius: 12px; object-fit: cover; }
+.sm-near-item b { display: block; font-family: var(--font-display); font-size: 21px; font-weight: 500; line-height: 1.1; color: var(--navy); }
+.sm-near-item small { font-size: 13px; color: var(--muted); }
+.sm-dots { position: absolute; left: 0; right: 0; bottom: 16px; display: flex; justify-content: center; gap: 8px; z-index: 2; }
+.sm-dots button { width: 9px; height: 9px; padding: 0; border: 0; border-radius: 50%; background: rgba(255, 255, 255, .5); cursor: pointer; transition: background .3s, transform .3s; }
+.sm-dots button.is-on { background: #fff; transform: scale(1.25); }
