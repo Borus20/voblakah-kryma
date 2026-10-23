@@ -1,0 +1,91 @@
+/* 3D-карта побережья (map3d.js) */
+.m3d { position: relative; overflow: hidden; background: #0b1b33; color: #fff; isolation: isolate;
+       --m3d-gold: #d4b483; --m3d-glass: rgba(11, 27, 51, .62); }
+.m3d-stage, .m3d-stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.m3d-stage canvas { touch-action: none; }
+.m3d:not(.is-full) .m3d-stage canvas { touch-action: pan-y; pointer-events: none; } /* на странице не мешает прокрутке */
+.m3d-fallback { width: 100%; height: 100%; object-fit: cover; }
+
+/* Метки */
+.m3d-markers { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
+.m3d-pin { position: absolute; left: 0; top: 0; pointer-events: auto; background: none; border: 0; padding: 0; cursor: pointer;
+           display: flex; align-items: center; gap: 8px; -webkit-tap-highlight-color: transparent; will-change: transform; }
+.m3d-dot { width: 26px; height: 26px; margin: -13px 0 0 -13px; border-radius: 50%; flex-shrink: 0; position: relative;
+           background: rgba(255, 255, 255, .92); box-shadow: 0 2px 10px rgba(0, 0, 0, .35); transition: transform .25s ease; }
+.m3d-dot::after { content: ''; position: absolute; inset: 9px; border-radius: 50%; background: #1d3557; }
+.m3d-pin:hover .m3d-dot, .m3d-pin.is-active .m3d-dot { transform: scale(1.18); }
+.m3d-pin--house .m3d-dot { width: 34px; height: 34px; margin: -17px 0 0 -17px; background: var(--m3d-gold);
+                           box-shadow: 0 0 0 6px rgba(212, 180, 131, .28), 0 4px 16px rgba(0, 0, 0, .4); }
+.m3d-pin--house .m3d-dot::after { inset: 11px; background: #fff; }
+.m3d-pin--house .m3d-dot::before { content: ''; position: absolute; inset: -6px; border-radius: 50%;
+                                   border: 2px solid rgba(212, 180, 131, .7); animation: m3d-pulse 2.4s ease-out infinite; }
+@keyframes m3d-pulse { from { transform: scale(.8); opacity: 1; } to { transform: scale(1.9); opacity: 0; } }
+.m3d-label { margin-top: -13px; padding: 5px 11px; border-radius: 999px; font-size: 13px; font-weight: 600; line-height: 1.2;
+             white-space: nowrap; color: #fff; background: var(--m3d-glass); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+             opacity: 0; transform: translateX(-4px); transition: opacity .2s, transform .2s; pointer-events: none; }
+.m3d-pin--house .m3d-label { opacity: 1; transform: none; margin-top: -17px; background: rgba(212, 180, 131, .92); color: #0b1b33; }
+.m3d-pin:hover .m3d-label, .m3d-pin.is-active .m3d-label, .m3d.m3d-near .m3d-label { opacity: 1; transform: none; }
+
+/* Интерфейс */
+.m3d-ui { position: absolute; inset: 0; pointer-events: none; z-index: 3; }
+.m3d-ui > * { pointer-events: auto; }
+.m3d-season { position: absolute; left: 50%; bottom: 22px; transform: translateX(-50%); display: flex; padding: 4px; border-radius: 999px;
+              background: var(--m3d-glass); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+.m3d-season button { border: 0; background: none; color: rgba(255, 255, 255, .8); font: inherit; font-size: 14px; font-weight: 600;
+                     padding: 8px 20px; border-radius: 999px; cursor: pointer; letter-spacing: .04em; transition: background .25s, color .25s; }
+.m3d-season button.is-on { background: #fff; color: #0b1b33; }
+.m3d-season button.is-loading { opacity: .6; }
+.m3d-explore { position: absolute; right: 22px; bottom: 22px; border: 1px solid rgba(255, 255, 255, .55); background: rgba(255, 255, 255, .08);
+               color: #fff; font: inherit; font-size: 14px; font-weight: 600; letter-spacing: .04em; padding: 10px 20px; border-radius: 999px;
+               cursor: pointer; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); transition: background .2s, color .2s; }
+.m3d-explore:hover { background: #fff; color: #0b1b33; }
+.m3d-close, .m3d-home { position: absolute; top: 18px; width: 44px; height: 44px; border-radius: 50%; border: 0; cursor: pointer;
+                        background: var(--m3d-glass); color: #fff; font-size: 26px; line-height: 1; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+.m3d-close { right: 18px; display: none; }
+.m3d-home { left: 18px; font-size: 22px; }
+.m3d-hint { position: absolute; top: 24px; left: 50%; transform: translateX(-50%); font-size: 12px; color: rgba(255, 255, 255, .78);
+            background: var(--m3d-glass); padding: 6px 14px; border-radius: 999px; white-space: nowrap; display: none; pointer-events: none; }
+.m3d.is-full .m3d-close { display: block; }
+.m3d.is-full .m3d-explore { display: none; }
+.m3d.is-full .m3d-hint { display: block; animation: m3d-hint 6s forwards; }
+@keyframes m3d-hint { 0%, 80% { opacity: 1; } 100% { opacity: 0; } }
+
+/* Полноэкранный режим исследования */
+.m3d.is-full { position: fixed !important; inset: 0 !important; width: auto !important; height: auto !important; z-index: 1000; border-radius: 0 !important; }
+html.m3d-lock, html.m3d-lock body { overflow: hidden !important; }
+
+/* Карточка места */
+.m3d-card { position: absolute; z-index: 4; left: 22px; bottom: 80px; width: min(380px, calc(100% - 44px)); border-radius: 18px; overflow: hidden;
+            background: rgba(250, 247, 241, .97); color: #1b2a3e; box-shadow: 0 20px 50px rgba(0, 0, 0, .35); animation: m3d-in .35s ease; }
+.m3d-card[hidden] { display: none; }
+@keyframes m3d-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+.m3d-card-img { aspect-ratio: 16 / 9; background: #e5ded1; }
+.m3d-card-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.m3d-card-body { padding: 16px 18px 18px; }
+.m3d-card-kicker { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: #9a7b4f; font-weight: 700; }
+.m3d-card h3 { margin: 4px 0 6px; font-size: 22px; line-height: 1.2; font-family: var(--font-display, Georgia, serif); font-weight: 600; }
+.m3d-card p { margin: 0 0 14px; font-size: 14px; line-height: 1.55; color: #3d4b5c; }
+.m3d-card-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.m3d-btn { display: inline-flex; align-items: center; padding: 9px 16px; border-radius: 999px; font-size: 14px; font-weight: 600; text-decoration: none;
+           color: #1b2a3e; border: 1px solid rgba(27, 42, 62, .25); transition: background .2s, color .2s; }
+.m3d-btn:hover { background: #1b2a3e; color: #fff; }
+.m3d-btn--primary { background: #1b2a3e; color: #fff; border-color: #1b2a3e; }
+.m3d-btn--primary:hover { background: #2b4366; }
+.m3d-card-close { position: absolute; top: 10px; right: 10px; width: 34px; height: 34px; border-radius: 50%; border: 0; cursor: pointer;
+                  background: rgba(11, 27, 51, .6); color: #fff; font-size: 22px; line-height: 1; z-index: 1; }
+
+.m3d-loading { position: absolute; inset: 0; z-index: 5; display: flex; align-items: center; justify-content: center; text-align: center;
+               padding: 20px; font-size: 15px; letter-spacing: .03em; color: rgba(255, 255, 255, .85); background: #0b1b33; transition: opacity .8s; }
+.m3d-loading.is-done { opacity: 0; pointer-events: none; }
+.m3d-attr { position: absolute; z-index: 3; right: 10px; bottom: 4px; max-width: 70%; font-size: 9px; line-height: 1.3; text-align: right;
+            color: rgba(255, 255, 255, .45); pointer-events: none; }
+
+@media (max-width: 640px) {
+    .m3d-card { left: 10px; right: 10px; width: auto; bottom: 74px; max-height: calc(100% - 150px); overflow-y: auto; }
+    .m3d-card-img { aspect-ratio: 2 / 1; }
+    .m3d-explore { right: 50%; transform: translateX(50%); bottom: 72px; }
+    .m3d.is-full .m3d-season { bottom: 22px; }
+    .m3d-hint { white-space: normal; width: calc(100% - 140px); text-align: center; }
+    .m3d-attr { max-width: 100%; left: 10px; text-align: left; }
+}
+@media (prefers-reduced-motion: reduce) { .m3d-pin--house .m3d-dot::before { animation: none; } }
