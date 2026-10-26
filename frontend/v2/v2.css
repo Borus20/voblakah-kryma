@@ -440,3 +440,85 @@ html.is-locked, html.is-locked body { overflow: hidden; }
 .sm-dots { position: absolute; left: 0; right: 0; bottom: 16px; display: flex; justify-content: center; gap: 8px; z-index: 2; }
 .sm-dots button { width: 9px; height: 9px; padding: 0; border: 0; border-radius: 50%; background: rgba(255, 255, 255, .5); cursor: pointer; transition: background .3s, transform .3s; }
 .sm-dots button.is-on { background: #fff; transform: scale(1.25); }
+
+/* =============================================================
+   v2.1 — правки по замечаниям владельца
+   ============================================================= */
+/* Иконки-кнопки: стрелки и крестики — SVG строго по центру (а не символы шрифта) */
+.ico-btn { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; width: 48px; height: 48px; padding: 0;
+           border-radius: 50%; border: 0; cursor: pointer; line-height: 0; font-size: 0;
+           transition: background .3s, color .3s, border-color .3s, transform .3s var(--ease); }
+.ico-btn svg, .drawer-close svg { width: 20px; height: 20px; display: block; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.ico-btn--line { background: transparent; border: 1px solid var(--line); color: var(--navy); }
+.ico-btn--line:hover:not(:disabled) { background: var(--navy); border-color: var(--navy); color: #fff; }
+.ico-btn--line:disabled { opacity: .3; cursor: default; }
+.ico-btn--glass { background: rgba(251, 248, 243, .92); color: var(--navy); box-shadow: 0 6px 20px rgba(0, 0, 0, .18); }
+.ico-btn--glass:hover { background: #fff; transform: scale(1.06); }
+.cal-nav .ico-btn { width: 42px; height: 42px; }
+.dr-arrows .ico-btn { width: 48px; height: 48px; font-size: 0; background: rgba(251, 248, 243, .92); }
+/* крестик: ровно по центру, поворот вокруг своего центра */
+.drawer-close { display: flex !important; align-items: center; justify-content: center; padding: 0; font-size: 0; line-height: 0; transform-origin: 50% 50%; top: 16px; right: 16px; }
+.drawer-close svg { width: 22px; height: 22px; }
+
+/* Заголовок секции со стрелками справа, на одной линии */
+.sec-head-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; }
+.sec-head-row .rail-nav { max-width: none; margin: 0; padding: 0 0 8px; display: flex; gap: 10px; }
+@media (max-width: 760px) { .sec-head-row .rail-nav { display: none; } }   /* на телефоне ленту листают пальцем */
+
+/* Карточки квартир: широкий кадр, фото листаются, пока курсор на карточке */
+.apt-media { aspect-ratio: 16 / 9; }
+.apt-slides, .apt-slides > picture, .apt-slide { position: absolute; inset: 0; display: block; }
+.apt-slides > picture > img { opacity: 0; transition: opacity .8s ease, transform 1.4s var(--ease); }
+.apt-slides > picture > img.is-on { opacity: 1; }
+.apt-slide { opacity: 0; transition: opacity .8s ease; }
+.apt-slide.is-on { opacity: 1; }
+.apt-slide img { opacity: 1 !important; }
+.apt-count { bottom: 20px; }
+.apt-progress { position: absolute; left: 16px; right: 16px; bottom: 10px; height: 2px; border-radius: 2px; overflow: hidden; z-index: 2;
+                background: rgba(255, 255, 255, .3); opacity: 0; transition: opacity .3s; }
+.apt-progress i { display: block; height: 100%; width: 0; background: #fff; }
+.apt.is-cycling .apt-progress { opacity: 1; }
+.apt.is-cycling .apt-progress i { animation: apt-prog 1.6s linear infinite; }
+@keyframes apt-prog { from { width: 0; } to { width: 100%; } }
+
+/* Панель бронирования: фото сверху целиком (они широкие, ~2:1), ниже — описание и календарь */
+.drawer-scroll { display: block !important; }
+.dr-gallery { position: relative !important; top: auto !important; height: auto !important; display: block !important; background: var(--navy); }
+.dr-main { position: relative; flex: none !important; width: 100%; aspect-ratio: 2.17 / 1 !important; max-height: 64vh; max-height: 64dvh; }
+.dr-main img { object-fit: contain !important; }
+.dr-arrows { left: 16px; right: 16px; }
+.dr-count { position: absolute; right: 16px; bottom: 14px; z-index: 2; padding: 5px 12px; border-radius: 999px; background: rgba(11, 27, 51, .6); color: #fff; font-size: 12px; }
+.dr-body { display: grid; grid-template-columns: minmax(0, .82fr) minmax(0, 1.3fr); gap: 24px 52px; align-items: start; padding: 38px clamp(20px, 3.5vw, 52px) 52px !important; }
+.dr-info { position: sticky; top: 24px; }
+.dr-prices { margin-top: 6px; border-top: 1px solid var(--line); }
+.dr-prices h4 { margin: 16px 0 6px; font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); }
+.dr-prices div { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 15px; }
+.dr-prices b { color: var(--navy); }
+.dr-prices p { margin: 10px 0 0; font-size: 13px; color: var(--muted); }
+.dr-more { display: inline-block; margin-top: 18px; font-weight: 600; color: var(--navy); text-decoration: none; border-bottom: 1px solid var(--gold); cursor: pointer; }
+.dr-more:hover { color: var(--gold); }
+@media (max-width: 1000px) { .dr-body { grid-template-columns: 1fr; } .dr-info { position: static; } .dr-main { max-height: none; } }
+@media (orientation: landscape) and (max-height: 500px) {
+    .dr-main { max-height: 80vh; max-height: 80dvh; }
+    .dr-body { grid-template-columns: 1fr; padding-top: 24px !important; }
+    .dr-info { position: static; }
+}
+
+/* Окно достопримечательности: широкое фото сверху, ниже рассказ и боковая колонка; всё окно прокручивается */
+.modal-panel--sight { display: block !important; width: min(1000px, 100%); padding: 0; overflow-y: auto !important; overflow-x: hidden; }
+.sm-gallery { aspect-ratio: 2 / 1 !important; min-height: 0 !important; }
+.sm-body { overflow: visible !important; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, .9fr); gap: 28px 44px;
+           padding: 34px clamp(22px, 4vw, 48px) 44px !important; }
+.sm-lead { font-size: 17px; color: var(--ink) !important; }
+.sm-facts { list-style: none; padding: 0; margin: 18px 0 20px; display: flex; flex-wrap: wrap; gap: 8px; }
+.sm-facts:empty { display: none; }
+.sm-facts li { padding: 7px 14px; border-radius: 999px; background: var(--sand); color: var(--navy); font-size: 13px; font-weight: 600; }
+.sm-more p { color: #4a5768; margin: 0 0 14px; }
+.sm-side .sm-route { margin: 0 0 12px; flex-direction: column; align-items: stretch; }
+.sm-side .sm-route .btn { width: 100%; }
+.sm-side .sm-actions { margin-top: 0; flex-direction: column; }
+.sm-side .sm-actions .btn { width: 100%; }
+.sm-side .sm-near { margin-top: 22px; }
+.sm-near-item { margin: 0; }
+@media (max-width: 860px) { .sm-body { grid-template-columns: 1fr; } }
+@media (orientation: landscape) and (max-height: 500px) { .sm-body { grid-template-columns: 1fr; } .sm-gallery { aspect-ratio: 2.4 / 1 !important; } }

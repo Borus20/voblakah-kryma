@@ -23,6 +23,7 @@ function haversineKm(a, b) {
     const s = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(a.lat)) * Math.cos(toRad(b.lat)) * Math.sin(dLon / 2) ** 2;
     return 2 * R * Math.asin(Math.sqrt(s));
 }
+const X_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
 const fmtKm = (km) => km < 10 ? km.toFixed(1).replace('.', ',') : String(Math.round(km));
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const easeInOut = (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
@@ -167,8 +168,11 @@ export async function initMap3D(root, opts) {
                 <button type="button" data-season="1">Зима</button>
             </div>
             <button type="button" class="m3d-explore">Исследовать карту</button>
-            <button type="button" class="m3d-close" aria-label="Закрыть карту">&times;</button>
-            <button type="button" class="m3d-home" aria-label="К нашему дому" title="К нашему дому">⌂</button>
+            <button type="button" class="m3d-close" aria-label="Закрыть карту">${X_ICON}</button>
+            <button type="button" class="m3d-home" aria-label="Показать наш дом на карте">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5L12 4l9 7.5"/><path d="M5.5 9.8V20h13V9.8"/><path d="M10 20v-5.5h4V20"/></svg>
+                <span>Наш дом</span>
+            </button>
             <div class="m3d-hint">Тяните — двигать · два пальца или правая кнопка — поворот · колесо или щипок — приблизить</div>
         </div>
         <div class="m3d-card" hidden></div>
@@ -280,10 +284,11 @@ export async function initMap3D(root, opts) {
     seaPlane.rotation.x = -Math.PI / 2; seaPlane.position.y = -0.03;
     scene.add(seaPlane);
 
-    let outerMat = null;
+    let outerMat = null, outerInfo = null;
     if (meta.outer) {
         const o = meta.outer;
         const oh = new Int16Array(await (await fetch(base + o.height.file)).arrayBuffer());
+        outerInfo = { hts: oh, w: o.height.w, h: o.height.h, wKm: o.width_m / 1000, hKm: o.height_m / 1000, offX: o.offset_m[0] / 1000, offZ: o.offset_m[1] / 1000 };
         const oGeo = terrainGeometry(oh, o.height.w, o.height.h, o.width_m / 1000, o.height_m / 1000,
             o.offset_m[0] / 1000, o.offset_m[1] / 1000, small ? 2 : 1, true);
         const oTex = await loadFile(`outer_summer_${small ? 1024 : 2048}.webp`);
@@ -354,14 +359,30 @@ export async function initMap3D(root, opts) {
     const camera = new PerspectiveCamera(40, 1, 0.3, 1200);
     const controls = new MapControls(camera, renderer.domElement);
     controls.enableDamping = true; controls.dampingFactor = 0.08;
-    controls.minDistance = 2.2; controls.maxDistance = 46;
+    controls.minDistance = 2.2; controls.maxDistance = 34;          // дальше — только размытая подложка
     controls.minPolarAngle = 0.15; controls.maxPolarAngle = 1.38;   // можно наклониться почти к горизонту
     controls.screenSpacePanning = false;
     controls.enabled = false;
+    // двигать можно только в пределах основной (чёткой) карты, где отмечены места
     const clampTarget = () => {
-        controls.target.x = MathUtils.clamp(controls.target.x, -W / 2 * 0.95, W / 2 * 0.95);
-        controls.target.z = MathUtils.clamp(controls.target.z, -H / 2 * 0.95, H / 2 * 0.95);
+        controls.target.x = MathUtils.clamp(controls.target.x, -W / 2 * 0.9, W / 2 * 0.9);
+        controls.target.z = MathUtils.clamp(controls.target.z, -H / 2 * 0.85, H / 2 * 0.85);
     };
+    // Высота земли (в единицах сцены) в любой точке: основная карта, затем подложка, иначе море
+    function groundY(x, z) {
+        const u = x / W + 0.5, v = z / H + 0.5;
+        if (u >= 0 && u <= 1 && v >= 0 && v <= 1) return Math.max(0, hAt(u, v) / 1000 * EXAG);
+        if (outerInfo) {
+            const o = outerInfo, ou = (x + W / 2 - o.offX) / o.wKm, ov = (z + H / 2 - o.offZ) / o.hKm;
+            if (ou >= 0 && ou <= 1 && ov >= 0 && ov <= 1) {
+                const gx = Math.min(o.w - 1.001, ou * (o.w - 1)), gy = Math.min(o.h - 1.001, ov * (o.h - 1));
+                const x0 = Math.floor(gx), y0 = Math.floor(gy), fx = gx - x0, fy = gy - y0, i = y0 * o.w + x0;
+                const hh2 = (o.hts[i] * (1 - fx) + o.hts[i + 1] * fx) * (1 - fy) + (o.hts[i + o.w] * (1 - fx) + o.hts[i + o.w + 1] * fx) * fy;
+                return Math.max(0, hh2 / 1000 * EXAG);
+            }
+        }
+        return 0;
+    }
     controls.addEventListener('change', clampTarget);
 
     const place = (id) => meta.places[id] ? world(meta.places[id].u, meta.places[id].v) : null;
@@ -412,7 +433,7 @@ export async function initMap3D(root, opts) {
         const route = (!isHouse && places[id]) ? `https://yandex.ru/maps/?rtext=${houseLL.lat},${houseLL.lon}~${places[id].lat},${places[id].lon}&rtt=auto` : null;
         const pic = img ? `<picture><source type="image/webp" srcset="/${img}.w1280.webp"><img src="/${img}" alt="${esc(isHouse ? houseInfo.title : s.title)}" loading="lazy"></picture>` : '';
         card.innerHTML = `
-            <button type="button" class="m3d-card-close" aria-label="Закрыть">&times;</button>
+            <button type="button" class="m3d-card-close" aria-label="Закрыть">${X_ICON}</button>
             <div class="m3d-card-img">${pic}</div>
             <div class="m3d-card-body">
                 ${dist ? `<div class="m3d-card-kicker">${dist} км от нашего дома по прямой</div>` : `<div class="m3d-card-kicker">Наш дом</div>`}
@@ -426,6 +447,11 @@ export async function initMap3D(root, opts) {
             </div>`;
         card.hidden = false;
         card.querySelector('.m3d-card-close').addEventListener('click', closeCard);
+        // ссылка на раздел сайта (#apartments, #sight-…) — сначала выходим из полноэкранной карты
+        card.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener('click', () => {
+            closeCard();
+            if (root.classList.contains('is-full')) setFull(false);
+        }));
         const w = place(id);
         flyTo(w, isHouse ? 8.5 : 9, 1.08, 0.12);
         wake();
@@ -508,6 +534,13 @@ export async function initMap3D(root, opts) {
             camera.position.copy(controls.target).add(off);
         }
         controls.update();
+        // Нельзя «нырнуть» в землю: точка вращения лежит на поверхности, камера всегда над рельефом
+        if (introDone && !fly) {
+            const gT = groundY(controls.target.x, controls.target.z);
+            controls.target.y += (gT + 0.05 - controls.target.y) * 0.2;
+        }
+        const gC = groundY(camera.position.x, camera.position.z);
+        if (camera.position.y < gC + 0.45) camera.position.y = gC + 0.45;
 
         const um = mat.uniforms.uMix;
         um.value += (mixTo - um.value) * Math.min(1, dt * 2.5);

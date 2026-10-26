@@ -92,3 +92,16 @@ html.m3d-lock, html.m3d-lock body { overflow: hidden !important; }
 /* метка за горой — плавно скрывается */
 .m3d-pin { transition: opacity .35s ease; }
 .m3d-pin.is-behind { opacity: 0; pointer-events: none; }
+
+/* Крестики и кнопка «Наш дом»: SVG строго по центру, крестик поворачивается при наведении */
+.m3d-close, .m3d-card-close { display: flex; align-items: center; justify-content: center; padding: 0; font-size: 0; line-height: 0;
+                              transform-origin: 50% 50%; transition: background .3s, transform .3s; }
+.m3d.is-full .m3d-close { display: flex; }
+.m3d-close svg, .m3d-card-close svg, .m3d-home svg { display: block; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.m3d-close svg { width: 22px; height: 22px; }
+.m3d-card-close svg { width: 18px; height: 18px; }
+.m3d-close:hover, .m3d-card-close:hover { transform: rotate(90deg); background: rgba(11, 27, 51, .9); }
+.m3d-home { width: auto; height: 44px; padding: 0 18px 0 14px; border-radius: 999px; display: inline-flex; align-items: center; gap: 8px;
+            font-size: 14px; font-weight: 600; letter-spacing: .02em; line-height: 1; transition: background .25s, color .25s; }
+.m3d-home svg { width: 20px; height: 20px; flex-shrink: 0; }
+.m3d-home:hover { background: #fff; color: #0b1b33; }

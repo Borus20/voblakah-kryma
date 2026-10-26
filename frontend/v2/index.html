@@ -12,8 +12,8 @@
     <link rel="preload" href="/v2/fonts/cormorant-cyrillic-normal.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="/fonts/inter-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="/v2/fonts/cormorant.css">
-    <link rel="stylesheet" href="/v2/v2.css?v=5">
-    <link rel="stylesheet" href="/v2/map/map3d.css?v=4">
+    <link rel="stylesheet" href="/v2/v2.css?v=6">
+    <link rel="stylesheet" href="/v2/map/map3d.css?v=5">
 </head>
 <body>
 
@@ -117,13 +117,15 @@
 <section class="sights" id="sights">
     <div class="sec-head">
         <p class="kicker reveal">Что рядом</p>
-        <h2 class="h2 reveal">Достопримечательности <em>рядом с нами</em></h2>
+        <div class="sec-head-row">
+            <h2 class="h2 reveal">Достопримечательности <em>рядом с нами</em></h2>
+            <div class="rail-nav">
+                <button type="button" class="ico-btn ico-btn--line" id="sights-prev" aria-label="Назад"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+                <button type="button" class="ico-btn ico-btn--line" id="sights-next" aria-label="Вперёд"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+            </div>
+        </div>
     </div>
     <div class="sights-rail" id="sights-rail"></div>
-    <div class="rail-nav">
-        <button type="button" class="rail-btn" id="sights-prev" aria-label="Назад">←</button>
-        <button type="button" class="rail-btn" id="sights-next" aria-label="Вперёд">→</button>
-    </div>
 </section>
 
 <!-- ============ ПРАВИЛА ============ -->
@@ -166,7 +168,7 @@
     <div class="ftr-logo">В облаках <em>Крыма</em></div>
     <p class="ftr-sub">Отдых в Крыму с комфортом</p>
     <p class="ftr-links" id="ftr-apts"></p>
-    <p class="ftr-links"><a href="/privacy.html">Политика конфиденциальности</a></p>
+    <p class="ftr-links"><a href="/v2/privacy.html">Политика конфиденциальности</a></p>
     <p class="ftr-copy">© 2027 Квартиры «В облаках Крыма». Все права защищены</p>
 </footer>
 
@@ -174,20 +176,24 @@
 <div class="drawer" id="drawer" hidden aria-modal="true" role="dialog" aria-labelledby="dr-title">
     <div class="drawer-backdrop" data-close></div>
     <div class="drawer-panel">
-        <button type="button" class="drawer-close" data-close aria-label="Закрыть">&times;</button>
+        <button type="button" class="drawer-close" data-close aria-label="Закрыть"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
         <div class="drawer-scroll">
             <div class="dr-gallery" id="dr-gallery"></div>
             <div class="dr-body">
+              <div class="dr-info">
                 <p class="kicker">Бронирование</p>
                 <h2 class="dr-title" id="dr-title"></h2>
                 <p class="dr-desc" id="dr-desc"></p>
-
+                <div class="dr-prices" id="dr-prices"></div>
+                <a class="dr-more" id="dr-more">Подробнее о квартире →</a>
+              </div>
+              <div class="dr-steps">
                 <div class="dr-step" id="dr-step-dates">
                     <div class="cal-head">
                         <h3>Выберите даты</h3>
                         <div class="cal-nav">
-                            <button type="button" id="cal-prev" aria-label="Предыдущий месяц">←</button>
-                            <button type="button" id="cal-next" aria-label="Следующий месяц">→</button>
+                            <button type="button" class="ico-btn ico-btn--line" id="cal-prev" aria-label="Предыдущий месяц"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+                            <button type="button" class="ico-btn ico-btn--line" id="cal-next" aria-label="Следующий месяц"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
                         </div>
                     </div>
                     <div class="cal" id="cal"></div>
@@ -218,7 +224,7 @@
                         <label class="fld"><span>Детей</span><select name="children"><option selected>0</option><option>1</option><option>2</option><option>3</option><option>4</option></select></label>
                         <label class="fld fld--wide"><span>Комментарий</span><textarea name="message" rows="3"></textarea></label>
                     </div>
-                    <label class="consent"><input type="checkbox" name="consent" required> <span>Я даю согласие на обработку моих персональных данных в соответствии с <a href="/privacy.html" target="_blank">политикой конфиденциальности</a></span></label>
+                    <label class="consent"><input type="checkbox" name="consent" required> <span>Я даю согласие на обработку моих персональных данных в соответствии с <a href="/v2/privacy.html" target="_blank">политикой конфиденциальности</a></span></label>
                     <p class="form-status" id="dr-status" role="alert"></p>
                     <button type="submit" class="btn btn--gold btn--wide">Отправить заявку</button>
                 </form>
@@ -229,6 +235,7 @@
                     <p>Ожидайте звонка или сообщения от нас для уточнения деталей и подтверждения бронирования.</p>
                     <button type="button" class="btn btn--dark" data-close>Закрыть</button>
                 </div>
+              </div>
             </div>
         </div>
     </div>
@@ -238,12 +245,17 @@
 <div class="modal" id="sight-modal" hidden role="dialog" aria-modal="true" aria-labelledby="sm-title">
     <div class="modal-backdrop" data-close></div>
     <div class="modal-panel modal-panel--sight">
-        <button type="button" class="drawer-close" data-close aria-label="Закрыть">&times;</button>
+        <button type="button" class="drawer-close" data-close aria-label="Закрыть"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
         <div class="sm-gallery" id="sm-gallery"></div>
         <div class="sm-body">
+          <div class="sm-main">
             <p class="kicker" id="sm-dist"></p>
             <h2 id="sm-title"></h2>
-            <p id="sm-desc"></p>
+            <p class="sm-lead" id="sm-desc"></p>
+            <ul class="sm-facts" id="sm-facts"></ul>
+            <div class="sm-more" id="sm-more"></div>
+          </div>
+          <div class="sm-side">
             <div class="sm-route">
                 <div>
                     <span>От нашего дома</span>
@@ -259,6 +271,7 @@
                 <h3>Что ещё рядом с этим местом</h3>
                 <div id="sm-near"></div>
             </div>
+          </div>
         </div>
     </div>
 </div>
@@ -267,7 +280,7 @@
 <div class="modal" id="contact-modal" hidden role="dialog" aria-modal="true" aria-labelledby="cm-title">
     <div class="modal-backdrop" data-close></div>
     <div class="modal-panel">
-        <button type="button" class="drawer-close" data-close aria-label="Закрыть">&times;</button>
+        <button type="button" class="drawer-close" data-close aria-label="Закрыть"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
         <form class="form" id="contact-form" novalidate>
             <p class="kicker">Связь</p>
             <h2 id="cm-title">Написать нам</h2>
@@ -278,7 +291,7 @@
                 <label class="fld"><span>Ник в Telegram</span><input name="telegram" type="text" placeholder="@username"></label>
                 <label class="fld fld--wide"><span>Сообщение *</span><textarea name="message" rows="4" required></textarea></label>
             </div>
-            <label class="consent"><input type="checkbox" name="consent" required> <span>Я даю согласие на обработку моих персональных данных в соответствии с <a href="/privacy.html" target="_blank">политикой конфиденциальности</a></span></label>
+            <label class="consent"><input type="checkbox" name="consent" required> <span>Я даю согласие на обработку моих персональных данных в соответствии с <a href="/v2/privacy.html" target="_blank">политикой конфиденциальности</a></span></label>
             <p class="form-status" id="cm-status" role="alert"></p>
             <button type="submit" class="btn btn--gold btn--wide">Отправить</button>
         </form>
@@ -294,14 +307,15 @@
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <div id="cookie-banner" class="cookie" role="region" aria-label="Уведомление о cookie" hidden>
-    <p>Мы используем cookie и Яндекс.Метрику, чтобы понимать, как сделать сайт удобнее. <a href="/privacy.html" target="_blank">Подробнее</a></p>
+    <p>Мы используем cookie и Яндекс.Метрику, чтобы понимать, как сделать сайт удобнее. <a href="/v2/privacy.html" target="_blank">Подробнее</a></p>
     <button type="button" id="cookie-ok">Понятно</button>
 </div>
 
 <script src="/js/config.js?v=v2"></script>
-<script src="/v2/v2.js?v=5"></script>
+<script src="/v2/sights-details.js?v=1"></script>
+<script src="/v2/v2.js?v=10"></script>
 <script type="module">
-    import { initMap3D } from '/v2/map/map3d.min.js?v=8';
+    import { initMap3D } from '/v2/map/map3d.min.js?v=9';
     window.__initMap3D = initMap3D;
     window.dispatchEvent(new Event('map3d-ready'));
 </script>

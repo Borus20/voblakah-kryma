@@ -117,7 +117,8 @@
         const p1 = a.photos[0], p2 = a.photos[1];
         return `<article class="apt reveal">
             <div class="apt-media" data-open-apt="${id}" role="button" tabindex="0" aria-label="${esc(aptName(a.name))}: фото и даты">
-                ${pic(p1, aptName(a.name), { sizes: '(max-width: 760px) 100vw, 50vw' })}${p2 ? pic(p2, '', { sizes: '(max-width: 760px) 100vw, 50vw' }) : ''}
+                <div class="apt-slides" data-slides="${id}">${pic(p1, aptName(a.name), { sizes: '(max-width: 760px) 100vw, 50vw', cls: 'is-on' })}</div>
+                <span class="apt-progress" aria-hidden="true"><i></i></span>
                 ${area ? `<span class="apt-badge">${area} м²</span>` : ''}
                 <span class="apt-count">${a.photos.length} фото</span>
             </div>
@@ -127,18 +128,46 @@
                 <div class="apt-meta"><span>от <b>${rub(minPrice)}</b> / сутки</span><span>отдельный вход</span></div>
                 <div class="apt-actions">
                     <button type="button" class="btn btn--dark" data-open-apt="${id}">Даты и цены</button>
-                    <a class="btn btn--outline" href="/kvartiry/${id}/">Подробнее</a>
+                    <a class="btn btn--outline" href="/v2/kvartiry/${id}/">Подробнее</a>
                 </div>
             </div>
         </article>`;
     }).join('');
     observeReveal($('#apts-grid'));
+
+    // Пока курсор на карточке — фото листаются по кругу (следующие подгружаются по мере показа)
+    const HOVER_STEP = 1600;
+    $$('.apt').forEach(card => {
+        const box = $('.apt-slides', card), id = box.dataset.slides, photos = apartmentsData[id].photos;
+        let i = 0, timer = null;
+        const show = (n) => {
+            let el = box.querySelector(`[data-n="${n}"]`);
+            if (!el) {
+                box.insertAdjacentHTML('beforeend', `<div class="apt-slide" data-n="${n}">${pic(photos[n], '', { sizes: '(max-width: 760px) 100vw, 50vw' })}</div>`);
+                el = box.querySelector(`[data-n="${n}"]`);
+            }
+            $$('img.is-on, .apt-slide.is-on', box).forEach(x => x.classList.remove('is-on'));
+            const target = n === 0 ? box.querySelector('img') : el;
+            void target.offsetWidth;            // новый слайд сначала отрисуется прозрачным — тогда сработает плавный переход
+            target.classList.add('is-on');
+            i = n;
+        };
+        if (!box.querySelector('[data-n="0"]')) box.firstElementChild.setAttribute('data-n', '0');
+        const media = $('.apt-media', card);
+        media.addEventListener('mouseenter', () => {
+            if (reduceMotion || photos.length < 2) return;
+            card.classList.add('is-cycling');
+            show((i + 1) % photos.length);
+            timer = setInterval(() => show((i + 1) % photos.length), HOVER_STEP);
+        });
+        media.addEventListener('mouseleave', () => { clearInterval(timer); card.classList.remove('is-cycling'); show(0); });
+    });
     $$('[data-open-apt]').forEach(el => {
         const go = () => openDrawer(el.dataset.openApt, true);
         el.addEventListener('click', go);
         el.addEventListener('keydown', (e) => { if (e.key === 'Enter') go(); });
     });
-    $('#ftr-apts').innerHTML = Object.entries(apartmentsData).map(([id, a]) => `<a href="/kvartiry/${id}/">${esc(aptShort(a.name))}</a>`).join(' · ');
+    $('#ftr-apts').innerHTML = Object.entries(apartmentsData).map(([id, a]) => `<a href="/v2/kvartiry/${id}/">${esc(aptShort(a.name))}</a>`).join(' · ');
 
     // ---------- координаты мест (для расстояний и карты) ----------
     let places = null;
@@ -201,10 +230,15 @@
         $('#sm-dist').textContent = d ? `${d} км от нашего дома по прямой` : 'Рядом с нами';
         $('#sm-title').textContent = s.title;
         $('#sm-desc').textContent = s.description;
+        // расширенный рассказ о месте (sights-details.js) — то, чего нет в карточке на карте
+        const det = (typeof sightsDetails !== 'undefined' && sightsDetails[id]) || null;
+        $('#sm-facts').innerHTML = det ? det.facts.map(f => `<li>${esc(f)}</li>`).join('') : '';
+        $('#sm-more').innerHTML = det ? det.more.map(p => `<p>${esc(p)}</p>`).join('') : '';
         const link = $('#sm-link');
         if (s.link) { link.href = s.link; link.hidden = false; } else link.hidden = true;
         const g = $('#sm-gallery');
-        g.innerHTML = s.images.map((src, i) => pic(src, s.title, { sizes: '(max-width: 1000px) 100vw, 520px', cls: i === 0 ? 'is-on' : '' })).join('');
+        g.innerHTML = s.images.map((src, i) => pic(src, s.title, { sizes: '(max-width: 1000px) 100vw, 960px', cls: i === 0 ? 'is-on' : '' })).join('');
+        $('.modal-panel--sight').scrollTop = 0;
         clearInterval(smTimer);
         const imgs = $$('img', g); let k = 0;
         if (imgs.length > 1 && !reduceMotion) smTimer = setInterval(() => showImg((k + 1) % imgs.length), 3800);   // showImg объявлена ниже, вызывается позже
@@ -294,17 +328,26 @@
 
     function renderGallery(a) {
         const g = $('#dr-gallery');
-        g.innerHTML = `<div class="dr-main">${a.photos.map((src, i) => `<img src="/${src}.w1280.webp" alt="${esc(aptName(a.name))} — фото ${i + 1}" class="${i === 0 ? 'is-on' : ''}" loading="${i < 2 ? 'eager' : 'lazy'}" decoding="async">`).join('')}
-            <div class="dr-arrows"><button type="button" data-g="-1" aria-label="Предыдущее фото">←</button><button type="button" data-g="1" aria-label="Следующее фото">→</button></div></div>
-            <div class="dr-thumbs">${a.photos.map((src, i) => `<button type="button" data-i="${i}" class="${i === 0 ? 'is-on' : ''}" aria-label="Фото ${i + 1}"><img src="/${src}.w1280.webp" alt="" loading="lazy" decoding="async"></button>`).join('')}</div>`;
+        // большое фото грузится, только когда до него дошли (и соседние заранее), миниатюры — лёгкие 320px
+        g.innerHTML = `<div class="dr-main">${a.photos.map((src, i) => `<img ${i === 0 ? 'src' : 'data-src'}="/${src}.webp" alt="${esc(aptName(a.name))} — фото ${i + 1}" class="${i === 0 ? 'is-on' : ''}" decoding="async">`).join('')}
+            <div class="dr-arrows"><button type="button" class="ico-btn ico-btn--glass" data-g="-1" aria-label="Предыдущее фото"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button><button type="button" class="ico-btn ico-btn--glass" data-g="1" aria-label="Следующее фото"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button></div>
+            <span class="dr-count" aria-hidden="true"></span></div>
+            <div class="dr-thumbs">${a.photos.map((src, i) => `<button type="button" data-i="${i}" class="${i === 0 ? 'is-on' : ''}" aria-label="Фото ${i + 1}"><img src="/${src}.t320.webp" alt="" loading="lazy" decoding="async"></button>`).join('')}</div>`;
         galIdx = 0;
         const show = (i) => {
             const imgs = $$('.dr-main img', g), th = $$('.dr-thumbs button', g);
             galIdx = (i + imgs.length) % imgs.length;
-            imgs.forEach((im, k) => im.classList.toggle('is-on', k === galIdx));
+            imgs.forEach((im, k) => {
+                im.classList.toggle('is-on', k === galIdx);
+                const near = Math.abs(k - galIdx) <= 1 || Math.abs(k - galIdx) === imgs.length - 1;
+                if (near && im.dataset.src && !im.getAttribute('src')) im.src = im.dataset.src;
+            });
             th.forEach((t, k) => t.classList.toggle('is-on', k === galIdx));
+            $('.dr-count', g).textContent = `${galIdx + 1} / ${imgs.length}`;
             th[galIdx].scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' });
         };
+        $('.dr-count', g).textContent = `1 / ${a.photos.length}`;
+        [1, a.photos.length - 1].forEach(k => { const im = $$('.dr-main img', g)[k]; if (im && im.dataset.src) im.src = im.dataset.src; });
         $$('[data-g]', g).forEach(b => b.addEventListener('click', () => show(galIdx + +b.dataset.g)));
         $$('.dr-thumbs button', g).forEach(b => b.addEventListener('click', () => show(+b.dataset.i)));
         // свайп
@@ -319,6 +362,10 @@
         curApt = id; checkIn = checkOut = null;
         $('#dr-title').textContent = aptName(a.name);
         $('#dr-desc').textContent = a.description;
+        $('#dr-more').href = `/v2/kvartiry/${id}/`;
+        $('#dr-prices').innerHTML = `<h4>Цена за сутки, сезон ${CALENDAR_START_DATE.getFullYear()}</h4>` +
+            prices.map(x => `<div><span>${monthNames[x.m][0].toUpperCase() + monthNames[x.m].slice(1)}</span><b>${rub(x.p)}</b></div>`).join('') +
+            `<p>За всю квартиру. От ${MIN_NIGHTS} ночей. Заезд после 14:00, выезд до 12:00.</p>`;
         renderGallery(a);
         setStep('dates');
         $('#dr-status').textContent = '';
@@ -335,7 +382,7 @@
         $('#dr-step-dates').hidden = step !== 'dates';
         $('#dr-step-form').hidden = step !== 'form';
         $('#dr-step-done').hidden = step !== 'done';
-        if (step !== 'dates') $('.drawer-scroll').scrollTo({ top: innerWidth <= 1000 ? $('.dr-body').offsetTop - 10 : 0, behavior: 'smooth' });
+        if (step !== 'dates') $('.drawer-scroll').scrollTo({ top: $('.dr-steps').getBoundingClientRect().top - $('.drawer-scroll').getBoundingClientRect().top + $('.drawer-scroll').scrollTop - 20, behavior: 'smooth' });
     }
 
     function renderCal() {
@@ -498,7 +545,12 @@
     addEventListener('hashchange', route);
     addEventListener('popstate', route);
     route();
-    if (location.hash === '#about' || location.hash === '#rules') setTimeout(() => $(location.hash).scrollIntoView(), 50);
+    // переход с отдельных страниц по ссылкам шапки (/v2/#map, /v2/#rules …) — прокрутить к разделу
+    if (['#about', '#apartments', '#map', '#sights', '#rules', '#contact'].includes(location.hash)) {
+        const go = () => { const el = $(location.hash); if (el) el.scrollIntoView({ behavior: 'instant' }); };   // сразу, без пролёта через всю страницу
+        setTimeout(go, 60);
+        addEventListener('load', () => setTimeout(go, 60), { once: true });   // после загрузки фото высоты могли измениться
+    }
 
     // ---------- cookie ----------
     (function () {
