@@ -6,7 +6,7 @@
     <meta name="robots" content="noindex, nofollow">
     <title>3D-карта побережья — В облаках Крыма (тест)</title>
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
-    <link rel="stylesheet" href="/v2/map/map3d.css?v=6">
+    <link rel="stylesheet" href="/v2/map/map3d.css?v=7">
     <style>
         html, body { margin: 0; height: 100%; background: #0b1b33; font-family: "Inter", system-ui, sans-serif; }
         #map3d { position: fixed; inset: 0; }
@@ -16,7 +16,7 @@
 <div id="map3d"></div>
 <script src="/js/config.js"></script>
 <script type="module">
-    import { initMap3D } from '/v2/map/map3d.min.js?v=10';
+    import { initMap3D } from '/v2/map/map3d.min.js?v=11';
     const places = await (await fetch('/v2/map/data/places.json')).json();
     const meta = await (await fetch('/v2/map/data/meta.json')).json();
     initMap3D(document.getElementById('map3d'), {

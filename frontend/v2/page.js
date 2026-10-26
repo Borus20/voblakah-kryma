@@ -4,6 +4,13 @@
     const $ = (s, r = document) => r.querySelector(s);
     const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 
+    // после нажатия пальцем/мышью кнопка не остаётся выделенной (и при возврате «Назад»)
+    document.addEventListener('click', (e) => {
+        const el = e.target.closest && e.target.closest('a, button');
+        if (el && e.detail > 0) setTimeout(() => el.blur(), 0);
+    }, true);
+    addEventListener('pageshow', () => { const a = document.activeElement; if (a && a !== document.body && a.blur) a.blur(); });
+
     // ---------- меню (как на главной) ----------
     const menu = $('#menu'), burger = $('.hdr-burger');
     if (menu && burger) {

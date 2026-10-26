@@ -13,7 +13,8 @@
 .m3d-dot { width: 26px; height: 26px; margin: -13px 0 0 -13px; border-radius: 50%; flex-shrink: 0; position: relative;
            background: rgba(255, 255, 255, .92); box-shadow: 0 2px 10px rgba(0, 0, 0, .35); transition: transform .25s ease; }
 .m3d-dot::after { content: ''; position: absolute; inset: 9px; border-radius: 50%; background: #1d3557; }
-.m3d-pin:hover .m3d-dot, .m3d-pin.is-active .m3d-dot { transform: scale(1.18); }
+.m3d-pin.is-active .m3d-dot { transform: scale(1.18); }
+@media (hover: hover) { .m3d-pin:hover .m3d-dot { transform: scale(1.18); } }
 .m3d-pin--house .m3d-dot { width: 34px; height: 34px; margin: -17px 0 0 -17px; background: var(--m3d-gold);
                            box-shadow: 0 0 0 6px rgba(212, 180, 131, .28), 0 4px 16px rgba(0, 0, 0, .4); }
 .m3d-pin--house .m3d-dot::after { inset: 11px; background: #fff; }
@@ -24,7 +25,8 @@
              white-space: nowrap; color: #fff; background: var(--m3d-glass); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
              opacity: 0; transform: translateX(-4px); transition: opacity .2s, transform .2s; pointer-events: none; }
 .m3d-pin--house .m3d-label { opacity: 1; transform: none; margin-top: -17px; background: rgba(212, 180, 131, .92); color: #0b1b33; }
-.m3d-pin:hover .m3d-label, .m3d-pin.is-active .m3d-label, .m3d.m3d-near .m3d-label { opacity: 1; transform: none; }
+.m3d-pin.is-active .m3d-label, .m3d.m3d-near .m3d-label { opacity: 1; transform: none; }
+@media (hover: hover) { .m3d-pin:hover .m3d-label { opacity: 1; transform: none; } }
 
 /* Интерфейс */
 .m3d-ui { position: absolute; inset: 0; pointer-events: none; z-index: 3; }
@@ -38,7 +40,7 @@
 .m3d-explore { position: absolute; right: 22px; bottom: 22px; border: 1px solid rgba(255, 255, 255, .55); background: rgba(255, 255, 255, .08);
                color: #fff; font: inherit; font-size: 14px; font-weight: 600; letter-spacing: .04em; padding: 10px 20px; border-radius: 999px;
                cursor: pointer; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); transition: background .2s, color .2s; }
-.m3d-explore:hover { background: #fff; color: #0b1b33; }
+@media (hover: hover) { .m3d-explore:hover { background: #fff; color: #0b1b33; } }
 .m3d-close, .m3d-home { position: absolute; top: 18px; width: 44px; height: 44px; border-radius: 50%; border: 0; cursor: pointer;
                         background: var(--m3d-glass); color: #fff; font-size: 26px; line-height: 1; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
 .m3d-close { right: 18px; display: none; }
@@ -68,9 +70,9 @@ html.m3d-lock, html.m3d-lock body { overflow: hidden !important; }
 .m3d-card-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 .m3d-btn { display: inline-flex; align-items: center; padding: 9px 16px; border-radius: 999px; font-size: 14px; font-weight: 600; text-decoration: none;
            color: #1b2a3e; border: 1px solid rgba(27, 42, 62, .25); transition: background .2s, color .2s; }
-.m3d-btn:hover { background: #1b2a3e; color: #fff; }
+@media (hover: hover) { .m3d-btn:hover { background: #1b2a3e; color: #fff; } }
 .m3d-btn--primary { background: #1b2a3e; color: #fff; border-color: #1b2a3e; }
-.m3d-btn--primary:hover { background: #2b4366; }
+@media (hover: hover) { .m3d-btn--primary:hover { background: #2b4366; } }
 .m3d-card-close { position: absolute; top: 10px; right: 10px; width: 34px; height: 34px; border-radius: 50%; border: 0; cursor: pointer;
                   background: rgba(11, 27, 51, .6); color: #fff; font-size: 22px; line-height: 1; z-index: 1; }
 
@@ -100,11 +102,11 @@ html.m3d-lock, html.m3d-lock body { overflow: hidden !important; }
 .m3d-close svg, .m3d-card-close svg, .m3d-home svg { display: block; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .m3d-close svg { width: 22px; height: 22px; }
 .m3d-card-close svg { width: 18px; height: 18px; }
-.m3d-close:hover, .m3d-card-close:hover { transform: rotate(90deg); background: rgba(11, 27, 51, .9); }
+@media (hover: hover) { .m3d-close:hover, .m3d-card-close:hover { transform: rotate(90deg); background: rgba(11, 27, 51, .9); } }
 .m3d-home { width: auto; height: 44px; padding: 0 18px 0 14px; border-radius: 999px; display: inline-flex; align-items: center; gap: 8px;
             font-size: 14px; font-weight: 600; letter-spacing: .02em; line-height: 1; transition: background .25s, color .25s; }
 .m3d-home svg { width: 20px; height: 20px; flex-shrink: 0; }
-.m3d-home:hover { background: #fff; color: #0b1b33; }
+@media (hover: hover) { .m3d-home:hover { background: #fff; color: #0b1b33; } }
 
 /* Фото места в карточке: стопкой, спокойная смена (раз в 5 с) с мягким перетеканием */
 .m3d-card-img { position: relative; overflow: hidden; }
@@ -115,3 +117,17 @@ html.m3d-lock, html.m3d-lock body { overflow: hidden !important; }
 .m3d-card::-webkit-scrollbar { width: 8px; }
 .m3d-card::-webkit-scrollbar-track { background: transparent; margin: 14px 0; }
 .m3d-card::-webkit-scrollbar-thumb { background: rgba(27, 42, 62, .3); border-radius: 999px; border: 2px solid transparent; background-clip: padding-box; }
+
+/* Крестик закрытия карты — только в полноэкранном режиме («Исследовать карту») */
+.m3d:not(.is-full) .m3d-close { display: none !important; }
+
+/* Низкий экран (телефон горизонтально): карточка места — фото слева, текст справа, целиком помещается */
+@media (max-height: 560px) {
+    .m3d-card { display: grid; grid-template-columns: 42% minmax(0, 1fr); left: 14px; right: auto; bottom: 70px;
+                width: min(660px, calc(100% - 28px)); max-height: calc(100% - 88px); overflow: hidden; }
+    .m3d-card-img { aspect-ratio: auto !important; height: 100%; min-height: 0; }
+    .m3d-card-body { overflow-y: auto; padding: 12px 16px 14px; }
+    .m3d-card h3 { font-size: 19px; margin: 2px 0 4px; }
+    .m3d-card p { font-size: 13px; line-height: 1.45; margin-bottom: 10px; }
+    .m3d-btn { padding: 7px 13px; font-size: 13px; }
+}

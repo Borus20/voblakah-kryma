@@ -49,8 +49,8 @@ function head({ title, desc, canonical, extra = '' }) {
     <link rel="preload" href="/v2/fonts/cormorant-cyrillic-normal.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="/fonts/inter-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="/v2/fonts/cormorant.css">
-    <link rel="stylesheet" href="/v2/v2.css?v=7">
-    <link rel="stylesheet" href="/v2/page.css?v=1">
+    <link rel="stylesheet" href="/v2/v2.css?v=8">
+    <link rel="stylesheet" href="/v2/page.css?v=2">
 ${extra}</head>
 <body class="subpage">`;
 }
@@ -83,7 +83,7 @@ function footer() {
     <p>Мы используем cookie и Яндекс.Метрику, чтобы понимать, как сделать сайт удобнее. <a href="${BASE}/privacy.html" target="_blank">Подробнее</a></p>
     <button type="button" id="cookie-ok">Понятно</button>
 </div>
-<script src="/v2/page.js?v=1"></script>
+<script src="/v2/page.js?v=2"></script>
 </body>
 </html>
 `;

@@ -21,7 +21,7 @@
 /* Вступление + карточка цен */
 .ap-intro { max-width: 1280px; margin: 0 auto; padding: clamp(40px, 6vw, 80px) var(--pad); display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: clamp(30px, 5vw, 70px); align-items: start; }
 .ap-back { display: inline-block; margin-bottom: 22px; color: var(--muted); text-decoration: none; font-size: 14px; }
-.ap-back:hover { color: var(--navy); }
+@media (hover: hover) { .ap-back:hover { color: var(--navy); } }
 .ap-lead { font-size: 18px; color: #3d4b5c; margin: 20px 0 28px; }
 .ap-facts { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); }
 .ap-facts li { padding: 18px 14px 0 0; display: flex; flex-direction: column; gap: 2px; }
@@ -49,7 +49,7 @@
 .ap-others-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 6px; }
 .ap-other { position: relative; display: block; aspect-ratio: 16 / 10; border-radius: 20px; overflow: hidden; color: #fff; text-decoration: none; }
 .ap-other img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s var(--ease); }
-.ap-other:hover img { transform: scale(1.06); }
+@media (hover: hover) { .ap-other:hover img { transform: scale(1.06); } }
 .ap-other::after { content: ''; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(11, 27, 51, .8), rgba(11, 27, 51, 0) 55%); }
 .ap-other span { position: absolute; left: 18px; bottom: 14px; z-index: 1; font-family: var(--font-display); font-size: 26px; }
 

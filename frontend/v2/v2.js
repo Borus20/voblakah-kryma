@@ -34,6 +34,14 @@
     const fmtD = (d) => d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' });
     const ymd = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
     const DAY = 86400000;
+
+    // После нажатия пальцем/мышью кнопка не остаётся выделенной (в т.ч. когда вернулись на страницу кнопкой «Назад»).
+    // e.detail > 0 — нажатие мышью или пальцем; при управлении с клавиатуры фокус не трогаем.
+    document.addEventListener('click', (e) => {
+        const el = e.target.closest && e.target.closest('a, button, [role="button"]');
+        if (el && e.detail > 0) setTimeout(() => el.blur(), 0);
+    }, true);
+    addEventListener('pageshow', () => { const a = document.activeElement; if (a && a !== document.body && a.blur) a.blur(); });
     const nightsBetween = (a, b) => Math.round((b - a) / DAY);
     const MIN_NIGHTS = 7;
 
@@ -70,7 +78,7 @@
     const setCounter = () => { counter.textContent = `${pad2(heroIdx + 1)} / ${pad2(slides.length)}`; };
     const ensureSlide = (i) => { if (!slides[i].innerHTML) slides[i].innerHTML = pic(heroList[i], 'Кацивели, Южный берег Крыма'); };
     setCounter();
-    if (slides.length > 1 && !reduceMotion) {
+    if (slides.length > 1) {   // смена фото — и при «Уменьшить движение» (это плавное перетекание, не движение)
         ensureSlide(1);
         setInterval(() => {
             if (document.hidden) return;
@@ -164,7 +172,7 @@
         if (!box.querySelector('[data-n="0"]')) box.firstElementChild.setAttribute('data-n', '0');
         const media = $('.apt-media', card);
         media.addEventListener('mouseenter', () => {
-            if (reduceMotion || photos.length < 2) return;
+            if (photos.length < 2) return;
             card.classList.add('is-cycling');
             show((i + 1) % photos.length);
             timer = setInterval(() => show((i + 1) % photos.length), HOVER_STEP);
@@ -251,7 +259,7 @@
         clearInterval(smTimer);
         const imgs = $$('img', g); let k = 0;
         // фото всего два — меняем спокойно, раз в 5 секунд, чтобы не мельтешило
-        if (imgs.length > 1 && !reduceMotion) smTimer = setInterval(() => showImg((k + 1) % imgs.length), 5000);   // showImg объявлена ниже, вызывается позже
+        if (imgs.length > 1) smTimer = setInterval(() => showImg((k + 1) % imgs.length), 5000);   // showImg объявлена ниже, вызывается позже
         $('#sm-onmap').onclick = () => { hideLayer($('#sight-modal')); showOnMap(id); };
         // маршрут и расстояние
         const route = routeUrl(id), routeBox = $('.sm-route');
