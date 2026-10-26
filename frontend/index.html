@@ -1,14 +1,13 @@
 <!DOCTYPE html>
-<html lang="ru" class="scroll-pt-24">
+<html lang="ru">
 <head>
+    <!-- Собрано tools/build-root-index.js из frontend/v2/index.html (+ SEO и Метрика старой главной). Правьте v2/index.html и пересоберите. -->
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Квартиры "В облаках Крыма" - Большая Ялта, Кацивели, Крым</title>
-    <meta name="theme-color" content="#eaf5fb">
-    <meta name="yandex-verification" content="ae02fa85f7655e0f" />
     <meta name="description" content="Уютные квартиры с панорамным видом на море и горы в Кацивели, Большая Ялта. Небольшой дом среди можжевельников, беседка и парковка. Бронирование напрямую у хозяев, без посредников и комиссий.">
     <meta name="keywords" content="аренда квартир Кацивели, жильё у моря Крым, отдых в Кацивели, В облаках Крыма, Большая Ялта, гостевой дом Кацивели, отдых без посредников">
-    
+    <meta name="yandex-verification" content="ae02fa85f7655e0f" />
     <meta property="og:title" content="Квартиры &quot;В облаках Крыма&quot; - Отдых в Кацивели">
     <meta property="og:description" content="Уютные квартиры с панорамным видом на море и горы. Небольшой дом среди можжевельников в Кацивели, Большая Ялта. Бронирование напрямую у хозяев.">
     <meta property="og:image" content="https://voblakah-kryma.ru/og-image.jpg">
@@ -22,14 +21,16 @@
     <meta property="og:site_name" content="В облаках Крыма">
     <meta name="twitter:card" content="summary_large_image">
     <link rel="canonical" href="https://voblakah-kryma.ru/">
+    <meta name="theme-color" content="#0b1b33">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
     <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <link rel="manifest" href="/site.webmanifest">
-    <link rel="stylesheet" href="css/tailwind.css">
+    <link rel="preload" href="/v2/fonts/cormorant-cyrillic-normal.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="/fonts/inter-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
-    <script src="https://api-maps.yandex.ru/2.1/?apikey=b4a58719-8733-4cf6-b450-e7343a6feef8&lang=ru_RU" type="text/javascript"></script>
-    
+    <link rel="stylesheet" href="/v2/fonts/cormorant.css">
+    <link rel="stylesheet" href="/v2/v2.css?v=8">
+    <link rel="stylesheet" href="/v2/map/map3d.css?v=7">
     <script type="text/javascript">
         (function(m,e,t,r,i,k,a){
             m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
@@ -41,7 +42,6 @@
         ym(106346948, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", accurateTrackBounce:true, trackLinks:true});
     </script>
     <noscript><div><img src="https://mc.yandex.ru/watch/106346948" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-    <link rel="stylesheet" href="css/styles.css">
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -134,448 +134,309 @@
     }
     </script>
 </head>
-<body class="text-gray-800 scroll-smooth flex flex-col min-h-screen">
-    <header class="bg-white/80 backdrop-blur-md shadow-md sticky top-0 z-50 relative rounded-b-2xl">
-        <nav class="container mx-auto px-4 sm:px-6 py-2 flex justify-between items-center relative">
-            <div class="flex items-center gap-x-6 relative z-50">
-                <a href="#" id="home-link" class="title-link text-2xl font-bold text-gray-900">
-                    <span class="title-char">В</span><span class="title-char">&nbsp;</span><span class="title-char">о</span><span class="title-char">б</span><span class="title-char">л</span><span class="title-char">а</span><span class="title-char">к</span><span class="title-char">а</span><span class="title-char">х</span><span class="title-char">&nbsp;</span><span class="title-char">К</span><span class="title-char">р</span><span class="title-char">ы</span><span class="title-char">м</span><span class="title-char">а</span>
-                </a>
-            </div>
-            <div>
-                <div class="hidden xl:flex items-center gap-x-8 cursor-default">
-                    <div class="flex items-center space-x-2">
-                        <a href="#about" class="nav-link text-gray-600 hover:text-blue-500 hover:bg-blue-50/50 transition px-3 py-2 rounded-full">О нас</a>
-                        <a href="#apartments" class="nav-link text-gray-800 font-bold hover:text-blue-500 hover:bg-blue-50/50 transition px-3 py-2 rounded-full">Забронировать квартиру</a>
-                        <a href="#sights" class="nav-link text-gray-600 hover:text-blue-500 hover:bg-blue-50/50 transition px-3 py-2 rounded-full">Достопримечательности рядом</a>
-                        <a href="#location" class="nav-link text-gray-600 hover:text-blue-500 hover:bg-blue-50/50 transition px-3 py-2 rounded-full">Расположение</a>
-                        <a href="#contact" class="nav-link text-gray-600 hover:text-blue-500 hover:bg-blue-50/50 transition px-3 py-2 rounded-full">Контакты</a>
-                        <a href="#rules" class="nav-link text-gray-600 hover:text-blue-500 hover:bg-blue-50/50 transition px-3 py-2 rounded-full">Правила проживания</a>
-                    </div>
-                </div>
-                <button id="mobile-menu-button" class="xl:hidden text-gray-800 focus:outline-none p-4 relative z-[60]">
-                    <svg class="w-8 h-8 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
-                </button>
-            </div>
-        </nav>
-        <div id="mobile-menu" class="hidden xl:hidden absolute top-full left-0 w-full shadow-xl z-40 overflow-hidden border-t border-white/20 rounded-b-2xl">
-            
-            <div class="absolute inset-0 z-0 opacity-100" style="background-image: url('img/common/house.jpg'); background-size: cover; background-position: center;"></div>
-            
-            <div class="absolute inset-0 z-0 bg-white/25"></div>
+<body>
 
-            <div class="absolute top-0 left-0 w-full h-12 bg-gradient-to-b from-white/90 to-transparent z-0 pointer-events-none"></div>
-            <div class="absolute bottom-0 left-0 w-full h-12 bg-gradient-to-t from-white/90 to-transparent z-0 pointer-events-none"></div>
+<!-- ============ ШАПКА ============ -->
+<header class="hdr" id="hdr">
+    <a href="#top" class="hdr-logo" aria-label="В облаках Крыма — наверх">В облаках <em>Крыма</em></a>
+    <nav class="hdr-nav" aria-label="Разделы">
+        <a href="#about">О нас</a>
+        <a href="#apartments">Квартиры</a>
+        <a href="#map">Карта</a>
+        <a href="#sights">Что рядом</a>
+        <a href="#rules">Правила</a>
+        <a href="#contact">Контакты</a>
+    </nav>
+    <a href="#apartments" class="btn btn--gold hdr-cta">Забронировать</a>
+    <button type="button" class="hdr-burger" aria-label="Меню" aria-expanded="false"><span></span><span></span></button>
+</header>
+<div class="menu" id="menu" hidden>
+    <nav>
+        <a href="#about">О нас</a>
+        <a href="#apartments">Квартиры</a>
+        <a href="#map">3D-карта</a>
+        <a href="#sights">Что рядом</a>
+        <a href="#rules">Правила</a>
+        <a href="#contact">Контакты</a>
+    </nav>
+    <div class="menu-contacts">
+        <a href="tel:+79093553729">+7 (909) 355-37-29</a>
+        <a href="https://t.me/+79093553729" target="_blank" rel="noopener">Telegram</a>
+    </div>
+</div>
 
-            <div class="relative z-10">
-                <a href="#about" class="nav-link block py-3 px-4 text-sm font-medium text-gray-900 hover:bg-white/50 transition-colors border-b border-gray-500/10 relative">О нас</a>
-                <a href="#apartments" class="nav-link block py-3 px-4 text-sm font-bold text-blue-700 hover:bg-white/50 transition-colors border-b border-gray-500/10 relative">Забронировать квартиру</a>
-                <a href="#sights" class="nav-link block py-3 px-4 text-sm font-medium text-gray-900 hover:bg-white/50 transition-colors border-b border-gray-500/10 relative">Достопримечательности рядом</a>
-                <a href="#location" class="nav-link block py-3 px-4 text-sm font-medium text-gray-900 hover:bg-white/50 transition-colors border-b border-gray-500/10 relative">Расположение</a>
-                <a href="#contact" class="nav-link block py-3 px-4 text-sm font-medium text-gray-900 hover:bg-white/50 transition-colors border-b border-gray-500/10 relative">Контакты</a>
-                <a href="#rules" class="nav-link block py-3 px-4 text-sm font-medium text-gray-900 hover:bg-white/50 transition-colors relative">Правила проживания</a>
+<main>
+<!-- ============ ГЛАВНЫЙ ЭКРАН ============ -->
+<section class="hero" id="top">
+    <div class="hero-slides" id="hero-slides"></div>
+    <div class="hero-clouds" aria-hidden="true"><i></i><i></i><i></i></div>
+    <div class="hero-shade"></div>
+    <div class="hero-inner">
+        <p class="kicker reveal">Кацивели · Большая Ялта · Южный берег Крыма</p>
+        <h1 class="hero-title reveal">Отдых на&nbsp;Южном <em>берегу Крыма</em></h1>
+        <p class="hero-sub reveal">Наши квартиры «В облаках Крыма» в Большой Ялте в живописном Кацивели с целебным воздухом и чистым морем</p>
+        <div class="hero-actions reveal">
+            <a href="#apartments" class="btn btn--light">Выбрать квартиру</a>
+            <a href="#map" class="btn btn--ghost">Побережье в 3D</a>
+        </div>
+    </div>
+    <div class="hero-bottom">
+        <a href="tel:+79093553729" class="hero-phone">+7 (909) 355-37-29</a>
+        <a href="https://t.me/+79093553729" target="_blank" rel="noopener" class="hero-tg" aria-label="Telegram">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9.78 18.65l.28-4.23l7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3L3.64 12c-.88-.25-.89-1.37.2-1.64l16.4-5.99c.75-.27 1.45.24 1.2 1.12l-2.43 11.4c-.22.99-1.01 1.24-1.74.77l-4.93-3.6-2.4 2.31c-.26.26-.6.39-.94.26z"/></svg>
+        </a>
+        <span class="hero-counter" id="hero-counter" aria-hidden="true"></span>
+        <a href="#about" class="hero-scroll" aria-label="Листать вниз"><span></span></a>
+    </div>
+</section>
+
+<!-- ============ ЦИФРЫ ============ -->
+<section class="facts" aria-label="Коротко о доме">
+    <div class="fact reveal"><b data-count="4">4</b><span>квартиры с отдельным входом</span></div>
+    <div class="fact reveal"><b><span data-count="40">40</span>&nbsp;м²</b><span>каждая квартира</span></div>
+    <div class="fact reveal"><b><span data-count="18">18</span>&nbsp;км</b><span>до Ялты</span></div>
+    <div class="fact reveal"><b>1,5&nbsp;км</b><span>до аквапарка Симеиз</span></div>
+    <div class="fact reveal"><b>июнь — сентябрь</b><span>сезон 2027</span></div>
+</section>
+
+<!-- ============ О НАС ============ -->
+<section class="about" id="about">
+    <div class="about-text">
+        <p class="kicker reveal">О нас</p>
+        <h2 class="h2 reveal">Небольшой уютный дом, <em>окружённый можжевельниками</em></h2>
+        <p class="reveal">Добро пожаловать «В облаках Крыма»! Наш небольшой уютный дом, окружённый можжевельниками, состоит из четырёх квартир по 40&nbsp;м². Дом расположен в уникальном месте посёлка Кацивели, где горный воздух встречается с морским бризом, создавая идеальный микроклимат для оздоровления и релаксации. На территории имеется парковка и мангальная зона.</p>
+        <p class="reveal">Каждая наша квартира с отдельным входом оснащена современной техникой, удобной мебелью и всем необходимым для комфортного отдыха. Потрясающие виды из окон на море и горы не оставят Вас равнодушными. Мы ценим тишину и уют, поэтому у нас Вы не найдёте шумных толп, только спокойствие и гармонию с природой.</p>
+        <p class="reveal">Кацивели расположен всего лишь в восемнадцати километрах от Ялты и полутора километрах от аквапарка Симеиз. От нас легко добраться до Воронцовского и Ливадийского дворцов, Ласточкиного гнезда и других достопримечательностей ЮБК. Для любителей морепродуктов в Кацивели есть ресторан местной устричной фермы.</p>
+        <p class="about-sign reveal">Ждём Вас в гости за яркими впечатлениями и тёплым южным солнцем!</p>
+    </div>
+    <div class="about-collage" id="about-collage" aria-hidden="true"></div>
+</section>
+
+<!-- ============ КВАРТИРЫ ============ -->
+<section class="apts" id="apartments">
+    <div class="sec-head">
+        <p class="kicker reveal">Квартиры</p>
+        <h2 class="h2 reveal">Четыре квартиры <em>по 40&nbsp;м²</em></h2>
+        <p class="sec-lead reveal" id="apts-lead"></p>
+    </div>
+    <div class="apts-grid" id="apts-grid"></div>
+</section>
+
+<!-- ============ 3D-КАРТА ============ -->
+<section class="mapsec" id="map">
+    <div class="sec-head sec-head--light">
+        <p class="kicker reveal">Побережье в 3D</p>
+        <h2 class="h2 reveal">Южный берег <em>с высоты облаков</em></h2>
+        <p class="sec-lead reveal">Настоящий рельеф и снимки со спутника — летом и зимой. Нажмите на точку, чтобы узнать о месте и расстоянии от нашего дома.</p>
+    </div>
+    <div class="mapsec-frame"><div id="map3d" class="mapsec-map"></div></div>
+</section>
+
+<!-- ============ ДОСТОПРИМЕЧАТЕЛЬНОСТИ ============ -->
+<section class="sights" id="sights">
+    <div class="sec-head">
+        <p class="kicker reveal">Что рядом</p>
+        <div class="sec-head-row">
+            <h2 class="h2 reveal">Достопримечательности <em>рядом с нами</em></h2>
+            <div class="rail-nav">
+                <button type="button" class="ico-btn ico-btn--line" id="sights-prev" aria-label="Назад"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+                <button type="button" class="ico-btn ico-btn--line" id="sights-next" aria-label="Вперёд"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
             </div>
         </div>
-    </header>
+    </div>
+    <div class="sights-rail" id="sights-rail"></div>
+</section>
 
-    <div id="main-page" class="page">
-        <div class="container pt-4 mb-6 lg:mb-12 xl:mb-16">
-            <section class="hero-section-container relative text-white rounded-xl shadow-lg overflow-hidden">
-                <div id="hero-carousel" class="absolute inset-0 rounded-xl"></div>
-                <div class="absolute inset-0 bg-black/0 rounded-xl"></div>
-                
-                <div class="relative z-10 w-full h-full flex flex-col px-4 sm:px-8 pointer-events-none">
-                    
-                    <div class="flex-grow flex flex-col justify-center items-center text-center">
-                        <div class="pointer-events-auto max-w-4xl mx-auto">
-                            <h1 class="text-2xl sm:text-3xl md:text-5xl xl:text-6xl font-bold mb-2 drop-shadow-md" style="text-shadow: 2px 2px 8px rgba(0,0,0,0.7);">Отдых на Южном берегу Крыма</h1>
-                            <p class="text-base sm:text-lg md:text-xl max-w-3xl mx-auto mb-0 drop-shadow-md" style="text-shadow: 1px 1px 4px rgba(0,0,0,0.7);">Наши квартиры "В облаках Крыма" в Большой Ялте в живописном Кацивели с целебным воздухом и чистым морем</p>
+<!-- ============ ПРАВИЛА ============ -->
+<section class="rules" id="rules">
+    <div class="sec-head">
+        <p class="kicker reveal">Перед поездкой</p>
+        <h2 class="h2 reveal">Правила <em>проживания</em></h2>
+    </div>
+    <div class="rules-grid">
+        <div class="rule reveal"><span class="rule-n">01</span><h3>Время заезда и выезда</h3><p>Заселение в апартаменты осуществляется после <b>14:00</b>, выезд — до <b>12:00</b>.</p></div>
+        <div class="rule reveal"><span class="rule-n">02</span><h3>Предоплата</h3><p>После того, как мы с Вами свяжемся, необходимо внести предоплату <b>20%</b>.</p></div>
+        <div class="rule reveal"><span class="rule-n">03</span><h3>Оплата и расчёт</h3><p>Полный расчёт за весь период проживания производится по приезде до заселения. Внесённая предоплата является гарантией брони и не может быть использована как оплата за одни сутки проживания.</p></div>
+        <div class="rule reveal"><span class="rule-n">04</span><h3>Отчётные документы</h3><p>При необходимости предоставляем комплект отчётных документов.</p></div>
+        <div class="rule reveal"><span class="rule-n">05</span><h3>Отмена и возврат</h3><p>Возврат предоплаты возможен при отмене бронирования не позднее, чем за <b>14 дней</b> до даты заезда. В случае досрочного выезда (ранний выезд) денежные средства не возвращаются и перерасчёт не производится.</p></div>
+        <div class="rule reveal"><span class="rule-n">06</span><h3>Безопасность</h3><p>По соображениям безопасности приём и хранение багажа до момента официального заселения не осуществляется.</p></div>
+        <div class="rule reveal"><span class="rule-n">07</span><h3>Питомцы</h3><p>Мы не принимаем гостей с домашними животными.</p></div>
+        <div class="rule reveal"><span class="rule-n">08</span><h3>Минимальный срок</h3><p>Бронирование — от <b>7 ночей</b>. Сезон: с 1 июня по 30 сентября.</p></div>
+    </div>
+</section>
+
+<!-- ============ КОНТАКТЫ ============ -->
+<section class="contact" id="contact">
+    <div class="contact-bg" id="contact-bg" aria-hidden="true"></div>
+    <div class="contact-inner">
+        <p class="kicker reveal">Контакты</p>
+        <h2 class="h2 reveal">Свяжитесь <em>с нами</em></h2>
+        <a class="contact-phone reveal" href="tel:+79093553729">+7 (909) 355-37-29</a>
+        <div class="contact-links reveal">
+            <a href="https://t.me/+79093553729" target="_blank" rel="noopener">Telegram</a>
+            <a href="mailto:polinadun@mail.ru">polinadun@mail.ru</a>
+            <a href="https://yandex.ru/maps/?pt=33.969208,44.396062&z=16&l=map" target="_blank" rel="noopener">Открыть в Яндекс Картах</a>
+        </div>
+        <p class="contact-addr reveal">Республика Крым, городской округ Ялта, пгт. Кацивели, ул. Академика Шулейкина, д. 53</p>
+        <button type="button" class="btn btn--light reveal" data-open="contact-modal">Написать нам</button>
+    </div>
+</section>
+</main>
+
+<footer class="ftr">
+    <div class="ftr-logo">В облаках <em>Крыма</em></div>
+    <p class="ftr-sub">Отдых в Крыму с комфортом</p>
+    <p class="ftr-links" id="ftr-apts"></p>
+    <p class="ftr-links"><a href="/privacy.html">Политика конфиденциальности</a></p>
+    <p class="ftr-copy">© 2027 Квартиры «В облаках Крыма». Все права защищены</p>
+</footer>
+
+<!-- ============ ПАНЕЛЬ БРОНИРОВАНИЯ ============ -->
+<div class="drawer" id="drawer" hidden aria-modal="true" role="dialog" aria-labelledby="dr-title">
+    <div class="drawer-backdrop" data-close></div>
+    <div class="drawer-panel">
+        <button type="button" class="drawer-close" data-close aria-label="Закрыть"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+        <div class="drawer-scroll">
+            <div class="dr-gallery" id="dr-gallery"></div>
+            <div class="dr-body">
+              <div class="dr-info">
+                <p class="kicker">Бронирование</p>
+                <h2 class="dr-title" id="dr-title"></h2>
+                <p class="dr-desc" id="dr-desc"></p>
+                <div class="dr-prices" id="dr-prices"></div>
+                <a class="dr-more" id="dr-more">Подробнее о квартире →</a>
+              </div>
+              <div class="dr-steps">
+                <div class="dr-step" id="dr-step-dates">
+                    <div class="cal-head">
+                        <h3>Выберите даты</h3>
+                        <div class="cal-nav">
+                            <button type="button" class="ico-btn ico-btn--line" id="cal-prev" aria-label="Предыдущий месяц"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+                            <button type="button" class="ico-btn ico-btn--line" id="cal-next" aria-label="Следующий месяц"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
                         </div>
                     </div>
-
-                    <div class="pointer-events-auto shrink-0 w-full flex justify-center sm:block sm:w-auto mb-6 sm:mb-0 sm:absolute sm:bottom-5 sm:right-5 z-20">
-                        <div class="flex items-center gap-3">
-                            <a href="https://t.me/+79093553729" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center text-sky-400 p-2 transition-all duration-300 transform hover:scale-125 drop-shadow-lg" aria-label="Telegram">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 sm:w-9 sm:h-9" viewBox="0 0 24 24" fill="currentColor" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));">
-                                    <path d="M9.78 18.65l.28-4.23l7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3L3.64 12c-.88-.25-.89-1.37.2-1.64l16.4-5.99c.75-.27 1.45.24 1.2 1.12l-2.43 11.4c-.22.99-1.01 1.24-1.74.77l-4.93-3.6-2.4 2.31c-.26.26-.6.39-.94.26z"/>
-                                </svg>
-                            </a>
-
-                            <a href="tel:+79093553729" class="flex items-center gap-2 bg-gray-900/1 backdrop-blur-md border border-white/30 text-white font-semibold py-1.5 px-3 sm:py-2 sm:px-4 rounded-full hover:bg-gray-900/50 transition-all duration-300 transform hover:scale-105 shadow-lg no-underline text-xs sm:text-base whitespace-nowrap">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                                </svg>
-                                <span>+7 (909) 355-37-29</span>
-                            </a>
-                        </div>
+                    <div class="cal" id="cal"></div>
+                    <div class="cal-legend">
+                        <span><i class="lg lg--free"></i>свободно · цена за сутки</span>
+                        <span><i class="lg lg--busy"></i>занято</span>
+                        <span><i class="lg lg--sel"></i>Ваши даты</span>
                     </div>
-
-                </div>
-            </section>
-        </div>
-
-        <main class="container pb-12">
-            <section id="apartments" class="my-6 lg:my-12 xl:my-16 scroll-mt-28">
-                <h2 class="text-3xl md:text-4xl font-bold text-center mb-6 text-white" style="text-shadow: 1px 1px 4px rgba(0,0,0,0.7);">Наши квартиры</h2>
-                <div id="apartment-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"></div>
-            </section>
-
-            <section id="sights" class="my-6 lg:my-12 xl:my-16 scroll-mt-28 relative">
-                <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-6 text-white break-words" style="text-shadow: 1px 1px 4px rgba(0,0,0,0.7);">Достопримечательности рядом</h2>
-                
-                <div class="relative px-2 sm:px-12">
-                    <div id="sights-carousel" class="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 pr-12" tabindex="-1">
-                        </div>
-                    <button id="sights-prev" class="disabled"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg></button>
-                    <button id="sights-next"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></button>
-                </div>
-            </section>
-
-            <section id="location" class="-mt-5 mb-6 lg:-mt-4 lg:mb-12 xl:-mt-15 xl:mb-16 scroll-mt-28">
-                <h2 class="text-3xl md:text-4xl font-bold text-center mb-6 text-white" style="text-shadow: 1px 1px 4px rgba(0,0,0,0.7);">Мы на карте</h2>
-                <div class="bg-white/90 backdrop-blur-sm p-2 sm:p-4 rounded-xl shadow-lg">
-                    <div id="map" class="w-full h-[300px] sm:h-[500px] rounded-lg"></div>
-                    <p class="text-center mt-4 text-gray-800 font-medium">Наш адрес: Республика Крым, городской округ Ялта, пгт. Кацивели, ул. Академика Шулейкина, д. 53</p>
-                </div>
-            </section>
-            
-            <section id="contact" class="my-6 lg:my-12 xl:my-16 scroll-mt-28">
-                <h2 class="text-3xl md:text-4xl font-bold text-center mb-6 text-white" style="text-shadow: 1px 1px 4px rgba(0,0,0,0.7);">Свяжитесь с нами</h2>
-                <div class="bg-white/90 backdrop-blur-sm p-6 sm:p-8 rounded-xl shadow-lg max-w-2xl mx-auto text-center">
-                    <h3 class="text-2xl font-bold mb-4">Прямая связь</h3>
-                    <div class="flex flex-col items-center space-y-4">
-                        <div class="flex items-center flex-wrap justify-center">
-                            <a href="tel:+79093553729" class="text-blue-500 mr-4 flex-shrink-0 transition-transform hover:scale-110">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
-                            </a>
-                            <a href="tel:+79093553729" class="text-lg text-gray-800 hover:text-blue-500 mr-3">+7 (909) 355-37-29</a>
-                            <div class="flex items-center">
-                                <a href="https://t.me/+79093553729" target="_blank" rel="noopener noreferrer" title="Написать в Telegram" class="text-sky-500 hover:text-sky-600 transition-transform hover:scale-110">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M9.78 18.65l.28-4.23l7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3L3.64 12c-.88-.25-.89-1.37.2-1.64l16.4-5.99c.75-.27 1.45.24 1.2 1.12l-2.43 11.4c-.22.99-1.01 1.24-1.74.77l-4.93-3.6-2.4 2.31c-.26.26-.6.39-.94.26z"></path></svg>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="flex items-center">
-                            <a href="mailto:polinadun@mail.ru" class="text-blue-500 mr-4 transition-transform hover:scale-110">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                            </a>
-                            <a href="mailto:polinadun@mail.ru" class="text-lg text-gray-800 hover:text-blue-500">polinadun@mail.ru</a>
-                        </div>
+                    <div class="dr-summary">
+                        <div><span>Даты</span><b id="sum-dates">не выбраны</b></div>
+                        <div><span>Ночей</span><b id="sum-nights">—</b></div>
+                        <div><span>Сумма</span><b id="sum-total">—</b></div>
+                        <div><span>Предоплата 20%</span><b id="sum-prepay">—</b></div>
                     </div>
-                    <div class="mt-8">
-                        <p class="text-gray-600 mb-4">Или оставьте заявку, и мы сами с Вами свяжемся:</p>
-                        <button id="open-contact-modal-btn" class="bg-blue-500 text-white px-8 py-3 rounded-full hover:bg-blue-600 transition font-bold text-lg shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-                            Написать нам
-                        </button>
-                    </div>
+                    <p class="dr-note">Минимальный срок — 7 ночей. Заезд после 14:00, выезд до 12:00.</p>
+                    <button type="button" class="btn btn--gold btn--wide" id="dr-continue" disabled>Продолжить</button>
                 </div>
-            </section>
-        </main>
-    </div>
 
-    <div id="about-page" class="page hidden flex-grow">
-        <div class="container py-6 lg:py-12 relative h-full flex flex-col justify-center">
-            <button id="back-to-main-from-about" class="mb-4 lg:mb-8 bg-blue-500 text-white px-5 py-2 rounded-full hover:bg-blue-600 transition flex items-center self-start">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                Назад
-            </button>
-            <div class="bg-white/95 backdrop-blur-sm p-6 sm:p-8 rounded-xl shadow-lg relative overflow-hidden flex-grow flex flex-col justify-center">
-                <div class="absolute inset-0 z-0 opacity-50" style="background-image: url('img/common/view2.jpg'); background-size: cover; background-position: center;"></div>
-                
-                <div class="relative z-10">
-                    <h2 class="text-3xl md:text-4xl font-bold mb-6 text-center text-gray-900">О нас</h2>
-                    <div class="text-lg text-gray-800 leading-relaxed">
-                          <p class="text-readable indent-8">
-                            Добро пожаловать «В облаках Крыма»! Наш небольшой уютный дом, окружённый можжевельниками, состоит из четырёх квартир по 40 м². Дом расположен в уникальном месте посёлка Кацивели, где горный воздух встречается с морским бризом, создавая идеальный микроклимат для оздоровления и релаксации. На территории имеется парковка и мангальная зона.
-                        </p>
-                        <p class="text-readable indent-8">
-                            Каждая наша квартира с отдельным входом оснащена современной техникой, удобной мебелью и всем необходимым для комфортного отдыха. Потрясающие виды из окон на море и горы не оставят вас равнодушными. Мы ценим тишину и уют, поэтому у нас вы не найдёте шумных толп, только спокойствие и гармонию с природой.
-                        </p>
-                        <p class="text-readable indent-8">
-                            Кацивели расположен всего лишь в восемнадцати километрах от Ялты и полутора километрах от аквапарка Симеиз. От нас легко добраться до Воронцовского и Ливадийского дворцов, Ласточкиного гнезда и других достопримечательностей ЮБК. Для любителей морепродуктов в Кацивели есть ресторан местной устричной фермы.
-                        </p>
-                        <p class="text-readable indent-8">
-                            Ждём вас в гости за яркими впечатлениями и тёплым южным солнцем!
-                        </p>
+                <form class="dr-step form" id="dr-step-form" novalidate hidden>
+                    <button type="button" class="dr-back" id="dr-back">← Изменить даты</button>
+                    <p class="dr-picked" id="dr-picked"></p>
+                    <div class="form-grid">
+                        <label class="fld"><span>Ваше имя *</span><input name="name" type="text" required autocomplete="name"></label>
+                        <label class="fld"><span>Телефон *</span><input name="phone" type="tel" required autocomplete="tel" placeholder="+7 (999) 123-45-67"></label>
+                        <label class="fld"><span>Email * <small>для оповещений о статусе брони</small></span><input name="email" type="email" required autocomplete="email" placeholder="example@mail.ru"></label>
+                        <label class="fld"><span>Ник в Telegram</span><input name="telegram" type="text" placeholder="@username"></label>
+                        <label class="fld"><span>Взрослых *</span><select name="adults"><option>1</option><option selected>2</option><option>3</option><option>4</option></select></label>
+                        <label class="fld"><span>Детей</span><select name="children"><option selected>0</option><option>1</option><option>2</option><option>3</option><option>4</option></select></label>
+                        <label class="fld fld--wide"><span>Комментарий</span><textarea name="message" rows="3"></textarea></label>
                     </div>
+                    <label class="consent"><input type="checkbox" name="consent" required> <span>Я даю согласие на обработку моих персональных данных в соответствии с <a href="/privacy.html" target="_blank">политикой конфиденциальности</a></span></label>
+                    <p class="form-status" id="dr-status" role="alert"></p>
+                    <button type="submit" class="btn btn--gold btn--wide">Отправить заявку</button>
+                </form>
+
+                <div class="dr-step dr-done" id="dr-step-done" hidden>
+                    <div class="done-mark">✓</div>
+                    <h3>Спасибо! Заявка отправлена.</h3>
+                    <p>Ожидайте звонка или сообщения от нас для уточнения деталей и подтверждения бронирования.</p>
+                    <button type="button" class="btn btn--dark" data-close>Закрыть</button>
                 </div>
+              </div>
             </div>
         </div>
     </div>
-    
-    <div id="rules-page" class="page hidden flex-grow">
-        <div class="container py-6 lg:py-12 relative h-full flex flex-col justify-center">
-            <button id="back-to-main-from-rules" class="mb-4 lg:mb-8 bg-blue-500 text-white px-5 py-2 rounded-full hover:bg-blue-600 transition flex items-center self-start">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                Назад
-            </button>
-            <div class="bg-white/95 backdrop-blur-sm p-6 sm:p-8 rounded-xl shadow-lg relative overflow-hidden flex-grow flex flex-col justify-center">
-                <div class="absolute inset-0 z-0 opacity-35" style="background-image: url('img/common/house.jpg'); background-size: cover; background-position: center;"></div>
-                
-                <div class="relative z-10">
-                    <h2 class="text-3xl md:text-4xl font-bold mb-6 text-center text-gray-900">Правила проживания</h2>
-                    <div class="text-lg text-gray-800 leading-relaxed text-readable">
-                        <ul class="space-y-4 list-none rules-list">
-                            <li class="flex items-start">
-                                <span class="rule-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></span>
-                                <div>
-                                    <strong class="block text-gray-900">Время заезда и выезда</strong>
-                                    Заселение в апартаменты осуществляется после <span class="font-bold">14:00</span>, выезд — до <span class="font-bold">12:00</span>.
-                                </div>
-                            </li>
-                            <li class="flex items-start">
-                                <span class="rule-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg></span>
-                                <div>
-                                    <strong class="block text-gray-900">Предоплата</strong>
-                                    После того, как мы с Вами свяжемся, необходимо внести предоплату 20%.
-                                </div>
-                            </li>
-                            <li class="flex items-start">
-                                <span class="rule-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg></span>
-                                <div>
-                                    <strong class="block text-gray-900">Оплата и расчёт</strong>
-                                    Полный расчёт за весь период проживания производится по приезде до заселения. 
-                                    <br>Внесённая предоплата является гарантией брони и не может быть использована как оплата за одни сутки проживания.
-                                </div>
-                            </li>
-                            <li class="flex items-start">
-                                <span class="rule-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></span>
-                                <div>
-                                    <strong class="block text-gray-900">Отчётные документы</strong>
-                                    При необходимости предоставляем комплект отчётных документов.
-                                </div>
-                            </li>
-                            <li class="flex items-start">
-                                <span class="rule-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/></svg></span>
-                                <div>
-                                    <strong class="block text-gray-900">Отмена и возврат</strong>
-                                    Возврат предоплаты возможен при отмене бронирования не позднее, чем за <span class="font-bold">14 дней</span> до даты заезда.
-                                    <br>В случае досрочного выезда (ранний выезд) денежные средства не возвращаются и перерасчёт не производится.
-                                </div>
-                            </li>
-                            <li class="flex items-start">
-                                <span class="rule-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></span>
-                                <div>
-                                    <strong class="block text-gray-900">Безопасность</strong>
-                                    По соображениям безопасности приём и хранение багажа до момента официального заселения не осуществляется.
-                                </div>
-                            </li>
-                            <li class="flex items-start">
-                                <span class="rule-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg></span>
-                                <div>
-                                    <strong class="block text-gray-900">Питомцы</strong>
-                                    Мы не принимаем гостей с домашними животными.
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
+</div>
+
+<!-- ============ ДОСТОПРИМЕЧАТЕЛЬНОСТЬ ============ -->
+<div class="modal" id="sight-modal" hidden role="dialog" aria-modal="true" aria-labelledby="sm-title">
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-panel modal-panel--sight">
+        <button type="button" class="drawer-close" data-close aria-label="Закрыть"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+        <div class="sm-gallery" id="sm-gallery"></div>
+        <div class="sm-body">
+          <div class="sm-main">
+            <p class="kicker" id="sm-dist"></p>
+            <h2 id="sm-title"></h2>
+            <p class="sm-lead" id="sm-desc"></p>
+            <ul class="sm-facts" id="sm-facts"></ul>
+            <div class="sm-more" id="sm-more"></div>
+          </div>
+          <div class="sm-side">
+            <div class="sm-route">
+                <div>
+                    <span>От нашего дома</span>
+                    <b id="sm-km"></b>
                 </div>
+                <a class="btn btn--gold" id="sm-route" target="_blank" rel="noopener">Маршрут в Яндекс Картах</a>
             </div>
-        </div>
-    </div>
-
-    <div id="apartment-details-page" class="page hidden">
-        <div class="container py-6 lg:py-12 relative">
-            <button id="back-to-main-from-apt" class="mb-4 lg:mb-8 bg-blue-500 text-white px-5 py-2 rounded-full hover:bg-blue-600 transition flex items-center">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                Назад
-            </button>
-            <div class="bg-white/95 backdrop-blur-sm p-4 sm:p-8 rounded-xl shadow-lg relative">
-                <button id="apartment-details-prev" tabindex="0">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg>
-                </button>
-                <button id="apartment-details-next" tabindex="0">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>
-                </button>
-
-                <h2 id="apartment-details-title" class="text-3xl md:text-4xl font-bold mb-6 text-center"></h2>
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-                    <div class="details-photo-carousel inner-carousel-container">
-                        <div id="apartment-details-photo-slides" class="details-photo-slides inner-carousel"></div>
-                        <button id="apartment-details-photo-prev" class="details-photo-nav prev">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg>
-                        </button>
-                        <button id="apartment-details-photo-next" class="details-photo-nav next">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>
-                        </button>
-                        <div id="apartment-details-dots" class="dots-container"></div>
-                    </div>
-                    <div>
-                        <h3 class="text-xl font-bold mb-2 text-center">Выберите даты для бронирования:</h3>
-                        <div id="calendar-wrapper"></div>
-                        <div id="booking-section" class="mt-4 text-center">
-                            <p class="text-lg">Выбранные даты: <span id="selected-dates-display" class="font-bold text-blue-600">не выбраны</span></p>
-                            <p class="text-md text-gray-600">Количество ночей: <span id="booking-nights" class="font-bold">--</span></p>
-                            <p id="booking-sum" class="text-lg font-bold text-gray-800 mt-2">Сумма: -- руб.</p>
-                            <button id="initiate-booking-btn" class="mt-4 bg-green-500 text-white px-8 py-3 rounded-full hover:bg-green-600 transition font-bold text-lg disabled:bg-gray-400 disabled:cursor-not-allowed" disabled>Забронировать</button>
-                        </div>
-                    </div>
-                </div>
+            <div class="sm-actions">
+                <button type="button" class="btn btn--dark" id="sm-onmap">Показать на 3D-карте</button>
+                <a class="btn btn--outline" id="sm-link" target="_blank" rel="noopener">Сайт места</a>
             </div>
-        </div>
-    </div>
-
-    <div id="details-page" class="page hidden">
-        <div class="container py-6 lg:py-12 relative">
-            <button id="back-to-main-from-sight" class="mb-4 lg:mb-8 bg-blue-500 text-white px-5 py-2 rounded-full hover:bg-blue-600 transition flex items-center">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                Назад
-            </button>
-            <div class="bg-white/95 backdrop-blur-sm p-4 sm:p-8 rounded-xl shadow-lg relative">
-                <button id="details-prev" tabindex="0">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg>
-                </button>
-                <button id="details-next" tabindex="0">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>
-                </button>
-
-                <h2 id="details-title" class="text-3xl md:text-4xl font-bold mb-6 text-center"></h2>
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-                    <div class="details-photo-carousel inner-carousel-container">
-                        <div id="details-photo-slides" class="details-photo-slides inner-carousel"></div>
-                        <button id="details-photo-prev" class="details-photo-nav prev">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg>
-                        </button>
-                        <button id="details-photo-next" class="details-photo-nav next">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>
-                        </button>
-                        <div id="details-dots" class="dots-container"></div>
-                    </div>
-                    <div>
-                        <p id="details-description" class="text-gray-700 leading-relaxed mb-6 text-readable indent-8"></p>
-                        <a id="details-link" href="#" target="_blank" rel="noopener noreferrer" class="inline-block bg-green-500 text-white px-6 py-3 rounded-full hover:bg-green-600 transition font-bold">Официальный сайт</a>
-                    </div>
-                </div>
+            <div class="sm-near">
+                <h3>Что ещё рядом с этим местом</h3>
+                <div id="sm-near"></div>
             </div>
+          </div>
         </div>
     </div>
-    
-    <footer class="bg-gray-800/80 backdrop-blur-sm text-white py-4 mt-auto rounded-t-2xl">
-        <div class="container text-center"><p>&copy; 2027 Квартиры "В облаках Крыма". Все права защищены</p><p class="text-sm text-gray-300 mt-1">Отдых в Крыму с комфортом</p><p class="footer-links"><a href="/kvartiry/breeze/">Морской бриз</a> · <a href="/kvartiry/mountain/">Горный воздух</a> · <a href="/kvartiry/sunny/">Солнечная</a> · <a href="/kvartiry/zapovednik/">Заповедник</a></p><p class="footer-links"><a href="/privacy.html">Политика конфиденциальности</a></p></div>
-    </footer>
+</div>
 
-    <div id="fullscreen-gallery" tabindex="0">
-        <div id="fullscreen-close">&times;</div>
-        
-        <div id="fullscreen-prev">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg>
-        </div>
-        
-        <div id="fullscreen-next">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>
-        </div>
-        
-        <div id="fullscreen-track"></div>
-
-        <div id="fullscreen-dots"></div>
-    </div>
-
-    <div id="toast-notification" class="fixed top-5 left-1/2 -translate-x-1/2 w-[90%] sm:w-auto sm:left-auto sm:right-5 sm:translate-x-0 bg-red-600 text-white py-3 px-6 rounded-full shadow-xl opacity-0 translate-y-[-20px] transition-all duration-500 ease-out z-[100] flex items-center justify-between pointer-events-none">
-        <span id="toast-message"></span>
-        <button id="toast-close" class="ml-4 font-bold text-xl leading-none p-2">&times;</button>
-    </div>
-    
-    <div id="post-booking-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[99] transition-opacity duration-300">
-        <div class="bg-white p-6 sm:p-8 rounded-xl shadow-2xl w-full max-w-lg relative m-4 text-center">
-            <button id="post-booking-modal-close" class="modal-close-btn absolute top-0 right-0 p-4 text-gray-500 hover:text-gray-800 text-3xl leading-none">&times;</button>
-            <div class="flex justify-center items-center mb-4">
-                <svg class="w-16 h-16 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+<!-- ============ НАПИСАТЬ НАМ ============ -->
+<div class="modal" id="contact-modal" hidden role="dialog" aria-modal="true" aria-labelledby="cm-title">
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-panel">
+        <button type="button" class="drawer-close" data-close aria-label="Закрыть"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+        <form class="form" id="contact-form" novalidate>
+            <p class="kicker">Связь</p>
+            <h2 id="cm-title">Написать нам</h2>
+            <div class="form-grid">
+                <label class="fld"><span>Ваше имя *</span><input name="name" type="text" required autocomplete="name"></label>
+                <label class="fld"><span>Телефон *</span><input name="phone" type="tel" required autocomplete="tel" placeholder="+7 (999) 123-45-67"></label>
+                <label class="fld"><span>Email *</span><input name="email" type="email" required autocomplete="email" placeholder="example@mail.ru"></label>
+                <label class="fld"><span>Ник в Telegram</span><input name="telegram" type="text" placeholder="@username"></label>
+                <label class="fld fld--wide"><span>Сообщение *</span><textarea name="message" rows="4" required></textarea></label>
             </div>
-            <h3 class="text-2xl font-bold mb-3 text-gray-800">Спасибо! Заявка отправлена.</h3>
-            <p class="text-gray-600 mb-6">Ожидайте звонка или сообщения от нас для уточнения деталей и подтверждения бронирования.</p>
+            <label class="consent"><input type="checkbox" name="consent" required> <span>Я даю согласие на обработку моих персональных данных в соответствии с <a href="/privacy.html" target="_blank">политикой конфиденциальности</a></span></label>
+            <p class="form-status" id="cm-status" role="alert"></p>
+            <button type="submit" class="btn btn--gold btn--wide">Отправить</button>
+        </form>
+        <div class="dr-done" id="cm-done" hidden>
+            <div class="done-mark">✓</div>
+            <h3>Спасибо! Сообщение отправлено.</h3>
+            <p>Мы свяжемся с Вами в ближайшее время.</p>
+            <button type="button" class="btn btn--dark" data-close>Закрыть</button>
         </div>
     </div>
+</div>
 
-    <div id="booking-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[99] transition-opacity duration-300">
-        <div class="bg-white p-6 sm:p-8 rounded-xl shadow-2xl w-full max-w-md relative m-4 max-h-[90vh] overflow-y-auto custom-scrollbar">
-            <button id="booking-modal-close-btn" class="modal-close-btn absolute top-0 right-0 p-4 text-gray-500 hover:text-gray-800 text-3xl leading-none">&times;</button>
-            <h3 id="booking-modal-title" class="text-2xl font-bold mb-1 text-center">Форма бронирования</h3>
-            <p id="booking-modal-info" class="text-center text-gray-600 mb-1"></p>
-            <p id="modal-booking-sum" class="text-center text-lg font-bold text-gray-800 mb-4"></p>
-            
-            <form id="bookingForm" novalidate>
-                <div class="mb-4"><label for="booking-name" class="block text-gray-700 font-medium mb-2">Ваше имя *</label><input type="text" id="booking-name" name="name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required></div>
-                <div class="mb-4"><label for="booking-phone" class="block text-gray-700 font-medium mb-2">Ваш номер телефона *</label><input type="tel" id="booking-phone" name="phone" placeholder="+7 (999) 123-45-67" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required></div>
-                <div class="mb-4">
-                    <label for="booking-email" class="block text-gray-700 font-medium mb-2">
-                        Ваш Email * <span class="block text-[10px] font-normal text-gray-500 leading-tight">(для автоматических оповещений о статусе бронирования)</span>
-                    </label>
-                    <input type="email" id="booking-email" name="email" placeholder="example@mail.ru" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                </div>
-                <div class="mb-4 relative">
-                    <label for="booking-telegram" class="block text-gray-700 font-medium mb-2">Ваш ник в Telegram</label>
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 pt-8 text-gray-500">@</span>
-                    <input type="text" id="booking-telegram" name="telegram" class="w-full pl-7 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
-                
-                <div class="flex gap-4 mb-4">
-                    <div class="w-1/2">
-                        <label for="booking-adults" class="block text-gray-700 font-medium mb-2">Взрослых *</label>
-                        <select id="booking-adults" name="adults" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <option value="1">1</option>
-                            <option value="2" selected>2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="w-1/2">
-                        <label for="booking-children" class="block text-gray-700 font-medium mb-2">Детей *</label>
-                        <select id="booking-children" name="children" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <option value="0" selected>0</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="mb-4"><label for="booking-message" class="block text-gray-700 font-medium mb-2">Комментарий</label><textarea id="booking-message" name="message" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea></div>
-                <div id="booking-form-status" class="mb-4 text-center"></div>
-                <div class="mb-4 flex items-center gap-2">
-                    <input type="checkbox" id="booking-consent" class="w-4 h-4 cursor-pointer" required>
-                    <label for="booking-consent" class="text-[11px] text-gray-600 cursor-pointer leading-tight">
-                        Я даю согласие на обработку моих персональных данных в соответствии с <a href="/privacy.html" target="_blank" class="policy-link">политикой конфиденциальности</a>
-                    </label>
-                </div>
-                <button type="submit" id="booking-submit-button" class="w-full bg-blue-500 text-white px-4 py-3 rounded-full hover:bg-blue-600 transition font-bold disabled:bg-gray-400">Отправить заявку</button>
-            </form>
-        </div>
-    </div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-    <div id="contact-form-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[99] transition-opacity duration-300">
-        <div class="bg-white p-6 sm:p-8 rounded-xl shadow-2xl w-full max-w-md relative m-4 max-h-[90vh] overflow-y-auto custom-scrollbar">
-            <button class="modal-close-btn absolute top-0 right-0 p-4 text-gray-500 hover:text-gray-800 text-3xl leading-none">&times;</button>
-            <h3 class="text-2xl font-bold mb-4 text-center">Написать нам</h3>
-            <form id="contactForm" novalidate>
-                <div class="mb-4"><label for="name" class="block text-gray-700 font-medium mb-2">Ваше имя *</label><input type="text" id="name" name="name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required></div>
-                <div class="mb-4"><label for="phone" class="block text-gray-700 font-medium mb-2">Ваш номер телефона *</label><input type="tel" id="phone" name="phone" placeholder="+7 (999) 123-45-67" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required></div>
-                <div class="mb-4">
-                    <label for="contact-email" class="block text-gray-700 font-medium mb-2">Ваш Email *</label>
-                    <input type="email" id="contact-email" name="email" placeholder="example@mail.ru" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                </div>
-                <div class="mb-4 relative">
-                    <label for="telegram" class="block text-gray-700 font-medium mb-2">Ваш ник в Telegram</label>
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 pt-8 text-gray-500">@</span>
-                    <input type="text" id="telegram" name="telegram" class="w-full pl-7 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
-                <div class="mb-6"><label for="message" class="block text-gray-700 font-medium mb-2">Сообщение *</label><textarea id="message" name="message" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required></textarea></div>
-                <div id="form-status" class="mb-4 text-center"></div>
-                <div class="mb-4 flex items-center gap-2">
-                    <input type="checkbox" id="contact-consent" class="w-4 h-4 cursor-pointer" required>
-                    <label for="contact-consent" class="text-[11px] text-gray-600 cursor-pointer leading-tight">
-                        Я даю согласие на обработку моих персональных данных в соответствии с <a href="/privacy.html" target="_blank" class="policy-link">политикой конфиденциальности</a>
-                    </label>
-                </div>
-                <button type="submit" id="submit-button" class="w-full bg-blue-500 text-white px-4 py-3 rounded-full hover:bg-blue-600 transition font-bold disabled:bg-gray-400 disabled:cursor-not-allowed">Отправить</button>
-            </form>
-        </div>
-    </div>
-    
-    <div id="cookie-banner" class="cookie-banner" role="region" aria-label="Уведомление о cookie" hidden>
-        <p>Мы используем cookie и Яндекс.Метрику, чтобы понимать, как сделать сайт удобнее. <a href="/privacy.html" target="_blank">Подробнее</a></p>
-        <button type="button" id="cookie-ok">Понятно</button>
-    </div>
-    <script src="js/config.js"></script>
-    <script src="js/app.js"></script>
+<div id="cookie-banner" class="cookie" role="region" aria-label="Уведомление о cookie" hidden>
+    <p>Мы используем cookie и Яндекс.Метрику, чтобы понимать, как сделать сайт удобнее. <a href="/privacy.html" target="_blank">Подробнее</a></p>
+    <button type="button" id="cookie-ok">Понятно</button>
+</div>
+
+<script src="/js/config.js?v=v2"></script>
+<script src="/v2/sights-details.js?v=1"></script>
+<script src="/v2/v2.js?v=12"></script>
+<script type="module">
+    import { initMap3D } from '/v2/map/map3d.min.js?v=11';
+    window.__initMap3D = initMap3D;
+    window.dispatchEvent(new Event('map3d-ready'));
+</script>
 </body>
 </html>

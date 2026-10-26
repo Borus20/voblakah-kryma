@@ -34,6 +34,8 @@
     const fmtD = (d) => d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' });
     const ymd = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
     const DAY = 86400000;
+    // новый сайт открыт как основной (/) или пока в /v2/ — ссылки на страницы квартир и политику
+    const BASE = location.pathname.startsWith('/v2') ? '/v2' : '';
 
     // После нажатия пальцем/мышью кнопка не остаётся выделенной (в т.ч. когда вернулись на страницу кнопкой «Назад»).
     // e.detail > 0 — нажатие мышью или пальцем; при управлении с клавиатуры фокус не трогаем.
@@ -145,7 +147,7 @@
                 <div class="apt-meta"><span>от <b>${rub(minPrice)}</b> / сутки</span><span>отдельный вход</span></div>
                 <div class="apt-actions">
                     <button type="button" class="btn btn--dark" data-open-apt="${id}">Даты и цены</button>
-                    <a class="btn btn--outline" href="/v2/kvartiry/${id}/">Подробнее</a>
+                    <a class="btn btn--outline" href="${BASE}/kvartiry/${id}/">Подробнее</a>
                 </div>
             </div>
         </article>`;
@@ -184,7 +186,7 @@
         el.addEventListener('click', go);
         el.addEventListener('keydown', (e) => { if (e.key === 'Enter') go(); });
     });
-    $('#ftr-apts').innerHTML = Object.entries(apartmentsData).map(([id, a]) => `<a href="/v2/kvartiry/${id}/">${esc(aptShort(a.name))}</a>`).join(' · ');
+    $('#ftr-apts').innerHTML = Object.entries(apartmentsData).map(([id, a]) => `<a href="${BASE}/kvartiry/${id}/">${esc(aptShort(a.name))}</a>`).join(' · ');
 
     // ---------- координаты мест (для расстояний и карты) ----------
     let places = null;
@@ -380,7 +382,7 @@
         curApt = id; checkIn = checkOut = null;
         $('#dr-title').textContent = aptName(a.name);
         $('#dr-desc').textContent = a.description;
-        $('#dr-more').href = `/v2/kvartiry/${id}/`;
+        $("#dr-more").href = `${BASE}/kvartiry/${id}/`;
         $('#dr-prices').innerHTML = `<h4>Цена за сутки, сезон ${CALENDAR_START_DATE.getFullYear()}</h4>` +
             prices.map(x => `<div><span>${monthNames[x.m][0].toUpperCase() + monthNames[x.m].slice(1)}</span><b>${rub(x.p)}</b></div>`).join('') +
             `<p>За всю квартиру. От ${MIN_NIGHTS} ночей. Заезд после 14:00, выезд до 12:00.</p>`;

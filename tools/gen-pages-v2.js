@@ -2,15 +2,26 @@
 // =============================================================
 // Отдельные страницы нового дизайна (v2): квартиры /v2/kvartiry/<id>/ и политика /v2/privacy.html.
 // Данные — из frontend/js/config.js (как у главной). Общие шапка/подвал — здесь, чтобы страницы не расходились.
-// Запуск: node /var/www/voblakah-kryma/tools/gen-pages-v2.js
+// Запуск: node /var/www/voblakah-kryma/tools/gen-pages-v2.js --root   (основной сайт: /kvartiry/…, /privacy.html, sitemap.xml)
+//         node /var/www/voblakah-kryma/tools/gen-pages-v2.js          (черновик в /v2/, скрыт от поисковиков)
 // =============================================================
 const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
 
+const ROOT = process.argv.includes('--root');
 const FRONT = path.join(__dirname, '..', 'frontend');
-const OUT = path.join(FRONT, 'v2');
-const BASE = '/v2';                       // после переключения v2 на главную поменять на ''
+const OUT = ROOT ? FRONT : path.join(FRONT, 'v2');
+const BASE = ROOT ? '' : '/v2';
+const METRIKA = `    <script>
+        (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+        (window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=106346948', 'ym');
+        ym(106346948, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", accurateTrackBounce:true, trackLinks:true});
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/106346948" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+`;
 const SITE = 'https://voblakah-kryma.ru';
 const cfg = vm.runInNewContext(fs.readFileSync(path.join(FRONT, 'js', 'config.js'), 'utf8') +
     '\n;({ apartmentsData, CALENDAR_START_DATE, CALENDAR_END_DATE, PRICES_BY_MONTH })', {});
@@ -39,8 +50,7 @@ function head({ title, desc, canonical, extra = '' }) {
     <!-- Сгенерировано tools/gen-pages-v2.js из js/config.js — правьте генератор/config.js, а не этот файл -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="robots" content="noindex, nofollow">
-    <title>${esc(title)}</title>
+${ROOT ? '' : '    <meta name="robots" content="noindex, nofollow">\n'}    <title>${esc(title)}</title>
     <meta name="description" content="${esc(desc)}">
     <link rel="canonical" href="${canonical}">
     <meta name="theme-color" content="#0b1b33">
@@ -51,7 +61,13 @@ function head({ title, desc, canonical, extra = '' }) {
     <link rel="stylesheet" href="/v2/fonts/cormorant.css">
     <link rel="stylesheet" href="/v2/v2.css?v=8">
     <link rel="stylesheet" href="/v2/page.css?v=2">
-${extra}</head>
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="ru_RU">
+    <meta property="og:site_name" content="В облаках Крыма">
+    <meta property="og:title" content="${esc(title)}">
+    <meta property="og:description" content="${esc(desc)}">
+    <meta property="og:url" content="${canonical}">
+${extra}${ROOT ? METRIKA : ''}</head>
 <body class="subpage">`;
 }
 
@@ -113,7 +129,7 @@ function apartmentPage(id) {
         title: `${name} в Кацивели — от ${rub(minPrice)} за сутки | В облаках Крыма`,
         desc: `${a.description.split('. ').slice(0, 2).join('. ').replace(/\.?$/, '.')} Кацивели, Большая Ялта.`,
         canonical: url,
-        extra: `    <script type="application/ld+json">${JSON.stringify(ld)}</script>\n`
+        extra: `    <meta property="og:image" content="${SITE}/${a.photos[0]}">\n    <meta name="twitter:card" content="summary_large_image">\n    <script type="application/ld+json">${JSON.stringify(ld)}</script>\n`
     }) + header(book) + `
 <main class="ap">
     <section class="ap-gallery" data-gallery>
@@ -194,7 +210,8 @@ function privacyPage() {
     return head({
         title: 'Политика конфиденциальности — «В облаках Крыма»',
         desc: 'Политика обработки персональных данных гостевого дома «В облаках Крыма» (Кацивели, Крым): какие данные мы получаем через сайт, зачем и как их защищаем.',
-        canonical: `${SITE}${BASE}/privacy.html`
+        canonical: `${SITE}${BASE}/privacy.html`,
+        extra: `    <meta property="og:image" content="${SITE}/og-image.jpg">\n`
     }) + header(`${BASE}/#apartments`) + `
 <main class="doc">
     <a class="ap-back" href="${BASE}/">← На главную</a>
@@ -210,3 +227,23 @@ for (const id of ids) {
 }
 fs.writeFileSync(path.join(OUT, 'privacy.html'), privacyPage());
 console.log('✓ ' + BASE + '/privacy.html');
+
+if (ROOT) {
+    const today = new Date().toISOString().slice(0, 10);
+    const urls = [
+        { loc: SITE + '/', priority: '1.0', changefreq: 'weekly' },
+        ...ids.map(id => ({ loc: `${SITE}/kvartiry/${id}/`, priority: '0.8', changefreq: 'monthly' })),
+        { loc: SITE + '/privacy.html', priority: '0.2', changefreq: 'yearly' }
+    ];
+    fs.writeFileSync(path.join(FRONT, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urls.map(u => `  <url>
+    <loc>${u.loc}</loc>
+    <lastmod>${today}</lastmod>
+    <changefreq>${u.changefreq}</changefreq>
+    <priority>${u.priority}</priority>
+  </url>`).join('\n')}
+</urlset>
+`);
+    console.log('✓ sitemap.xml (' + urls.length + ' адресов)');
+}
