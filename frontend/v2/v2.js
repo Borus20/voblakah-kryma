@@ -37,6 +37,16 @@
     const nightsBetween = (a, b) => Math.round((b - a) / DAY);
     const MIN_NIGHTS = 7;
 
+    // ---------- перезагрузка страницы: всегда наверх, как при первом заходе ----------
+    // (иначе браузер восстанавливает позицию или прокручивает к #contact и т.п. из адреса)
+    const navType = ((performance.getEntriesByType && performance.getEntriesByType('navigation')[0]) || {}).type;
+    if (navType === 'reload') {
+        if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+        if (location.hash) history.replaceState(null, '', location.pathname + location.search);
+        scrollTo(0, 0);
+        addEventListener('load', () => scrollTo(0, 0), { once: true });
+    }
+
     // ---------- шапка и меню ----------
     const hdr = $('#hdr'), menu = $('#menu'), burger = $('.hdr-burger');
     const onScroll = () => hdr.classList.toggle('is-solid', scrollY > 40 && !document.documentElement.classList.contains('menu-open'));
@@ -118,7 +128,6 @@
         return `<article class="apt reveal">
             <div class="apt-media" data-open-apt="${id}" role="button" tabindex="0" aria-label="${esc(aptName(a.name))}: фото и даты">
                 <div class="apt-slides" data-slides="${id}">${pic(p1, aptName(a.name), { sizes: '(max-width: 760px) 100vw, 50vw', cls: 'is-on' })}</div>
-                <span class="apt-progress" aria-hidden="true"><i></i></span>
                 ${area ? `<span class="apt-badge">${area} м²</span>` : ''}
                 <span class="apt-count">${a.photos.length} фото</span>
             </div>
@@ -136,7 +145,7 @@
     observeReveal($('#apts-grid'));
 
     // Пока курсор на карточке — фото листаются по кругу (следующие подгружаются по мере показа)
-    const HOVER_STEP = 1600;
+    const HOVER_STEP = 2000;
     $$('.apt').forEach(card => {
         const box = $('.apt-slides', card), id = box.dataset.slides, photos = apartmentsData[id].photos;
         let i = 0, timer = null;
@@ -241,7 +250,8 @@
         $('.modal-panel--sight').scrollTop = 0;
         clearInterval(smTimer);
         const imgs = $$('img', g); let k = 0;
-        if (imgs.length > 1 && !reduceMotion) smTimer = setInterval(() => showImg((k + 1) % imgs.length), 3800);   // showImg объявлена ниже, вызывается позже
+        // фото всего два — меняем спокойно, раз в 5 секунд, чтобы не мельтешило
+        if (imgs.length > 1 && !reduceMotion) smTimer = setInterval(() => showImg((k + 1) % imgs.length), 5000);   // showImg объявлена ниже, вызывается позже
         $('#sm-onmap').onclick = () => { hideLayer($('#sight-modal')); showOnMap(id); };
         // маршрут и расстояние
         const route = routeUrl(id), routeBox = $('.sm-route');

@@ -49,7 +49,7 @@ function head({ title, desc, canonical, extra = '' }) {
     <link rel="preload" href="/v2/fonts/cormorant-cyrillic-normal.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="/fonts/inter-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="/v2/fonts/cormorant.css">
-    <link rel="stylesheet" href="/v2/v2.css?v=6">
+    <link rel="stylesheet" href="/v2/v2.css?v=7">
     <link rel="stylesheet" href="/v2/page.css?v=1">
 ${extra}</head>
 <body class="subpage">`;

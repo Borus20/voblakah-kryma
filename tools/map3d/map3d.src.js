@@ -423,7 +423,9 @@ export async function initMap3D(root, opts) {
     for (const [id, s] of Object.entries(sights)) addMarker(id, s.title, false);
 
     const houseLL = { lat: houseInfo.lat, lon: houseInfo.lon };
+    let cardTimer = null;
     function openCard(id) {
+        clearInterval(cardTimer);
         markers.forEach(m => m.el.classList.toggle('is-active', m.id === id));
         const isHouse = id === 'house';
         const s = isHouse ? null : sights[id];
@@ -431,7 +433,10 @@ export async function initMap3D(root, opts) {
         const dist = (!isHouse && places[id]) ? fmtKm(haversineKm(houseLL, places[id])) : null;
         // маршрут на машине от нашего дома в Яндекс Картах
         const route = (!isHouse && places[id]) ? `https://yandex.ru/maps/?rtext=${houseLL.lat},${houseLL.lon}~${places[id].lat},${places[id].lon}&rtt=auto` : null;
-        const pic = img ? `<picture><source type="image/webp" srcset="/${img}.w1280.webp"><img src="/${img}" alt="${esc(isHouse ? houseInfo.title : s.title)}" loading="lazy"></picture>` : '';
+        // все фото места стопкой; если их несколько — спокойная смена раз в 5 секунд
+        const allImgs = isHouse ? (img ? [img] : []) : (s.images || []);
+        const alt = esc(isHouse ? houseInfo.title : s.title);
+        const pic = allImgs.map((src, i) => `<img src="/${src}.w1280.webp" alt="${alt}" class="${i === 0 ? 'is-on' : ''}" decoding="async">`).join('');
         card.innerHTML = `
             <button type="button" class="m3d-card-close" aria-label="Закрыть">${X_ICON}</button>
             <div class="m3d-card-img">${pic}</div>
@@ -446,6 +451,15 @@ export async function initMap3D(root, opts) {
                 </div>
             </div>`;
         card.hidden = false;
+        const cardImgs = card.querySelectorAll('.m3d-card-img img');
+        if (cardImgs.length > 1 && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            let ci = 0;
+            cardTimer = setInterval(() => {
+                cardImgs[ci].classList.remove('is-on');
+                ci = (ci + 1) % cardImgs.length;
+                cardImgs[ci].classList.add('is-on');
+            }, 5000);
+        }
         card.querySelector('.m3d-card-close').addEventListener('click', closeCard);
         // ссылка на раздел сайта (#apartments, #sight-…) — сначала выходим из полноэкранной карты
         card.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener('click', () => {
@@ -456,7 +470,7 @@ export async function initMap3D(root, opts) {
         flyTo(w, isHouse ? 8.5 : 9, 1.08, 0.12);
         wake();
     }
-    function closeCard() { card.hidden = true; markers.forEach(m => m.el.classList.remove('is-active')); }
+    function closeCard() { clearInterval(cardTimer); card.hidden = true; markers.forEach(m => m.el.classList.remove('is-active')); }
 
     // --- Сезон ---
     let mixTo = 0;
