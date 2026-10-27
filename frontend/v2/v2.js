@@ -186,6 +186,15 @@
         el.addEventListener('click', go);
         el.addEventListener('keydown', (e) => { if (e.key === 'Enter') go(); });
     });
+    // Текст под фото тоже открывает бронирование (кнопки и ссылки внутри работают как обычно, выделение текста не мешает)
+    $$('.apt').forEach(card => {
+        const id = $('.apt-slides', card).dataset.slides;
+        $('.apt-body', card).addEventListener('click', (e) => {
+            if (e.target.closest('a, button')) return;
+            if (String(getSelection && getSelection()).trim()) return;
+            openDrawer(id, true);
+        });
+    });
     $('#ftr-apts').innerHTML = Object.entries(apartmentsData).map(([id, a]) => `<a href="${BASE}/kvartiry/${id}/">${esc(aptShort(a.name))}</a>`).join(' · ');
 
     // ---------- координаты мест (для расстояний и карты) ----------

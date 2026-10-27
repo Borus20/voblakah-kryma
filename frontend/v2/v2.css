@@ -547,3 +547,8 @@ html::-webkit-scrollbar-track { background: var(--paper); }
 }
 /* Окно достопримечательности: фото меняются спокойно, с мягким перетеканием */
 .sm-gallery img { transition: opacity 1.4s ease !important; }
+
+/* Текст карточки квартиры тоже открывает бронирование */
+.apt-body { cursor: pointer; }
+.apt-name { transition: color .25s; }
+@media (hover: hover) { .apt-body:hover .apt-name { color: #a8814a; } }
