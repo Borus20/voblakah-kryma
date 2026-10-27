@@ -172,14 +172,15 @@
             i = n;
         };
         if (!box.querySelector('[data-n="0"]')) box.firstElementChild.setAttribute('data-n', '0');
-        const media = $('.apt-media', card);
-        media.addEventListener('mouseenter', () => {
+        // наведение на любую часть карточки (фото или текст под ним); mouseenter/leave не срабатывают при переходе между ними
+        card.addEventListener('mouseenter', () => {
             if (photos.length < 2) return;
+            clearInterval(timer);
             card.classList.add('is-cycling');
             show((i + 1) % photos.length);
             timer = setInterval(() => show((i + 1) % photos.length), HOVER_STEP);
         });
-        media.addEventListener('mouseleave', () => { clearInterval(timer); card.classList.remove('is-cycling'); show(0); });
+        card.addEventListener('mouseleave', () => { clearInterval(timer); card.classList.remove('is-cycling'); show(0); });
     });
     $$('[data-open-apt]').forEach(el => {
         const go = () => openDrawer(el.dataset.openApt, true);
